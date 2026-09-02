@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="hope-bet-api" content="https://betting-ed.onrender.com" />
+    <title>Hope Bet — Sportsbook</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="web-app">
+      <header class="site-header">
+        <div class="utility-bar">
+          <div class="utility-balances">
+            <button type="button" class="balance-toggle" id="btn-balance-toggle" aria-label="Toggle balance visibility">👁</button>
+            <div class="balance-line">
+              <span>Real Balance</span>
+              <strong id="balance">0.00</strong>
+              <em id="currency-label">ETB</em>
+            </div>
+            <div class="balance-line balance-line--bonus">
+              <span>Bonus Balance</span>
+              <strong id="bonus-balance">0.00</strong>
+              <em>ETB</em>
+            </div>
+          </div>
+          <button type="button" class="btn-deposit-header" id="btn-deposit">DEPOSIT</button>
+          <div class="utility-icons">
+            <button type="button" class="utility-icon" title="Messages">✉</button>
+            <button type="button" class="utility-icon" title="Promotions">🎁</button>
+            <button type="button" class="utility-icon" id="btn-my-bets-shortcut" title="My Bets">📋</button>
+          </div>
+          <div class="utility-right">
+            <button type="button" class="utility-link">App</button>
+            <button type="button" class="utility-link">LIVE CHAT</button>
+            <button type="button" class="utility-link utility-link--icon" title="Telegram">✈</button>
+            <button type="button" class="utility-link">English ▾</button>
+            <button type="button" class="btn-join btn-join--header" id="btn-join">Sign In</button>
+            <span class="user-pill" id="user-pill" hidden></span>
+          </div>
+        </div>
+
+        <nav class="main-nav">
+          <a class="main-nav-logo" href="./">
+            <img id="brand-logo" src="assets/hope-bet-logo.png" alt="Hope Bet" />
+          </a>
+          <div class="main-nav-tabs">
+            <button type="button" class="main-nav-tab is-on" data-nav="sport">SPORT</button>
+            <button type="button" class="main-nav-tab" data-nav="upcoming">UPCOMING</button>
+            <button type="button" class="main-nav-tab" data-nav="live">LIVE</button>
+            <button type="button" class="main-nav-tab" data-nav="race">RACE</button>
+            <button type="button" class="main-nav-tab" data-nav="fury">FURY FLIGHT</button>
+            <button type="button" class="main-nav-tab" data-nav="jetx">JETX</button>
+            <button type="button" class="main-nav-tab" data-nav="virtual">VIRTUAL</button>
+            <button type="button" class="main-nav-tab" data-nav="special">SPECIAL GAMES</button>
+          </div>
+        </nav>
+
+        <nav class="sub-nav">
+          <button type="button" class="sub-nav-item is-on">Sports</button>
+          <button type="button" class="sub-nav-item">Daily Events</button>
+          <button type="button" class="sub-nav-item">All Events</button>
+          <button type="button" class="sub-nav-item">Upcoming</button>
+          <button type="button" class="sub-nav-item">Inplay Calendar</button>
+          <button type="button" class="sub-nav-item" id="sub-nav-my-bets">My Bets</button>
+        </nav>
+      </header>
+
+      <div class="web-body">
+        <aside class="sidebar" id="sidebar">
+          <div class="sidebar-search">
+            <label class="sidebar-search-label">Search Event</label>
+            <div class="sidebar-search-wrap">
+              <input type="search" id="event-search" placeholder="Search..." autocomplete="off" />
+              <span aria-hidden="true">⌕</span>
+            </div>
+          </div>
+
+          <div class="sidebar-block">
+            <div class="sidebar-title"><span>QUICK FILTER</span></div>
+            <div class="filter-chips filter-chips--time filter-chips--sidebar" id="time-filters"></div>
+            <button type="button" class="btn-inplay" id="btn-inplay">🕐 In-Play</button>
+          </div>
+
+          <div class="sidebar-block">
+            <div class="sidebar-title"><span>SPORTS</span></div>
+            <div class="sidebar-list" id="sidebar-sports"></div>
+          </div>
+
+          <div class="sidebar-block sidebar-block--compact">
+            <div class="sidebar-title">
+              <span>TOP LEAGUES</span>
+              <em id="top-league-count">0</em>
+            </div>
+            <div class="sidebar-list" id="sidebar-leagues"></div>
+          </div>
+
+          <div class="sidebar-block sidebar-block--compact">
+            <div class="sidebar-title">
+              <span>COUNTRIES</span>
+              <em id="country-count">0</em>
+            </div>
+            <div class="sidebar-list" id="sidebar-countries"></div>
+          </div>
+        </aside>
+
+        <main class="content">
+          <section class="content-view is-active" id="view-sports" data-view="sports">
+            <div class="ad-carousel" id="ad-carousel">
+              <button type="button" class="ad-carousel-btn ad-carousel-btn--prev" id="ad-prev" aria-label="Previous">‹</button>
+              <div class="ad-carousel-track" id="ad-carousel-track"></div>
+              <button type="button" class="ad-carousel-btn ad-carousel-btn--next" id="ad-next" aria-label="Next">›</button>
+              <div class="ad-carousel-dots" id="ad-carousel-dots"></div>
+            </div>
+
+            <div class="section-head section-head--row">
+              <h2>TOP MATCHES</h2>
+            </div>
+            <div class="popular-row" id="popular-carousel"></div>
+
+            <div class="section-head section-head--row">
+              <h2>TOP LEAGUES</h2>
+            </div>
+            <div class="top-leagues-grid" id="top-leagues-grid"></div>
+
+            <div class="filter-bar">
+              <div class="league-filter-bar" id="league-filter-bar"></div>
+            </div>
+            <div class="league-dropdown-backdrop" id="league-dropdown-backdrop" hidden></div>
+
+            <div class="board-head">
+              <h3 id="board-title">All Leagues</h3>
+              <div class="board-markets">
+                <span>1X2</span>
+                <span>Double Chance</span>
+                <span>O/U 2.5</span>
+              </div>
+            </div>
+
+            <div class="board-wrap">
+              <div class="board-loading" id="board-loading" hidden>Loading fixtures…</div>
+              <div class="match-board" id="match-board"></div>
+            </div>
+          </section>
+
+          <section class="content-view" id="view-match" data-view="match" hidden>
+            <button type="button" class="match-back" id="match-back">‹ Back to matches</button>
+            <div class="md-hero" id="match-hero"></div>
+            <div class="md-tabs" id="market-tabs"></div>
+            <div class="md-search">
+              <span class="md-search-icon" aria-hidden="true">⌕</span>
+              <input type="search" id="market-search" placeholder="Search..." autocomplete="off" />
+            </div>
+            <div class="md-loading" id="match-loading" hidden>Loading markets…</div>
+            <div class="md-markets" id="match-markets"></div>
+          </section>
+        </main>
+
+        <aside class="betslip-panel" id="betslip-panel">
+          <div class="betslip-header">
+            <span>Betslip</span>
+            <em id="slip-tab-count">0</em>
+          </div>
+
+          <div class="betslip-panel-slip" id="panel-slip">
+            <div class="betslip-mode">
+              <button type="button" class="betslip-mode-btn is-on" data-mode="multiple">Multiple</button>
+              <button type="button" class="betslip-mode-btn" data-mode="single">Single</button>
+            </div>
+
+            <div class="betslip-empty" id="slip-empty">
+              <strong>Betslip is empty</strong>
+              <p>Add selections to start betting</p>
+            </div>
+
+            <div class="betslip-list" id="slip-list"></div>
+
+            <div class="betslip-foot" id="slip-foot" hidden>
+              <div class="stake-row">
+                <label for="stake-input">Stake</label>
+                <div class="stake-stepper">
+                  <button type="button" class="stake-step" id="stake-minus">−</button>
+                  <input type="number" id="stake-input" min="20" step="1" value="20" placeholder="Stake.." />
+                  <button type="button" class="stake-step" id="stake-plus">+</button>
+                </div>
+              </div>
+              <div class="quick-stakes" id="quick-stakes"></div>
+              <div class="slip-summary">
+                <div><span>Total odds</span><strong id="total-odds">0.00</strong></div>
+                <div><span>Potential win</span><strong id="potential-win">0.00</strong></div>
+              </div>
+              <button type="button" class="btn-share-slip" id="btn-share-slip">💾 SHARE</button>
+              <div class="betslip-actions">
+                <button type="button" class="btn-cancel-bet" id="btn-clear-slip">✕ CANCEL</button>
+                <button type="button" class="btn-place" id="btn-place">✓ PLACE BET</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="betslip-tools">
+            <div class="betslip-tool">
+              <div class="betslip-tool-head">Load booked bet</div>
+              <p>Insert the code to load or check it here.</p>
+              <div class="betslip-tool-row">
+                <input type="text" id="load-booked-code" placeholder="Code" />
+                <button type="button" class="btn-load-tool" data-load="booked">Load</button>
+              </div>
+            </div>
+            <div class="betslip-tool">
+              <div class="betslip-tool-head">Load Ticket</div>
+              <p>Insert the id to load ticket.</p>
+              <div class="betslip-tool-row">
+                <input type="text" id="load-ticket-id" placeholder="Ticket ID" />
+                <button type="button" class="btn-load-tool" data-load="ticket">Load</button>
+              </div>
+            </div>
+            <div class="betslip-tool">
+              <div class="betslip-tool-head">Check Your Bet</div>
+              <p>Your Bet ID</p>
+              <div class="betslip-tool-row">
+                <input type="text" id="check-bet-id" placeholder="Bet ID" />
+                <button type="button" class="btn-load-tool" data-load="check">Load</button>
+              </div>
+            </div>
+            <div class="betslip-tool">
+              <div class="betslip-tool-head">Last winnings</div>
+              <div class="last-winnings" id="last-winnings">
+                <div class="last-winnings-head">
+                  <span>Winner</span><span>Stake</span><span>Date</span>
+                </div>
+                <div class="last-winnings-body" id="last-winnings-body">
+                  <p class="last-winnings-empty">No recent wins</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="betslip-panel-bets" id="panel-bets" hidden>
+            <div class="bet-history" id="bet-history"></div>
+          </div>
+        </aside>
+      </div>
+
+      <button type="button" class="fab-chat" title="Live chat">💬</button>
+    </div>
+
+    <div class="toast" id="toast" hidden></div>
+
+    <div class="auth-modal" id="deposit-modal" hidden>
+      <div class="auth-card">
+        <button type="button" class="auth-close" id="deposit-close" aria-label="Close">×</button>
+        <h2>Deposit ETB</h2>
+        <p class="auth-sub" id="deposit-instructions">Send payment, then submit your transaction reference.</p>
+        <form id="deposit-form" class="auth-form">
+          <label>
+            Payment method
+            <select id="deposit-method" required></select>
+          </label>
+          <label>
+            Amount (ETB)
+            <input type="number" id="deposit-amount" min="100" step="1" required />
+          </label>
+          <label>
+            Transaction reference
+            <input type="text" id="deposit-reference" required minlength="4" placeholder="Telebirr / bank reference ID" />
+          </label>
+          <button type="submit" class="auth-submit" id="deposit-submit">Submit deposit request</button>
+        </form>
+        <p class="auth-note" id="deposit-note">Deposits are reviewed manually. Balance updates after approval.</p>
+        <div class="deposit-history" id="deposit-history"></div>
+      </div>
+    </div>
+
+    <div class="auth-modal" id="auth-modal" hidden>
+      <div class="auth-card">
+        <button type="button" class="auth-close" id="auth-close" aria-label="Close">×</button>
+        <h2 id="auth-title">Sign in to Hope Bet</h2>
+        <p class="auth-sub">Real wallet · ETB balance · Secure bets</p>
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab is-on" data-auth-tab="login">Sign In</button>
+          <button type="button" class="auth-tab" data-auth-tab="register">Register</button>
+        </div>
+        <form id="auth-form" class="auth-form">
+          <label>
+            Email
+            <input type="email" id="auth-email" required autocomplete="email" />
+          </label>
+          <label id="auth-phone-wrap" hidden>
+            Phone (optional)
+            <input type="tel" id="auth-phone" autocomplete="tel" />
+          </label>
+          <label>
+            Password
+            <input type="password" id="auth-password" required minlength="6" autocomplete="current-password" />
+          </label>
+          <button type="submit" class="auth-submit" id="auth-submit">Sign In</button>
+        </form>
+        <p class="auth-note">New accounts receive a welcome bonus (demo ETB).</p>
+      </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="api-client.js"></script>
+    <script src="game.js"></script>
+  </body>
+</html>
