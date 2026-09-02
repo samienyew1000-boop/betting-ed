@@ -3,9 +3,13 @@
 const STORAGE = "sport-betting-v1";
 const API_BASE = "https://multi-shop-games-2.onrender.com/api/games/sportsbook";
 const BOOKMAKER = 8;
-const START_BALANCE = 10000;
+const START_BALANCE = 0;
 const MIN_STAKE = 20;
 const QUICK_STAKES = [20, 30, 50, 100];
+const CURRENCY = "ETB";
+
+const api = () => window.HopeBetAPI;
+const useApi = () => api() && api().isEnabled();
 
 const LEAGUE_FILTERS = [
   { id: "all", label: "All Leagues" },
@@ -66,9 +70,12 @@ const state = {
   leagueDropdown: null,
   leagueDropdownSearch: "",
   sidebar: { topLeagues: [], countries: [] },
+  sessionUser: null,
+  authTab: "login",
 };
 
 function load() {
+  if (useApi()) return;
   try {
     const raw = JSON.parse(localStorage.getItem(STORAGE) || "{}");
     if (Number.isFinite(raw.balance) && raw.balance >= 0) state.balance = raw.balance;
@@ -81,6 +88,7 @@ function load() {
 }
 
 function save() {
+  if (useApi()) return;
   localStorage.setItem(
     STORAGE,
     JSON.stringify({
@@ -273,7 +281,9 @@ async function fetchCountryLeagues(countryName) {
 
   try {
     const res = await fetch(
-      `${API_BASE}/football/countries/${encodeURIComponent(countryName)}/leagues?view=prematch&bookmaker=${BOOKMAKER}`
+      useApi()
+        ? `${api().apiUrl()}/api/odds/countries/${encodeURIComponent(countryName)}/leagues`
+        : `${API_BASE}/football/countries/${encodeURIComponent(countryName)}/leagues?view=prematch&bookmaker=${BOOKMAKER}`
     );
     if (res.ok) {
       const data = await res.json();
@@ -405,10 +415,15 @@ function normalizeApiFixture(row) {
 
 async function fetchLiveFixtures() {
   const topLeagues = "39-140-61-88-78-135-40";
-  const urls = [
-    `${API_BASE}/football/board/upcoming?bookmaker=${BOOKMAKER}`,
-    `${API_BASE}/football/board/prematch?bookmaker=${BOOKMAKER}&leagues=${topLeagues}`,
-  ];
+  const urls = useApi()
+    ? [
+        `${api().apiUrl()}/api/odds/fixtures/upcoming`,
+        `${api().apiUrl()}/api/odds/fixtures/prematch?leagues=${topLeagues}`,
+      ]
+    : [
+        `${API_BASE}/football/board/upcoming?bookmaker=${BOOKMAKER}`,
+        `${API_BASE}/football/board/prematch?bookmaker=${BOOKMAKER}&leagues=${topLeagues}`,
+      ];
 
   for (const url of urls) {
     try {
@@ -436,7 +451,11 @@ async function fetchLiveFixtures() {
 
 async function fetchSidebar() {
   try {
-    const res = await fetch(`${API_BASE}/football/sidebar/summary?view=prematch&bookmaker=${BOOKMAKER}`);
+    const res = await fetch(
+      useApi()
+        ? `${api().apiUrl()}/api/odds/sidebar`
+        : `${API_BASE}/football/sidebar/summary?view=prematch&bookmaker=${BOOKMAKER}`
+    );
     if (!res.ok) return;
     const data = await res.json();
     if (!data.ok) return;
@@ -466,7 +485,9 @@ async function fetchCountryLeagues(countryName) {
 
   try {
     const res = await fetch(
-      `${API_BASE}/football/countries/${encodeURIComponent(countryName)}/leagues?view=prematch&bookmaker=${BOOKMAKER}`
+      useApi()
+        ? `${api().apiUrl()}/api/odds/countries/${encodeURIComponent(countryName)}/leagues`
+        : `${API_BASE}/football/countries/${encodeURIComponent(countryName)}/leagues?view=prematch&bookmaker=${BOOKMAKER}`
     );
     if (res.ok) {
       const data = await res.json();
@@ -593,7 +614,11 @@ async function fetchFixtureMarkets(fixtureId) {
   if (state.fixtureMarkets[fixtureId]) return state.fixtureMarkets[fixtureId];
 
   try {
-    const res = await fetch(`${API_BASE}/football/odds/fixture/${fixtureId}?bookmaker=${BOOKMAKER}`);
+    const res = await fetch(
+      useApi()
+        ? `${api().apiUrl()}/api/odds/fixture/${fixtureId}/markets`
+        : `${API_BASE}/football/odds/fixture/${fixtureId}?bookmaker=${BOOKMAKER}`
+    );
     if (res.ok) {
       const data = await res.json();
       if (data.ok && Array.isArray(data.markets) && data.markets.length) {
@@ -829,6 +854,10 @@ function potentialWin() {
 
 function renderBalance() {
   $("balance").textContent = fmt(state.balance);
+  const cur = $("currency-label");
+  const stakeCur = $("stake-currency");
+  if (cur) cur.textContent = CURRENCY;
+  if (stakeCur) stakeCur.textContent = CURRENCY;
 }
 
 function renderSidebar() {
@@ -1158,7 +1187,7 @@ function renderHistory() {
         </div>
         <div class="sel">${picks}</div>
         <div class="meta">
-          <span>Stake: ${fmt(t.stake)} FUN</span>
+          <span>Stake: ${fmt(t.stake)} ${CURRENCY}</span>
           <span>${t.status === "won" ? "Won: " + fmt(t.payout) : t.status === "lost" ? "Lost" : "Pending"}</span>
         </div>
       </div>`;
@@ -1291,7 +1320,99 @@ function renderMatchDetail() {
     .join("");
 }
 
-function settleTicket(ticket) {
+function renderSession() {
+  const joinBtn = $("btn-join");
+  const userPill = $("user-pill");
+  if (!useApi()) {
+    joinBtn.textContent = "Demo";
+    userPill.hidden = true;
+    return;
+  }
+
+  if (state.sessionUser) {
+    joinBtn.textContent = "Sign Out";
+    userPill.hidden = false;
+    userPill.textContent = state.sessionUser.displayName || state.sessionUser.email;
+  } else {
+    joinBtn.textContent = "Sign In";
+    userPill.hidden = true;
+  }
+}
+
+function openAuthModal(tab) {
+  state.authTab = tab || "login";
+  $("auth-modal").hidden = false;
+  document.querySelectorAll(".auth-tab").forEach((btn) => {
+    btn.classList.toggle("is-on", btn.dataset.authTab === state.authTab);
+  });
+  $("auth-phone-wrap").hidden = state.authTab !== "register";
+  $("auth-title").textContent = state.authTab === "register" ? "Create Hope Bet account" : "Sign in to Hope Bet";
+  $("auth-submit").textContent = state.authTab === "register" ? "Create Account" : "Sign In";
+}
+
+function closeAuthModal() {
+  $("auth-modal").hidden = true;
+}
+
+async function syncFromApi() {
+  if (!useApi()) return;
+  if (!api().getToken()) {
+    state.sessionUser = null;
+    state.balance = 0;
+    state.history = [];
+    renderSession();
+    renderBalance();
+    return;
+  }
+
+  try {
+    state.sessionUser = api().getUser();
+    const bal = await api().fetchBalance();
+    state.balance = bal.balance;
+    const hist = await api().fetchHistory();
+    state.history = (hist.tickets || []).map((t) => ({
+      id: t.id,
+      bets: t.bets,
+      stake: t.stake,
+      totalOdds: t.totalOdds,
+      status: t.status,
+      payout: t.payout || 0,
+      placedAt: t.placedAt,
+    }));
+    renderSession();
+    renderBalance();
+    if (state.betslipTab === "bets") renderHistory();
+  } catch (err) {
+    if (err.status === 401) {
+      api().clearSession();
+      state.sessionUser = null;
+      openAuthModal("login");
+    }
+    toast(err.message || "Could not sync account", "err");
+  }
+}
+
+async function settleTicketRemote(ticket) {
+  if (!useApi()) {
+    settleTicketLocal(ticket);
+    return;
+  }
+  const won = Math.random() < (ticket.bets.length === 1 ? 0.32 : 0.12);
+  try {
+    const result = await api().devSettle(ticket.id, won);
+    ticket.status = result.status;
+    ticket.payout = result.payout || 0;
+    state.balance = result.balance;
+    renderBalance();
+    if (state.betslipTab === "bets") renderHistory();
+  } catch (err) {
+    ticket.status = won ? "won" : "lost";
+    if (won) ticket.payout = ticket.stake * ticket.totalOdds;
+    toast(err.message || "Settlement pending", "err");
+  }
+}
+
+function settleTicketLocal(ticket) {
   const winChance = ticket.bets.length === 1 ? 0.32 : 0.12;
   const won = Math.random() < winChance;
   ticket.status = won ? "won" : "lost";
@@ -1304,8 +1425,13 @@ function settleTicket(ticket) {
   if (state.betslipTab === "bets") renderHistory();
 }
 
-function placeBet() {
+async function placeBet() {
   if (!state.slip.length) return;
+  if (useApi() && !api().getToken()) {
+    openAuthModal("login");
+    toast("Sign in to place bets", "err");
+    return;
+  }
   if (state.slip.some(isSlipBetExpired)) {
     toast("Remove expired selections before placing a bet", "err");
     return;
@@ -1313,11 +1439,53 @@ function placeBet() {
   const active = activeSlipBets();
   if (!active.length) return;
   if (state.stake < MIN_STAKE) {
-    toast(`Minimum stake is ${MIN_STAKE} FUN`, "err");
+    toast(`Minimum stake is ${MIN_STAKE} ${CURRENCY}`, "err");
     return;
   }
-  if (state.balance < state.stake) {
+  if (!useApi() && state.balance < state.stake) {
     toast("Insufficient balance", "err");
+    return;
+  }
+
+  if (useApi()) {
+    try {
+      const payload = {
+        stake: state.stake,
+        mode: state.slipMode,
+        selections: active.map((b) => ({
+          fixtureId: b.fixtureId,
+          marketKey: b.marketKey,
+          marketName: b.marketName,
+          value: b.value,
+          odd: b.odd,
+          homeName: b.homeName,
+          awayName: b.awayName,
+          kickoff: b.kickoff,
+        })),
+      };
+      const result = await api().placeBet(payload);
+      const ticket = {
+        id: result.ticket.id,
+        bets: result.ticket.bets,
+        stake: result.ticket.stake,
+        totalOdds: result.ticket.totalOdds,
+        status: result.ticket.status,
+        payout: 0,
+        placedAt: result.ticket.placedAt,
+      };
+      state.balance = result.balance;
+      state.history.unshift(ticket);
+      state.slip = [];
+      renderBalance();
+      renderSlip();
+      renderBoard();
+      renderCarousel();
+      if (state.detailFixtureId) renderMatchDetail();
+      toast(`Bet placed — ${ticket.id}`, "ok");
+      setTimeout(() => settleTicketRemote(ticket), 3000 + Math.random() * 4000);
+    } catch (err) {
+      toast(err.message || "Could not place bet", "err");
+    }
     return;
   }
 
@@ -1344,7 +1512,7 @@ function placeBet() {
   if (state.detailFixtureId) renderMatchDetail();
   toast(`Bet placed — ${id}`, "ok");
 
-  setTimeout(() => settleTicket(ticket), 3000 + Math.random() * 4000);
+  setTimeout(() => settleTicketLocal(ticket), 3000 + Math.random() * 4000);
 }
 
 function updateCountdowns() {
@@ -1613,10 +1781,57 @@ function bindEvents() {
   });
 
   $("btn-join").addEventListener("click", () => {
-    state.balance += 1000;
-    save();
-    renderBalance();
-    toast("+1,000 FUN added", "ok");
+    if (!useApi()) {
+      state.balance += 1000;
+      save();
+      renderBalance();
+      toast(`+1,000 ${CURRENCY} demo added`, "ok");
+      return;
+    }
+    if (state.sessionUser) {
+      api().clearSession();
+      state.sessionUser = null;
+      state.balance = 0;
+      state.history = [];
+      renderSession();
+      renderBalance();
+      if (state.betslipTab === "bets") renderHistory();
+      toast("Signed out", "ok");
+      return;
+    }
+    openAuthModal("login");
+  });
+
+  document.querySelectorAll(".auth-tab").forEach((btn) => {
+    btn.addEventListener("click", () => openAuthModal(btn.dataset.authTab));
+  });
+
+  $("auth-close").addEventListener("click", closeAuthModal);
+  $("auth-modal").addEventListener("click", (e) => {
+    if (e.target === $("auth-modal")) closeAuthModal();
+  });
+
+  $("auth-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!useApi()) return;
+    const email = $("auth-email").value.trim();
+    const password = $("auth-password").value;
+    const phone = $("auth-phone").value.trim();
+    try {
+      if (state.authTab === "register") {
+        const data = await api().register({ email, password, phone });
+        state.sessionUser = data.user;
+        toast(`Welcome! +${data.welcomeBonus || 0} ${CURRENCY} bonus`, "ok");
+      } else {
+        const data = await api().login({ email, password });
+        state.sessionUser = data.user;
+        toast("Signed in", "ok");
+      }
+      closeAuthModal();
+      await syncFromApi();
+    } catch (err) {
+      toast(err.message || "Authentication failed", "err");
+    }
   });
 }
 
@@ -1625,7 +1840,11 @@ function init() {
   state.fixtures = buildMockFixtures();
   state.sidebar = buildMockSidebar();
   bindEvents();
+  renderSession();
   renderAll();
+  syncFromApi().then(() => {
+    if (useApi() && !api().getToken()) openAuthModal("login");
+  });
   fetchSidebar().then(() => {
     renderSidebar();
   });
