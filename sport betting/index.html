@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#121822" />
+    <title>Hope Bet — Sportsbook</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="web-app">
+      <header class="topbar">
+        <a class="topbar-back" href="./" id="btn-back" aria-label="Home">‹</a>
+        <img
+          class="topbar-logo"
+          id="brand-logo"
+          src="assets/hope-bet-logo.png"
+          alt="Hope Bet"
+        />
+        <div class="topbar-actions">
+          <div class="balance-pill">
+            <strong id="balance">10000.00</strong>
+            <span>FUN</span>
+          </div>
+          <button type="button" class="btn-join" id="btn-join">+ Join</button>
+        </div>
+      </header>
+
+      <div class="web-body">
+        <aside class="sidebar" id="sidebar">
+          <div class="sidebar-block">
+            <div class="sidebar-title">
+              <span>TOP LEAGUES</span>
+              <em id="top-league-count">0</em>
+            </div>
+            <div class="sidebar-list" id="sidebar-leagues"></div>
+          </div>
+          <div class="sidebar-block">
+            <div class="sidebar-title">
+              <span>COUNTRIES</span>
+              <em id="country-count">0</em>
+            </div>
+            <div class="sidebar-list" id="sidebar-countries"></div>
+          </div>
+        </aside>
+
+        <main class="content">
+          <section class="content-view is-active" id="view-sports" data-view="sports">
+            <div class="section-head">
+              <h2>POPULAR MATCHES</h2>
+            </div>
+            <div class="popular-row" id="popular-carousel"></div>
+
+            <div class="filter-bar">
+              <div class="league-filter-bar" id="league-filter-bar"></div>
+              <div class="filter-chips filter-chips--time" id="time-filters"></div>
+            </div>
+            <div class="league-dropdown-backdrop" id="league-dropdown-backdrop" hidden></div>
+
+            <div class="board-head">
+              <h3 id="board-title">All Leagues</h3>
+              <div class="board-markets">
+                <span>1X2</span>
+                <span>Double Chance</span>
+                <span>O/U 2.5</span>
+              </div>
+            </div>
+
+            <div class="board-wrap">
+              <div class="board-loading" id="board-loading" hidden>Loading fixtures…</div>
+              <div class="match-board" id="match-board"></div>
+            </div>
+          </section>
+
+          <section class="content-view" id="view-match" data-view="match" hidden>
+            <button type="button" class="match-back" id="match-back">‹ Back to matches</button>
+            <div class="md-hero" id="match-hero"></div>
+            <div class="md-tabs" id="market-tabs"></div>
+            <div class="md-search">
+              <span class="md-search-icon" aria-hidden="true">⌕</span>
+              <input type="search" id="market-search" placeholder="Search..." autocomplete="off" />
+            </div>
+            <div class="md-loading" id="match-loading" hidden>Loading markets…</div>
+            <div class="md-markets" id="match-markets"></div>
+          </section>
+        </main>
+
+        <aside class="betslip-panel" id="betslip-panel">
+          <div class="betslip-tabs">
+            <button type="button" class="betslip-tab is-on" data-btab="slip">
+              Bet Slip <em id="slip-tab-count">(0)</em>
+            </button>
+            <button type="button" class="betslip-tab" data-btab="bets">My Bets</button>
+          </div>
+
+          <div class="betslip-panel-slip" id="panel-slip">
+            <div class="betslip-mode">
+              <button type="button" class="betslip-mode-btn is-on" data-mode="multiple">Multiple</button>
+              <button type="button" class="betslip-mode-btn" data-mode="single">Single</button>
+            </div>
+
+            <div class="betslip-empty" id="slip-empty">
+              <div class="betslip-empty-icon">🎫</div>
+              <strong>Betslip is empty</strong>
+              <p>Add selections to start betting</p>
+            </div>
+
+            <div class="betslip-list" id="slip-list"></div>
+
+            <div class="betslip-foot" id="slip-foot" hidden>
+              <div class="stake-row">
+                <label for="stake-input">Stake</label>
+                <div class="stake-input-wrap">
+                  <input type="number" id="stake-input" min="20" step="1" value="20" />
+                  <span>FUN</span>
+                </div>
+              </div>
+              <div class="quick-stakes" id="quick-stakes"></div>
+              <div class="slip-summary">
+                <div><span>Total odds</span><strong id="total-odds">0.00</strong></div>
+                <div><span>Potential win</span><strong id="potential-win">0.00</strong></div>
+              </div>
+              <button type="button" class="btn-place" id="btn-place">Place Bet</button>
+              <button type="button" class="btn-clear" id="btn-clear-slip">Clear all</button>
+            </div>
+          </div>
+
+          <div class="betslip-panel-bets" id="panel-bets" hidden>
+            <div class="bet-history" id="bet-history"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" hidden></div>
+    <script src="game.js"></script>
+  </body>
+</html>
