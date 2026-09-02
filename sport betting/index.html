@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="hope-bet-api" content="https://https://betting-ed.onrender.com" />
+    <meta name="hope-bet-api" content="https://betting-ed.onrender.com" />
     <title>Hope Bet — Sportsbook</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -25,10 +25,11 @@
         />
         <div class="topbar-actions">
           <div class="balance-pill">
-            <strong id="balance">10000.00</strong>
-            <span>FUN</span>
+            <strong id="balance">0.00</strong>
+            <span id="currency-label">ETB</span>
           </div>
-          <button type="button" class="btn-join" id="btn-join">+ Join</button>
+          <span class="user-pill" id="user-pill" hidden></span>
+          <button type="button" class="btn-join" id="btn-join">Sign In</button>
         </div>
       </header>
 
@@ -118,7 +119,7 @@
                 <label for="stake-input">Stake</label>
                 <div class="stake-input-wrap">
                   <input type="number" id="stake-input" min="20" step="1" value="20" />
-                  <span>FUN</span>
+                  <span id="stake-currency">ETB</span>
                 </div>
               </div>
               <div class="quick-stakes" id="quick-stakes"></div>
@@ -139,6 +140,37 @@
     </div>
 
     <div class="toast" id="toast" hidden></div>
+
+    <div class="auth-modal" id="auth-modal" hidden>
+      <div class="auth-card">
+        <button type="button" class="auth-close" id="auth-close" aria-label="Close">×</button>
+        <h2 id="auth-title">Sign in to Hope Bet</h2>
+        <p class="auth-sub">Real wallet · ETB balance · Secure bets</p>
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab is-on" data-auth-tab="login">Sign In</button>
+          <button type="button" class="auth-tab" data-auth-tab="register">Register</button>
+        </div>
+        <form id="auth-form" class="auth-form">
+          <label>
+            Email
+            <input type="email" id="auth-email" required autocomplete="email" />
+          </label>
+          <label id="auth-phone-wrap" hidden>
+            Phone (optional)
+            <input type="tel" id="auth-phone" autocomplete="tel" />
+          </label>
+          <label>
+            Password
+            <input type="password" id="auth-password" required minlength="6" autocomplete="current-password" />
+          </label>
+          <button type="submit" class="auth-submit" id="auth-submit">Sign In</button>
+        </form>
+        <p class="auth-note">New accounts receive a welcome bonus (demo ETB).</p>
+      </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="api-client.js"></script>
     <script src="game.js"></script>
   </body>
 </html>
