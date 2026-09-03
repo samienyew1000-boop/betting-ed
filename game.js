@@ -22,6 +22,47 @@ const LEAGUE_FILTERS = [
   { id: 88, label: "Eredivisie", logo: "https://media.api-sports.io/football/leagues/88.png" },
 ];
 
+const FOOTBALL_REGION_PRIORITY = ["England", "Europe", "Germany", "Italy", "Spain", "World", "Portugal", "Netherlands", "Belgium", "Turkey"];
+
+const FOOTBALL_STATIC_LEAGUES = {
+  England: [
+    { id: 39, name: "Premier League" },
+    { id: 40, name: "Championship" },
+    { id: 41, name: "League One" },
+    { id: 42, name: "League Two" },
+    { id: 43, name: "National League" },
+    { id: 45, name: "FA Cup" },
+    { id: 48, name: "EFL Cup" },
+    { id: 528, name: "Community Shield" },
+    { id: 699, name: "Women's Super League" },
+  ],
+  Europe: [
+    { id: 2, name: "UEFA Champions League" },
+    { id: 3, name: "UEFA Europa League" },
+    { id: 848, name: "UEFA Europa Conference League" },
+    { id: 5, name: "UEFA Nations League" },
+    { id: 1, name: "World Cup" },
+  ],
+  Germany: [
+    { id: 78, name: "Bundesliga" },
+    { id: 79, name: "2. Bundesliga" },
+    { id: 81, name: "DFB Pokal" },
+    { id: 529, name: "Super Cup" },
+  ],
+  Italy: [
+    { id: 135, name: "Serie A" },
+    { id: 136, name: "Serie B" },
+    { id: 137, name: "Coppa Italia" },
+    { id: 547, name: "Super Cup" },
+  ],
+  Spain: [
+    { id: 140, name: "La Liga" },
+    { id: 141, name: "Segunda Division" },
+    { id: 143, name: "Copa del Rey" },
+    { id: 556, name: "Super Cup" },
+  ],
+};
+
 const SPORTS_MENU = [
   { id: "football", name: "Football", icon: "⚽" },
   { id: "basketball", name: "Basketball", icon: "🏀" },
@@ -53,12 +94,25 @@ const TIME_FILTERS = [
 
 const MARKET_TABS = [
   { id: "all", label: "All" },
+  { id: "betbuilder", label: "Betbuilder", icon: "⚙" },
   { id: "main", label: "Main" },
   { id: "goals", label: "Goals" },
   { id: "handicap", label: "Handicap" },
+  { id: "half1", label: "1st Half" },
+  { id: "half2", label: "2nd Half" },
+  { id: "htft", label: "Half Time/ Full Time" },
   { id: "score", label: "Correct Score" },
-  { id: "half", label: "Half" },
-  { id: "other", label: "Other" },
+  { id: "combo", label: "Combo" },
+  { id: "chance", label: "Chance Mix" },
+  { id: "home", label: "Home" },
+  { id: "away", label: "Away" },
+  { id: "scorers", label: "Goalscorers" },
+  { id: "asian", label: "Asian Markets" },
+  { id: "corners", label: "Corners" },
+  { id: "cards", label: "Cards" },
+  { id: "minutes", label: "Minutes" },
+  { id: "specials", label: "Football Specials" },
+  { id: "players", label: "Players" },
 ];
 
 const TOP_LEAGUE_IDS = new Set([39, 140, 61, 88, 78, 135, 40]);
@@ -95,6 +149,15 @@ const state = {
   balanceHidden: false,
   eventSearch: "",
   sportFilter: "football",
+  sportsMenuMode: false,
+  expandedFootballRegions: new Set(["England", "Europe", "Germany", "Italy"]),
+  checkedLeagueIds: new Set(),
+  leaguePageIds: [],
+  footballFiltersOpen: false,
+  subNav: "sports",
+  myBetsStatus: "in-course",
+  myBetsTime: "today",
+  myBetsSearch: "",
 };
 
 function load() {
@@ -134,6 +197,7 @@ function fmt(n, d = 2) {
 
 function toast(msg, kind) {
   const el = $("toast");
+  if (!el) return;
   el.textContent = msg;
   el.className = "toast" + (kind ? " is-" + kind : "");
   el.hidden = false;
@@ -141,6 +205,130 @@ function toast(msg, kind) {
   toast._t = setTimeout(() => {
     el.hidden = true;
   }, 2400);
+}
+
+function showBootError(err) {
+  const el = $("boot-error");
+  const message = err?.message || String(err || "Unknown error");
+  console.error(err);
+  if (el) {
+    el.textContent = `Hope Bet could not start: ${message}`;
+    el.hidden = false;
+  }
+}
+
+function getSidebarData() {
+  if (state.sidebar?.topLeagues?.length) return state.sidebar;
+  const mock = buildMockSidebar();
+  state.sidebar = mock;
+  return mock;
+}
+
+function on(el, event, handler) {
+  if (!el) return;
+  el.addEventListener(event, handler);
+}
+
+function isMobileLayout() {
+  return window.matchMedia("(max-width: 980px)").matches;
+}
+
+function closeMobileDrawers() {
+  document.body.classList.remove("menu-open", "betslip-open", "account-open");
+  const backdrop = $("mobile-drawer-backdrop");
+  if (backdrop) backdrop.hidden = true;
+}
+
+function openMobileMenu() {
+  document.body.classList.add("menu-open");
+  document.body.classList.remove("betslip-open", "account-open");
+  const backdrop = $("mobile-drawer-backdrop");
+  if (backdrop) backdrop.hidden = false;
+}
+
+function openMobileBetslip() {
+  document.body.classList.add("betslip-open");
+  document.body.classList.remove("menu-open", "account-open");
+  const backdrop = $("mobile-drawer-backdrop");
+  if (backdrop) backdrop.hidden = false;
+}
+
+function openAccountDrawer() {
+  renderAccountDrawer();
+  document.body.classList.add("account-open");
+  document.body.classList.remove("menu-open", "betslip-open");
+  const backdrop = $("mobile-drawer-backdrop");
+  if (backdrop) backdrop.hidden = false;
+}
+
+function renderAccountDrawer() {
+  const guest = $("account-guest");
+  const signed = $("account-signed");
+  const nameEl = $("account-signed-name");
+  if (!guest || !signed) return;
+  const loggedIn = useApi() && state.sessionUser;
+  guest.hidden = !!loggedIn;
+  signed.hidden = !loggedIn;
+  if (loggedIn && nameEl) {
+    nameEl.textContent = state.sessionUser.displayName || state.sessionUser.email || "Account";
+  }
+}
+
+function syncMobileSlipCount() {
+  const count = state.slip.length;
+  const countEl = $("mobile-slip-count");
+  const oddsEl = $("mobile-slip-odds");
+  const fab = $("mobile-slip-fab");
+  if (countEl) countEl.textContent = String(count);
+  if (oddsEl) oddsEl.textContent = totalOdds() ? totalOdds().toFixed(2) : "0.00";
+  if (fab) fab.hidden = count === 0;
+}
+
+function renderMobileSportsStrip() {
+  const el = $("mobile-sports-strip");
+  if (!el) return;
+  const footballCount = state.fixtures.length || 0;
+  const counts = {
+    football: footballCount,
+    basketball: 50,
+    tennis: 120,
+    hockey: 45,
+    volleyball: 30,
+    rugby: 18,
+  };
+  el.innerHTML = `
+    <button type="button" class="mobile-sport-chip" data-mobile-tool="check">
+      <span class="sport-icon">🎫</span>
+      <span>Check Bet</span>
+    </button>
+    <button type="button" class="mobile-sport-chip" data-mobile-tool="search">
+      <span class="sport-icon">⌕</span>
+      <span>Search</span>
+    </button>
+    <button type="button" class="mobile-sport-chip" data-mobile-tool="inplay">
+      <span class="sport-icon">⏱</span>
+      <span>IN-PLAY</span>
+    </button>
+    ${SPORTS_MENU.map(
+      (s) => `
+      <button type="button" class="mobile-sport-chip${state.sportFilter === s.id && state.sportsMenuMode ? " is-on" : ""}" data-mobile-sport="${s.id}">
+        ${counts[s.id] ? `<em>${counts[s.id]}</em>` : ""}
+        <span class="sport-icon">${s.icon}</span>
+        <span>${s.name.split(" ")[0]}</span>
+      </button>`
+    ).join("")}`;
+}
+
+function renderMobileTimeStrip() {
+  const el = $("mobile-time-strip");
+  if (!el) return;
+  const show = isMobileLayout() && (state.sportsMenuMode || isBoardSubNav());
+  el.hidden = !show;
+  if (!show) return;
+  el.innerHTML = TIME_FILTERS_SIDEBAR.map(
+    (f) =>
+      `<button type="button" class="mobile-time-chip${state.timeFilter === f.id ? " is-on" : ""}" data-mobile-time="${f.id}">${f.label}</button>`
+  ).join("");
 }
 
 function hoursFromNow(h) {
@@ -164,6 +352,55 @@ function endOfTomorrow() {
   const d = startOfTomorrow();
   d.setHours(23, 59, 59, 999);
   return d;
+}
+
+function startOfDayOffset(daysFromToday) {
+  const d = new Date();
+  d.setDate(d.getDate() + daysFromToday);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+function endOfDayOffset(daysFromToday) {
+  const d = startOfDayOffset(daysFromToday);
+  d.setHours(23, 59, 59, 999);
+  return d;
+}
+
+function formatFootballFilterDate(daysFromToday) {
+  return startOfDayOffset(daysFromToday).toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "2-digit",
+    year: "2-digit",
+  });
+}
+
+function getFootballTimeFilterOptions() {
+  const opts = [
+    { id: "all", label: "All", hours: null },
+    { id: "3h", label: "3H", hours: 3 },
+    { id: "today", label: "Today", hours: "today" },
+    { id: "tomorrow", label: "Tomorrow", hours: "tomorrow" },
+  ];
+  for (let offset = 2; offset <= 4; offset += 1) {
+    opts.push({
+      id: `day+${offset}`,
+      label: formatFootballFilterDate(offset),
+      hours: "date",
+      dateStart: startOfDayOffset(offset).getTime(),
+      dateEnd: endOfDayOffset(offset).getTime(),
+    });
+  }
+  return opts;
+}
+
+function getTimeFilterDef(id) {
+  return (
+    getFootballTimeFilterOptions().find((t) => t.id === id) ||
+    TIME_FILTERS.find((t) => t.id === id) ||
+    TIME_FILTERS_SIDEBAR.find((t) => t.id === id)
+  );
 }
 
 function buildMockFixtures() {
@@ -264,12 +501,30 @@ function buildMockFixtures() {
       away: { id: 543, name: "Real Betis", logo: "https://media.api-sports.io/football/teams/543.png" },
       odds: { home: "2.55", draw: "3.15", away: "2.85", doubleChance: { homeDraw: "1.40", homeAway: "1.34", drawAway: "1.50" }, totals: { over25: "1.90", under25: "1.90" } },
     },
+    {
+      fixtureId: 1013,
+      hours: -0.5,
+      live: true,
+      league: { id: 39, name: "Premier League", country: "England", logo: "https://media.api-sports.io/football/leagues/39.png", flag: "https://media.api-sports.io/flags/gb-eng.svg" },
+      home: { id: 34, name: "Newcastle", logo: "https://media.api-sports.io/football/teams/34.png" },
+      away: { id: 66, name: "Aston Villa", logo: "https://media.api-sports.io/football/teams/66.png" },
+      odds: { home: "2.10", draw: "3.40", away: "3.30", doubleChance: { homeDraw: "1.32", homeAway: "1.30", drawAway: "1.68" }, totals: { over25: "1.88", under25: "1.92" } },
+    },
+    {
+      fixtureId: 1014,
+      hours: -1.2,
+      live: true,
+      league: { id: 78, name: "Bundesliga", country: "Germany", logo: "https://media.api-sports.io/football/leagues/78.png", flag: "https://media.api-sports.io/flags/de.svg" },
+      home: { id: 161, name: "Wolfsburg", logo: "https://media.api-sports.io/football/teams/161.png" },
+      away: { id: 162, name: "Werder Bremen", logo: "https://media.api-sports.io/football/teams/162.png" },
+      odds: { home: "2.35", draw: "3.30", away: "2.95", doubleChance: { homeDraw: "1.38", homeAway: "1.32", drawAway: "1.58" }, totals: { over25: "1.72", under25: "2.08" } },
+    },
   ];
 
   return base.map((m) => ({
     fixtureId: m.fixtureId,
     date: hoursFromNow(m.hours).toISOString(),
-    status: "NS",
+    status: m.live ? "LIVE" : "NS",
     league: m.league,
     home: m.home,
     away: m.away,
@@ -299,48 +554,11 @@ function buildMockSidebar() {
   return { topLeagues: leagues, countries };
 }
 
-async function fetchCountryLeagues(countryName) {
-  if (state.countryLeagues[countryName]) return state.countryLeagues[countryName];
-
-  try {
-    const res = await fetch(
-      useApi()
-        ? `${api().apiUrl()}/api/odds/countries/${encodeURIComponent(countryName)}/leagues`
-        : `${API_BASE}/football/countries/${encodeURIComponent(countryName)}/leagues?view=prematch&bookmaker=${BOOKMAKER}`
-    );
-    if (res.ok) {
-      const data = await res.json();
-      if (data.ok && Array.isArray(data.leagues)) {
-        const leagues = data.leagues.map((l) => ({
-          id: l.id,
-          name: l.name,
-          logo: l.logo,
-          count: l.fixtureCount || 0,
-        }));
-        state.countryLeagues[countryName] = leagues;
-        return leagues;
-      }
-    }
-  } catch (_) {}
-
-  const leagues = [
-    ...new Map(
-      state.fixtures
-        .filter((f) => f.league.country === countryName)
-        .map((f) => [f.league.id, { id: f.league.id, name: f.league.name, logo: f.league.logo, count: 0 }])
-    ).values(),
-  ];
-  leagues.forEach((l) => {
-    l.count = state.fixtures.filter((f) => f.league.id === l.id).length;
-  });
-  state.countryLeagues[countryName] = leagues;
-  return leagues;
-}
-
 function closeLeagueDropdown() {
   state.leagueDropdown = null;
   state.leagueDropdownSearch = "";
-  $("league-dropdown-backdrop").hidden = true;
+  const backdrop = $("league-dropdown-backdrop");
+  if (backdrop) backdrop.hidden = true;
 }
 
 function openLeagueDropdown(kind) {
@@ -362,34 +580,7 @@ async function toggleSidebarCountry(countryName) {
   closeLeagueDropdown();
   renderSidebar();
   renderFilters();
-  renderCarousel();
-  renderBoard();
-}
-
-function selectLeague(leagueId) {
-  state.leagueFilter = leagueId;
-  state.countryFilter = null;
-  closeLeagueDropdown();
-  renderSidebar();
-  renderFilters();
-  renderCarousel();
-  renderBoard();
-}
-
-function selectCountryFromDropdown(countryName) {
-  state.countryFilter = countryName;
-  state.leagueFilter = "all";
-  closeLeagueDropdown();
-  if (!state.expandedSidebarCountries.has(countryName)) {
-    state.expandedSidebarCountries.add(countryName);
-    fetchCountryLeagues(countryName).then(() => {
-      renderSidebar();
-    });
-  }
-  renderSidebar();
-  renderFilters();
-  renderCarousel();
-  renderBoard();
+  refreshHomeAndBoard();
 }
 
 function normalizeApiFixture(row) {
@@ -436,71 +627,124 @@ function normalizeApiFixture(row) {
   };
 }
 
+async function fetchJson(url, timeoutMs = 25000) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { signal: ctrl.signal });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (_) {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function extractFixtureRows(data) {
+  if (!data || data.ok === false) return [];
+  if (Array.isArray(data.fixtures) && data.fixtures.length) return data.fixtures;
+  if (data.leagueBoards) {
+    const rows = [];
+    for (const board of Object.values(data.leagueBoards)) {
+      if (Array.isArray(board.fixtures)) rows.push(...board.fixtures);
+    }
+    return rows;
+  }
+  return [];
+}
+
 async function fetchLiveFixtures() {
   const topLeagues = "39-140-61-88-78-135-40";
-  const urls = useApi()
-    ? [
-        `${api().apiUrl()}/api/odds/fixtures/upcoming`,
-        `${api().apiUrl()}/api/odds/fixtures/prematch?leagues=${topLeagues}`,
-      ]
-    : [
-        `${API_BASE}/football/board/upcoming?bookmaker=${BOOKMAKER}`,
-        `${API_BASE}/football/board/prematch?bookmaker=${BOOKMAKER}&leagues=${topLeagues}`,
-      ];
+  const urls = [];
+
+  // Prefer top-league prematch for the home board, then full upcoming.
+  if (useApi()) {
+    const base = api().apiUrl();
+    urls.push(
+      `${base}/api/odds/fixtures/prematch?leagues=${topLeagues}`,
+      `${base}/api/odds/fixtures/upcoming`
+    );
+  }
+
+  // Public sportsbook feed fallback (same fixture shape).
+  urls.push(
+    `${API_BASE}/football/board/prematch?bookmaker=${BOOKMAKER}&leagues=${topLeagues}`,
+    `${API_BASE}/football/board/upcoming?bookmaker=${BOOKMAKER}`
+  );
 
   for (const url of urls) {
-    try {
-      const res = await fetch(url);
-      if (!res.ok) continue;
-      const data = await res.json();
-      if (!data.ok) continue;
-
-      let rows = [];
-      if (Array.isArray(data.fixtures)) rows = data.fixtures;
-      else if (data.leagueBoards) {
-        for (const board of Object.values(data.leagueBoards)) {
-          if (Array.isArray(board.fixtures)) rows.push(...board.fixtures);
-        }
-      }
-
-      if (rows.length) {
-        state.liveSource = true;
-        return rows.map(normalizeApiFixture);
-      }
-    } catch (_) {}
+    const data = await fetchJson(url);
+    const rows = extractFixtureRows(data);
+    if (!rows.length) continue;
+    const normalized = rows.map(normalizeApiFixture).filter((f) => f.fixtureId && f.home?.name && f.away?.name);
+    if (normalized.length) {
+      state.liveSource = true;
+      return normalized;
+    }
   }
   return null;
 }
 
-async function fetchSidebar() {
-  try {
-    const res = await fetch(
-      useApi()
-        ? `${api().apiUrl()}/api/odds/sidebar`
-        : `${API_BASE}/football/sidebar/summary?view=prematch&bookmaker=${BOOKMAKER}`
-    );
-    if (!res.ok) return;
-    const data = await res.json();
-    if (!data.ok) return;
+async function loadFixtures() {
+  const loading = $("board-loading");
+  if (loading) loading.hidden = false;
+  const mockFixtures = buildMockFixtures();
+  let live = null;
 
-    const topLeagues = (data.topLeagues || data.leagues || []).map((l) => ({
-      id: l.id || l.leagueId,
-      name: l.name || l.leagueName,
-      logo: l.logo || l.leagueLogo,
-      count: l.fixtureCount || l.count || l.fixtures || 0,
-    }));
-
-    const countries = (data.countries || []).map((c) => ({
-      name: c.name || c.country,
-      flag: c.flag,
-      count: c.leagueCount || c.count || 0,
-      fixtureCount: c.fixtureCount || c.fixtures || 0,
-    }));
-
-    if (topLeagues.length || countries.length) {
-      state.sidebar = { topLeagues, countries };
+  if (window.location.protocol !== "file:") {
+    live = await fetchLiveFixtures();
+    if (live && live.length) {
+      state.fixtures = live;
+      state.liveSource = true;
     }
-  } catch (_) {}
+  }
+
+  if (!state.fixtures.length) state.fixtures = mockFixtures;
+  if (!state.liveSource && window.location.protocol !== "file:") {
+    toast("Live matches unavailable — showing demo fixtures", "err");
+  }
+
+  if (loading) loading.hidden = true;
+  renderSportsSidebar();
+  renderTopLeaguesGrid();
+  updateSportsMenuUI();
+  if (isSportsHomeSubNav()) renderCarousel();
+  if (isBoardSubNav()) renderBoard();
+  renderSidebar();
+  if ($("view-leagues") && !$("view-leagues").hidden) renderLeaguePage();
+}
+
+async function fetchSidebar() {
+  const urls = [];
+  if (useApi()) urls.push(`${api().apiUrl()}/api/odds/sidebar`);
+  urls.push(`${API_BASE}/football/sidebar/summary?view=prematch&bookmaker=${BOOKMAKER}`);
+
+  for (const url of urls) {
+    try {
+      const data = await fetchJson(url);
+      if (!data || !data.ok) continue;
+
+      const topLeagues = (data.topLeagues || data.leagues || []).map((l) => ({
+        id: l.id || l.leagueId,
+        name: l.name || l.leagueName,
+        logo: l.logo || l.leagueLogo,
+        count: l.fixtureCount || l.count || l.fixtures || 0,
+      }));
+
+      const countries = (data.countries || []).map((c) => ({
+        name: c.name || c.country,
+        flag: c.flag,
+        count: c.leagueCount || c.count || 0,
+        fixtureCount: c.fixtureCount || c.fixtures || 0,
+      }));
+
+      if (topLeagues.length || countries.length) {
+        state.sidebar = { topLeagues, countries };
+        return;
+      }
+    } catch (_) {}
+  }
 }
 
 async function fetchCountryLeagues(countryName) {
@@ -549,21 +793,54 @@ function buildCountryLeaguesFromFixtures(countryName) {
   return [...map.values()];
 }
 
-async function loadFixtures() {
-  $("board-loading").hidden = false;
-  try {
-    const live = await fetchLiveFixtures();
-    if (live && live.length) {
-      state.fixtures = live;
-      state.liveSource = true;
-    }
-  } catch (_) {}
-  $("board-loading").hidden = true;
-  renderSportsSidebar();
-  renderTopLeaguesGrid();
-  renderCarousel();
-  renderBoard();
-  renderSidebar();
+function buildMockComboMarkets(fixture) {
+  const h = parseFloat(fixture.odds?.home) || 2.45;
+  const d = parseFloat(fixture.odds?.draw) || 3.4;
+  const a = parseFloat(fixture.odds?.away) || 2.8;
+
+  return [
+    {
+      id: 201,
+      category: "combo",
+      name: "Results/Both Teams Score",
+      values: [
+        { value: "Home/Yes", odd: (h * 1.63).toFixed(2), handicap: null },
+        { value: "Draw/Yes", odd: (d * 1.32).toFixed(2), handicap: null },
+        { value: "Away/Yes", odd: (a * 2.5).toFixed(2), handicap: null },
+        { value: "Home/No", odd: (h * 1.43).toFixed(2), handicap: null },
+        { value: "Draw/No", odd: (d * 3.44).toFixed(2), handicap: null },
+        { value: "Away/No", odd: (a * 2.32).toFixed(2), handicap: null },
+      ],
+    },
+    {
+      id: 202,
+      category: "combo",
+      name: "Result/Total Goals",
+      values: [
+        { value: "Home/Over 2.5", odd: (h * 1.27).toFixed(2), handicap: null },
+        { value: "Draw/Over 2.5", odd: "12.00", handicap: null },
+        { value: "Away/Over 2.5", odd: (a * 2.32).toFixed(2), handicap: null },
+        { value: "Home/Under 2.5", odd: (h * 1.84).toFixed(2), handicap: null },
+        { value: "Draw/Under 2.5", odd: (d * 1.32).toFixed(2), handicap: null },
+        { value: "Away/Under 2.5", odd: (a * 2.86).toFixed(2), handicap: null },
+      ],
+    },
+    {
+      id: 203,
+      category: "combo",
+      name: "Goals Over/Under - Second Half",
+      values: [
+        { value: "Over 1.5", odd: "2.10", handicap: null },
+        { value: "Under 1.5", odd: "1.67", handicap: null },
+        { value: "Over 2.5", odd: "4.50", handicap: null },
+        { value: "Under 2.5", odd: "1.18", handicap: null },
+        { value: "Over 3.5", odd: "11.00", handicap: null },
+        { value: "Under 3.5", odd: "1.05", handicap: null },
+        { value: "Over 0.5", odd: "1.22", handicap: null },
+        { value: "Under 0.5", odd: "4.00", handicap: null },
+      ],
+    },
+  ];
 }
 
 function buildMockMarkets(fixture) {
@@ -577,11 +854,44 @@ function buildMockMarkets(fixture) {
   return [
     {
       id: 1,
-      name: "Match Winner",
+      name: "Match Result",
       values: [
         { value: "Home", odd: h.toFixed(2), handicap: null },
         { value: "Draw", odd: d.toFixed(2), handicap: null },
         { value: "Away", odd: a.toFixed(2), handicap: null },
+      ],
+    },
+    {
+      id: 12,
+      name: "Double Chance",
+      values: [
+        { value: "Home/Draw", odd: String(dc.homeDraw || "1.30"), handicap: null },
+        { value: "Home/Away", odd: String(dc.homeAway || "1.28"), handicap: null },
+        { value: "Draw/Away", odd: String(dc.drawAway || "1.55"), handicap: null },
+      ],
+    },
+    {
+      id: 10,
+      name: "Both Teams To Score",
+      values: [
+        { value: "Yes", odd: "1.55", handicap: null },
+        { value: "No", odd: "2.30", handicap: null },
+      ],
+    },
+    {
+      id: 11,
+      name: "Draw No Bet",
+      values: [
+        { value: "Home", odd: (h * 1.62).toFixed(2), handicap: null },
+        { value: "Away", odd: (a * 0.78).toFixed(2), handicap: null },
+      ],
+    },
+    {
+      id: 14,
+      name: "Match Score Draw",
+      values: [
+        { value: "Yes", odd: d.toFixed(2), handicap: null },
+        { value: "No", odd: Math.max(1.05, Number((1.12 / Math.max(0.2, 1 - 1 / Math.max(d, 1.05))).toFixed(2))).toFixed(2), handicap: null },
       ],
     },
     {
@@ -606,21 +916,12 @@ function buildMockMarkets(fixture) {
     },
     {
       id: 8,
-      name: "Exact Score",
+      name: "Correct Score",
       values: [
         { value: "1:0", odd: "7.50", handicap: null },
         { value: "2:1", odd: "8.50", handicap: null },
         { value: "1:1", odd: "6.50", handicap: null },
         { value: "0:1", odd: "9.50", handicap: null },
-      ],
-    },
-    {
-      id: 12,
-      name: "Double Chance",
-      values: [
-        { value: "Home/Draw", odd: String(dc.homeDraw || "1.30"), handicap: null },
-        { value: "Home/Away", odd: String(dc.homeAway || "1.28"), handicap: null },
-        { value: "Draw/Away", odd: String(dc.drawAway || "1.55"), handicap: null },
       ],
     },
     {
@@ -632,11 +933,20 @@ function buildMockMarkets(fixture) {
         { value: "Away", odd: (a * 1.35).toFixed(2), handicap: null },
       ],
     },
+    ...buildMockComboMarkets(fixture),
   ];
 }
 
 async function fetchFixtureMarkets(fixtureId) {
-  if (state.fixtureMarkets[fixtureId]) return state.fixtureMarkets[fixtureId];
+  const fixture = state.fixtures.find((f) => f.fixtureId === fixtureId) || { odds: {} };
+  const combo = buildMockComboMarkets(fixture);
+
+  if (state.fixtureMarkets[fixtureId]) {
+    const existing = state.fixtureMarkets[fixtureId];
+    const missing = combo.filter((c) => !existing.some((m) => m.id === c.id || m.name === c.name));
+    if (missing.length) state.fixtureMarkets[fixtureId] = [...existing, ...missing];
+    return state.fixtureMarkets[fixtureId];
+  }
 
   try {
     const res = await fetch(
@@ -647,14 +957,17 @@ async function fetchFixtureMarkets(fixtureId) {
     if (res.ok) {
       const data = await res.json();
       if (data.ok && Array.isArray(data.markets) && data.markets.length) {
-        state.fixtureMarkets[fixtureId] = data.markets;
-        return data.markets;
+        const merged = [
+          ...data.markets,
+          ...combo.filter((c) => !data.markets.some((m) => m.name === c.name)),
+        ];
+        state.fixtureMarkets[fixtureId] = merged;
+        return merged;
       }
     }
   } catch (_) {}
 
-  const fixture = state.fixtures.find((f) => f.fixtureId === fixtureId);
-  const markets = fixture?.markets?.length > 3 ? fixture.markets : buildMockMarkets(fixture || { odds: {} });
+  const markets = fixture?.markets?.length > 3 ? fixture.markets : buildMockMarkets(fixture);
   state.fixtureMarkets[fixtureId] = markets;
   return markets;
 }
@@ -680,27 +993,62 @@ function formatMarketLabel(value, fixture) {
   if (value === "Home") return "Home";
   if (value === "Away") return "Away";
   if (value === "Draw") return "Draw";
+  if (value === "Yes") return "Yes";
+  if (value === "No") return "No";
   if (value === "Home/Draw") return "Home or Draw";
   if (value === "Home/Away") return "Home or Away";
   if (value === "Draw/Away") return "Draw or Away";
   return value;
 }
 
+function getMarketCategory(market) {
+  if (market.category) return market.category;
+  return marketCategory(market.name);
+}
+
 function marketCategory(name) {
   const n = name.toLowerCase();
+  if (n.includes("results/") || n.includes("result/total")) return "combo";
+  if (n.includes("asian")) return "asian";
+  if (n.includes("corner")) return "corners";
+  if (n.includes("card")) return "cards";
+  if (n.includes("goalscorer") || n.includes("scorer")) return "scorers";
+  if (n.includes("player")) return "players";
+  if (n.includes("minute")) return "minutes";
+  if (n.includes("special")) return "specials";
+  if (n.includes("combo")) return "combo";
+  if (n.includes("chance mix")) return "chance";
   if (n.includes("handicap") || n.includes("goal line")) return "handicap";
-  if (n.includes("score") || n.includes("exact")) return "score";
-  if (n.includes("first half") || n.includes("ht/ft") || n.includes("1st half") || n.includes("second half")) return "half";
+  if (n.includes("correct score") || n.includes("exact score")) return "score";
+  if (n.includes("first half") || n.includes("1st half")) return "half1";
+  if (n.includes("second half") || n.includes("2nd half")) return "half2";
+  if (n.includes("ht/ft") || n.includes("half time/full")) return "htft";
   if (n.includes("over") || n.includes("under") || n.includes("goals") || n.includes("total") || n.includes("odd/even")) return "goals";
+  if (n.includes("home") && !n.includes("away") && !n.includes("draw")) return "home";
+  if (n.includes("away") && !n.includes("home")) return "away";
   if (
+    n.includes("result") ||
     n.includes("winner") ||
     n.includes("double chance") ||
     n.includes("both teams") ||
     n.includes("draw no bet") ||
-    n.includes("home/away")
+    n.includes("score draw")
   )
     return "main";
-  return "other";
+  return "specials";
+}
+
+function matchBreadcrumb(fixture) {
+  return `Football ${fixture.league.country} - ${fixture.league.name} / ${fixture.home.name} vs ${fixture.away.name}`;
+}
+
+function renderMarketTabs() {
+  const el = $("market-tabs");
+  if (!el) return;
+  el.innerHTML = MARKET_TABS.map((t) => {
+    const icon = t.icon ? `<span class="md-tab-icon" aria-hidden="true">${t.icon}</span>` : "";
+    return `<button type="button" class="md-tab${state.marketTab === t.id ? " is-on" : ""}" data-mtab="${t.id}">${icon}<span>${t.label}</span></button>`;
+  }).join("");
 }
 
 function formatKickoff(iso) {
@@ -726,8 +1074,198 @@ function formatCountdown(iso) {
   return [h, m, s].map((v) => String(v).padStart(2, "0")).join(":");
 }
 
+function isLiveFixture(fixture) {
+  if (!fixture) return false;
+  if (fixture.status === "LIVE" || fixture.status === "1H" || fixture.status === "2H") return true;
+  const kick = new Date(fixture.date).getTime();
+  const now = Date.now();
+  return kick <= now && kick >= now - 2 * 3600000;
+}
+
+function isBoardSubNav() {
+  return ["daily", "upcoming", "inplay"].includes(state.subNav);
+}
+
+function isSportsHomeSubNav() {
+  return state.subNav === "sports" && !state.sportsMenuMode;
+}
+
+function leagueIdInTopSet(leagueId) {
+  return TOP_LEAGUE_IDS.has(Number(leagueId));
+}
+
+function updateSubNavHighlight() {
+  document.querySelectorAll(".sub-nav-item").forEach((btn) => {
+    btn.classList.toggle("is-on", btn.dataset.subnav === state.subNav);
+  });
+  updateMainNavHighlight();
+}
+
+function updateMainNavHighlight() {
+  let active = "sport";
+  if (state.subNav === "upcoming") active = "upcoming";
+  document.querySelectorAll(".main-nav-tab").forEach((btn) => {
+    btn.classList.toggle("is-on", btn.dataset.nav === active);
+  });
+}
+
+function refreshHomeAndBoard() {
+  if (isSportsHomeSubNav()) renderCarousel();
+  if (isBoardSubNav()) renderBoard();
+}
+
+function applySubNav(id) {
+  if (!id) return;
+
+  state.subNav = id;
+  state.leaguePageIds = [];
+  state.detailFixtureId = null;
+  updateSubNavHighlight();
+
+  if (id === "my-bets") {
+    setView("my-bets");
+    renderMyBetsPage();
+    return;
+  }
+
+  if (id === "check-bet") {
+    setView("check-bet");
+    return;
+  }
+
+  setView("sports");
+
+  if (id === "all-events") {
+    openSportsMenu("football", { fromSubNav: true });
+    return;
+  }
+
+  if (state.sportsMenuMode) {
+    state.sportsMenuMode = false;
+    state.checkedLeagueIds.clear();
+    updateOpenSelectedButton();
+  }
+
+  switch (id) {
+    case "sports":
+      state.timeFilter = "all";
+      state.leagueFilter = "top";
+      state.countryFilter = null;
+      break;
+    case "daily":
+      state.timeFilter = "today";
+      state.leagueFilter = "all";
+      state.countryFilter = null;
+      break;
+    case "upcoming":
+      state.timeFilter = "24h";
+      state.leagueFilter = "all";
+      state.countryFilter = null;
+      break;
+    case "inplay":
+      state.leagueFilter = "all";
+      state.countryFilter = null;
+      break;
+    default:
+      break;
+  }
+
+  updateSportsMenuUI();
+  renderFilters();
+  renderMobileTimeStrip();
+  refreshHomeAndBoard();
+}
+
+function ticketHasLiveSelection(ticket) {
+  return (ticket.bets || []).some((bet) => {
+    const fixture = state.fixtures.find((f) => f.fixtureId === bet.fixtureId);
+    return isLiveFixture(fixture);
+  });
+}
+
+function ticketPlacedAtMs(ticket) {
+  if (!ticket.placedAt) return Date.now();
+  return new Date(ticket.placedAt).getTime();
+}
+
+function passesMyBetsTimeFilter(ticket) {
+  const placed = ticketPlacedAtMs(ticket);
+  const now = Date.now();
+  if (state.myBetsTime === "all") return true;
+  if (state.myBetsTime === "week") return placed >= now - 7 * 24 * 3600000;
+  const start = new Date();
+  start.setHours(0, 0, 0, 0);
+  return placed >= start.getTime();
+}
+
+function passesMyBetsStatusFilter(ticket) {
+  const status = ticket.status || "open";
+  if (state.myBetsStatus === "closed") return status === "won" || status === "lost";
+  if (state.myBetsStatus === "live") return status === "open" && ticketHasLiveSelection(ticket);
+  return status === "open";
+}
+
+function filteredMyBets() {
+  const q = state.myBetsSearch.trim().toLowerCase();
+  return state.history.filter((ticket) => {
+    if (q && !String(ticket.id).toLowerCase().includes(q)) return false;
+    if (!passesMyBetsStatusFilter(ticket)) return false;
+    if (!passesMyBetsTimeFilter(ticket)) return false;
+    return true;
+  });
+}
+
+function renderMyBetsPage() {
+  const list = $("my-bets-list");
+  if (!list) return;
+
+  document.querySelectorAll("[data-mybets-status]").forEach((btn) => {
+    btn.classList.toggle("is-on", btn.dataset.mybetsStatus === state.myBetsStatus);
+  });
+  document.querySelectorAll("[data-mybets-time]").forEach((btn) => {
+    btn.classList.toggle("is-on", btn.dataset.mybetsTime === state.myBetsTime);
+  });
+
+  const search = $("my-bets-search");
+  if (search && search.value !== state.myBetsSearch) search.value = state.myBetsSearch;
+
+  const tickets = filteredMyBets();
+  if (!tickets.length) {
+    list.innerHTML = `<div class="my-bets-empty">There are no active bets this moment!</div>`;
+    return;
+  }
+
+  list.innerHTML = tickets
+    .map((t) => {
+      const picks = (t.bets || [])
+        .map((b) => {
+          const label = b.selectionName || b.value || b.selection || "Pick";
+          const odd = Number(b.odd || 0).toFixed(2);
+          return `${label} @ ${odd}`;
+        })
+        .join(" · ");
+      const placed = t.placedAt ? new Date(t.placedAt).toLocaleString() : "—";
+      const status = t.status || "open";
+      const statusLabel =
+        status === "open" && ticketHasLiveSelection(t) ? "LIVE" : status.toUpperCase();
+      return `
+      <article class="my-bets-ticket">
+        <div class="my-bets-ticket-head">
+          <span class="my-bets-ticket-id">${t.id}</span>
+          <span class="my-bets-ticket-status ${status}">${statusLabel}</span>
+        </div>
+        <div class="my-bets-ticket-picks">${picks}</div>
+        <div class="my-bets-ticket-meta">
+          <span>Stake: ${fmt(t.stake)} ${CURRENCY}</span>
+          <span>${status === "won" ? `Won: ${fmt(t.payout)} ${CURRENCY}` : status === "lost" ? "Lost" : `Placed: ${placed}`}</span>
+        </div>
+      </article>`;
+    })
+    .join("");
+}
+
 function passesTimeFilter(fixture) {
-  const tf = TIME_FILTERS.find((t) => t.id === state.timeFilter);
+  const tf = getTimeFilterDef(state.timeFilter);
   if (!tf || tf.hours === null) return true;
 
   const kick = new Date(fixture.date).getTime();
@@ -737,24 +1275,71 @@ function passesTimeFilter(fixture) {
   if (tf.hours === "tomorrow") {
     return kick >= startOfTomorrow().getTime() && kick <= endOfTomorrow().getTime();
   }
+  if (tf.hours === "date") {
+    return kick >= tf.dateStart && kick <= tf.dateEnd;
+  }
   return kick <= now + tf.hours * 3600000 && kick >= now - 3600000;
 }
 
-function filteredFixtures() {
+function footballMenuFixtures() {
+  if (!state.leaguePageIds.length) return [];
+  const ids = new Set(state.leaguePageIds);
   return state.fixtures.filter((f) => {
+    if (!ids.has(f.league.id)) return false;
     if (state.eventSearch) {
       const q = state.eventSearch.toLowerCase();
       const hay = `${f.home.name} ${f.away.name} ${f.league.name}`.toLowerCase();
       if (!hay.includes(q)) return false;
     }
-    if (state.countryFilter && f.league.country !== state.countryFilter) return false;
-    if (state.leagueFilter === "top" && !TOP_LEAGUE_IDS.has(f.league.id)) return false;
-    if (state.leagueFilter !== "all" && state.leagueFilter !== "top" && f.league.id !== state.leagueFilter) return false;
     return passesTimeFilter(f);
   });
 }
 
+function getLeagueNameById(id) {
+  for (const region of Object.values(FOOTBALL_STATIC_LEAGUES)) {
+    const hit = region.find((l) => l.id === id);
+    if (hit) return hit.name;
+  }
+  for (const leagues of Object.values(state.countryLeagues)) {
+    const hit = leagues.find((l) => l.id === id);
+    if (hit) return hit.name;
+  }
+  const fromFixture = state.fixtures.find((f) => f.league.id === id);
+  return fromFixture?.league.name || `League ${id}`;
+}
+
+function filteredFixtures() {
+  return state.fixtures.filter((f) => {
+    if (!f?.home?.name || !f?.away?.name) return false;
+    if (state.subNav === "inplay" && !isLiveFixture(f)) return false;
+    if (state.eventSearch) {
+      const q = state.eventSearch.toLowerCase();
+      const hay = `${f.home.name} ${f.away.name} ${f.league?.name || ""}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    if (state.countryFilter && f.league?.country !== state.countryFilter) return false;
+    if (state.leagueFilter === "top" && !leagueIdInTopSet(f.league?.id)) return false;
+    if (state.leagueFilter !== "all" && state.leagueFilter !== "top" && Number(f.league?.id) !== Number(state.leagueFilter)) {
+      return false;
+    }
+    if (state.subNav === "inplay") return true;
+    return passesTimeFilter(f);
+  });
+}
+
+function fixturesForCarousel() {
+  if (isSportsHomeSubNav()) {
+    return state.fixtures
+      .filter((f) => f?.home?.name && f?.away?.name && leagueIdInTopSet(f.league?.id))
+      .slice(0, 8);
+  }
+  return filteredFixtures().slice(0, 8);
+}
+
 function boardTitle() {
+  if (state.subNav === "daily") return "Daily Events";
+  if (state.subNav === "upcoming") return "Upcoming";
+  if (state.subNav === "inplay") return "In-Play Calendar";
   if (state.countryFilter) return state.countryFilter.toUpperCase();
   if (state.leagueFilter === "all") return "All Leagues";
   if (state.leagueFilter === "top") return "Top Leagues";
@@ -851,13 +1436,21 @@ function addToSlip(fixture, marketKey, selection, odd, marketLabel, pickLabel) {
   });
 }
 
+function refreshMatchViews() {
+  const leaguesView = document.querySelector('[data-view="leagues"]');
+  if (leaguesView && !leaguesView.hidden) {
+    renderLeaguePage();
+    return;
+  }
+  refreshHomeAndBoard();
+}
+
 function toggleSelection(fixture, market, selection) {
   const odd = getMarketOdds(fixture, market, selection);
   addToSlip(fixture, market, selection, odd, marketNameFor(market), selectionLabel(market, selection, fixture));
   save();
   renderSlip();
-  renderBoard();
-  renderCarousel();
+  refreshMatchViews();
   if (state.detailFixtureId) renderMatchDetail();
 }
 
@@ -867,8 +1460,7 @@ function toggleDetailSelection(fixture, market, value) {
   save();
   renderSlip();
   renderMatchDetail();
-  renderBoard();
-  renderCarousel();
+  refreshMatchViews();
 }
 
 function totalOdds() {
@@ -884,7 +1476,8 @@ function potentialWin() {
 
 function renderBalance() {
   const hidden = state.balanceHidden;
-  $("balance").textContent = hidden ? "••••" : fmt(state.balance);
+  const balance = $("balance");
+  if (balance) balance.textContent = hidden ? "••••" : fmt(state.balance);
   const cur = $("currency-label");
   const stakeCur = $("stake-currency");
   const bonus = $("bonus-balance");
@@ -907,18 +1500,20 @@ function renderSportsSidebar() {
   };
   el.innerHTML = SPORTS_MENU.map(
     (s) => `
-    <button type="button" class="sidebar-item${state.sportFilter === s.id ? " is-on" : ""}" data-sidebar-sport="${s.id}">
+    <button type="button" class="sidebar-item sidebar-item--sport${state.sportFilter === s.id && state.sportsMenuMode ? " is-on" : ""}" data-sidebar-sport="${s.id}">
       <span class="sport-icon">${s.icon}</span>
       <span>${s.name}</span>
       <em>${counts[s.id] || 0}</em>
     </button>`
   ).join("");
+  renderMobileSportsStrip();
+  renderMobileTimeStrip();
 }
 
 function renderTopLeaguesGrid() {
   const el = $("top-leagues-grid");
   if (!el) return;
-  const sidebar = state.sidebar.topLeagues.length ? state.sidebar : buildMockSidebar();
+  const sidebar = getSidebarData();
   const leagues = sidebar.topLeagues.slice(0, 12);
   if (!leagues.length) {
     el.innerHTML = "";
@@ -999,14 +1594,335 @@ function renderLastWinnings() {
     .join("");
 }
 
-function renderSidebar() {
+function updateSportsMenuUI() {
+  const sidebar = $("sidebar");
+  const home = $("sports-home-wrap");
+  const menu = $("football-menu-wrap");
+  const menuHead = $("sports-menu-head");
+  const hint = $("sidebar-search-hint");
+  const filterBar = document.querySelector(".filter-bar");
+  const boardHead = document.querySelector(".board-head");
+  const boardWrap = document.querySelector(".board-wrap");
+
+  const showHome = isSportsHomeSubNav();
+  const showBoard = !state.sportsMenuMode && isBoardSubNav();
+  const showFootballMenu = state.sportsMenuMode && state.sportFilter === "football";
+
+  if (sidebar) sidebar.classList.toggle("is-sports-menu", state.sportsMenuMode);
+  if (home) home.hidden = !showHome;
+  if (menu) menu.hidden = !showFootballMenu;
+  if (menuHead) menuHead.hidden = !state.sportsMenuMode;
+  if (hint) hint.hidden = !state.sportsMenuMode;
+
+  if (filterBar) filterBar.hidden = !showBoard;
+  if (boardHead) boardHead.hidden = !showBoard;
+  if (boardWrap) boardWrap.hidden = !showBoard;
+
+  document.body.classList.toggle("is-sports-home", showHome);
+  document.body.classList.toggle("is-events-board", showBoard);
+  renderMobileSportsStrip();
+  renderMobileTimeStrip();
+}
+
+function openSportsMenu(sportId, options = {}) {
+  if (!options.fromSubNav) state.subNav = "all-events";
+  state.sportsMenuMode = true;
+  state.sportFilter = sportId;
+  state.leaguePageIds = [];
+  updateSubNavHighlight();
+  if (sportId === "football") {
+    renderFootballRegions();
+    updateOpenSelectedButton();
+    renderFootballFilters();
+  }
+  setView("sports");
+  updateSportsMenuUI();
+  renderSportsSidebar();
+}
+
+function closeSportsMenu() {
+  state.sportsMenuMode = false;
+  state.subNav = "sports";
+  state.leagueFilter = "top";
+  state.countryFilter = null;
+  state.checkedLeagueIds.clear();
+  state.leaguePageIds = [];
+  updateOpenSelectedButton();
+  updateSubNavHighlight();
+  updateSportsMenuUI();
+  renderSportsSidebar();
+  setView("sports");
+  refreshHomeAndBoard();
+}
+
+function sortFootballRegions(countries) {
+  const names = countries.map((c) => c.name);
+  const ordered = [];
+  for (const p of FOOTBALL_REGION_PRIORITY) {
+    if (names.includes(p)) ordered.push(p);
+  }
+  for (const n of names.sort()) {
+    if (!ordered.includes(n)) ordered.push(n);
+  }
+  if (!ordered.includes("Europe") && FOOTBALL_STATIC_LEAGUES.Europe) ordered.splice(1, 0, "Europe");
+  return ordered;
+}
+
+async function renderFootballRegions() {
+  const el = $("football-regions");
+  if (!el) return;
+
   const sidebar = state.sidebar.topLeagues.length ? state.sidebar : buildMockSidebar();
-  if (!state.sidebar.topLeagues.length) state.sidebar = sidebar;
+  let regionNames = sortFootballRegions(sidebar.countries);
 
-  $("top-league-count").textContent = sidebar.topLeagues.length;
-  $("country-count").textContent = sidebar.countries.length;
+  if (!regionNames.length) {
+    regionNames = Object.keys(FOOTBALL_STATIC_LEAGUES);
+  }
 
-  $("sidebar-leagues").innerHTML = sidebar.topLeagues
+  el.innerHTML = regionNames
+    .map((name) => {
+      const country = sidebar.countries.find((c) => c.name === name);
+      const expanded = state.expandedFootballRegions.has(name);
+      return `
+      <section class="football-region${expanded ? " is-open" : ""}" data-football-region="${name.replace(/"/g, "&quot;")}">
+        <button type="button" class="football-region-head" data-toggle-football-region="${name.replace(/"/g, "&quot;")}">
+          <span class="football-region-dots">⋯</span>
+          ${country?.flag ? `<img class="flag" src="${country.flag}" alt="" loading="lazy" />` : "<span class='football-region-flag'>🏳</span>"}
+          <span class="football-region-name">${name}</span>
+          <span class="football-region-chev">${expanded ? "▼" : "▶"}</span>
+        </button>
+        <div class="football-region-body" data-region-body="${name.replace(/"/g, "&quot;")}">
+          ${expanded ? `<div class="football-region-loading">Loading leagues…</div>` : ""}
+        </div>
+      </section>`;
+    })
+    .join("");
+
+  for (const name of regionNames) {
+    if (state.expandedFootballRegions.has(name)) {
+      await renderFootballRegionLeagues(name);
+    }
+  }
+}
+
+async function renderFootballRegionLeagues(regionName) {
+  const body = document.querySelector(`[data-region-body="${regionName}"]`);
+  if (!body) return;
+
+  let leagues = FOOTBALL_STATIC_LEAGUES[regionName] || [];
+  if (!leagues.length) {
+    const fetched = await fetchCountryLeagues(regionName);
+    leagues = fetched.length ? fetched : leagues;
+  }
+
+  if (!leagues.length) {
+    body.innerHTML = `<div class="football-region-empty">No leagues available</div>`;
+    return;
+  }
+
+  body.innerHTML = `<div class="football-leagues-grid">${leagues
+    .map(
+      (l) => `
+    <div class="football-league-row${state.checkedLeagueIds.has(l.id) ? " is-marked" : ""}">
+      <label class="football-league-check" title="Mark league">
+        <input type="checkbox" data-football-league="${l.id}" ${state.checkedLeagueIds.has(l.id) ? "checked" : ""} />
+      </label>
+      <button type="button" class="football-league-link" data-open-league="${l.id}">${l.name}</button>
+    </div>`
+    )
+    .join("")}</div>`;
+}
+
+async function toggleFootballRegion(regionName) {
+  if (state.expandedFootballRegions.has(regionName)) {
+    state.expandedFootballRegions.delete(regionName);
+  } else {
+    state.expandedFootballRegions.add(regionName);
+  }
+  await renderFootballRegions();
+}
+
+function onFootballLeagueToggle(leagueId, checked) {
+  if (checked) state.checkedLeagueIds.add(leagueId);
+  else state.checkedLeagueIds.delete(leagueId);
+  syncFootballLeagueChecks();
+  updateOpenSelectedButton();
+}
+
+function updateOpenSelectedButton() {
+  const btn = $("btn-open-selected-leagues");
+  if (!btn) return;
+  const n = state.checkedLeagueIds.size;
+  btn.hidden = n === 0;
+  btn.textContent = n === 1 ? "Open selected league" : `Open selected leagues (${n})`;
+}
+
+function getFootballTimeFilterIndex() {
+  const opts = getFootballTimeFilterOptions();
+  const idx = opts.findIndex((o) => o.id === state.timeFilter);
+  return idx >= 0 ? idx : 0;
+}
+
+function setFootballTimeFilterByIndex(index) {
+  const opts = getFootballTimeFilterOptions();
+  const pick = opts[Math.max(0, Math.min(index, opts.length - 1))];
+  if (!pick) return;
+  state.timeFilter = pick.id;
+  renderFootballFilters();
+  renderFilters();
+  const leaguesView = document.querySelector('[data-view="leagues"]');
+  if (leaguesView && !leaguesView.hidden) {
+    renderLeaguePage();
+  } else if (!state.sportsMenuMode) {
+    refreshHomeAndBoard();
+  }
+}
+
+function renderFootballFilterBlock(sliderId, ticksId, labelsId) {
+  const slider = $(sliderId);
+  const ticks = $(ticksId);
+  const labels = $(labelsId);
+  if (!slider || !ticks || !labels) return;
+
+  const opts = getFootballTimeFilterOptions();
+  const active = getFootballTimeFilterIndex();
+
+  slider.min = 0;
+  slider.max = String(opts.length - 1);
+  slider.value = String(active);
+
+  ticks.innerHTML = opts.map(() => `<span class="football-time-tick" aria-hidden="true"></span>`).join("");
+  labels.innerHTML = opts
+    .map(
+      (opt, i) =>
+        `<button type="button" class="football-time-label${i === active ? " is-on" : ""}" data-football-time-index="${i}" title="${opt.label}">${opt.label}</button>`
+    )
+    .join("");
+}
+
+function renderFootballFilters() {
+  renderFootballFilterBlock("football-time-slider", "football-time-ticks", "football-time-labels");
+  renderFootballFilterBlock("league-time-slider", "league-time-ticks", "league-time-labels");
+
+  const open = state.footballFiltersOpen;
+  const onLeagues = !$("view-leagues")?.hidden;
+  const onFootballMenu = state.sportsMenuMode && state.sportFilter === "football" && !onLeagues;
+
+  const footballPanel = $("football-filters-panel");
+  const leaguePanel = $("league-filters-panel");
+  if (footballPanel) footballPanel.hidden = !open || !onFootballMenu;
+  if (leaguePanel) leaguePanel.hidden = !open || !onLeagues;
+
+  document.querySelectorAll(".football-filters-btn").forEach((btn) => {
+    btn.classList.toggle("is-on", open);
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+    const chev = btn.querySelector(".football-filters-btn-chev");
+    if (chev) chev.textContent = open ? "▴" : "▾";
+  });
+}
+
+function toggleFootballFilters(force) {
+  state.footballFiltersOpen = typeof force === "boolean" ? force : !state.footballFiltersOpen;
+  renderFootballFilters();
+}
+
+function syncFootballLeagueChecks() {
+  document.querySelectorAll("[data-football-league]").forEach((input) => {
+    const id = Number(input.dataset.footballLeague);
+    input.checked = state.checkedLeagueIds.has(id);
+    input.closest(".football-league-row")?.classList.toggle("is-marked", input.checked);
+  });
+}
+
+function leaguePageTitle() {
+  if (!state.leaguePageIds.length) return "Matches";
+  return state.leaguePageIds.map((id) => getLeagueNameById(id)).join(" · ");
+}
+
+function openLeaguePage(leagueIds) {
+  const ids = [...new Set(leagueIds.map(Number).filter(Boolean))];
+  if (!ids.length) return;
+  state.leaguePageIds = ids;
+  state.sportsMenuMode = true;
+  setView("leagues");
+  renderFootballFilters();
+  renderLeaguePage();
+}
+
+function closeLeaguePage() {
+  state.leaguePageIds = [];
+  setView("sports");
+  updateSportsMenuUI();
+}
+
+function renderLeaguePage() {
+  const title = $("league-page-title");
+  const board = $("league-page-board");
+  if (title) title.textContent = leaguePageTitle();
+  if (!board) return;
+
+  const list = footballMenuFixtures();
+  if (!list.length) {
+    board.innerHTML = `<div class="board-empty">No matches for selected leagues</div>`;
+    return;
+  }
+  renderMatchBoardInto(board, list);
+}
+
+function renderMatchBoardInto(board, list) {
+  if (!board) return;
+
+  const groups = new Map();
+  for (const f of list) {
+    const key = f.league.id;
+    if (!groups.has(key)) groups.set(key, { league: f.league, matches: [] });
+    groups.get(key).matches.push(f);
+  }
+
+  board.innerHTML = [...groups.values()]
+    .map(
+      (g) => `
+    <section class="league-block">
+      <div class="league-block-head">
+        <img src="${g.league.flag}" alt="" class="flag" loading="lazy" />
+        <img src="${g.league.logo}" alt="" loading="lazy" />
+        <span>${g.league.name.toUpperCase()}</span>
+      </div>
+      ${g.matches
+        .map(
+          (f) => `
+        <div class="match-row">
+          <div class="match-row-info" data-open-fixture="${f.fixtureId}" role="button" tabindex="0">
+            <div class="match-row-teams">
+              <span class="match-row-team">${f.home.name}</span>
+              <span class="match-row-vs" aria-hidden="true">-</span>
+              <span class="match-row-team">${f.away.name}</span>
+            </div>
+            <div class="match-row-meta">
+              <span class="match-row-time" data-countdown="${f.date}">${formatCountdown(f.date)}</span>
+              <a class="match-row-more" href="#" data-open-fixture="${f.fixtureId}">+${f.marketCount || 83} Markets</a>
+            </div>
+          </div>
+          ${renderOddsRow(f)}
+        </div>`
+        )
+        .join("")}
+    </section>`
+    )
+    .join("");
+}
+
+function renderSidebar() {
+  const sidebar = getSidebarData();
+  const topCount = $("top-league-count");
+  const countryCount = $("country-count");
+  const leaguesEl = $("sidebar-leagues");
+  const countriesEl = $("sidebar-countries");
+  if (topCount) topCount.textContent = String(sidebar.topLeagues.length);
+  if (countryCount) countryCount.textContent = String(sidebar.countries.length);
+  if (!leaguesEl || !countriesEl) return;
+
+  leaguesEl.innerHTML = sidebar.topLeagues
     .map(
       (l) => `
     <button type="button" class="sidebar-item${state.leagueFilter === l.id && !state.countryFilter ? " is-on" : ""}" data-sidebar-league="${l.id}">
@@ -1018,7 +1934,7 @@ function renderSidebar() {
     )
     .join("");
 
-  $("sidebar-countries").innerHTML = sidebar.countries
+  countriesEl.innerHTML = sidebar.countries
     .map((c) => {
       const expanded = state.expandedSidebarCountries.has(c.name);
       const children = state.countryLeagues[c.name] || [];
@@ -1046,14 +1962,8 @@ function renderSidebar() {
     .join("");
 }
 
-function closeLeagueDropdown() {
-  state.leagueDropdown = null;
-  state.leagueDropdownSearch = "";
-  $("league-dropdown-backdrop").hidden = true;
-}
-
 function renderFilters() {
-  const sidebar = state.sidebar.topLeagues.length ? state.sidebar : buildMockSidebar();
+  const sidebar = getSidebarData();
   const allOpen = state.leagueDropdown === "all";
   const topOpen = state.leagueDropdown === "top";
   const search = state.leagueDropdownSearch.toLowerCase();
@@ -1082,7 +1992,10 @@ function renderFilters() {
         ? `<button type="button" class="chip is-on" data-country-chip="${state.countryFilter}">${state.countryFilter}</button>`
         : "";
 
-  $("league-filter-bar").innerHTML = `
+  const filterBar = $("league-filter-bar");
+  if (!filterBar) return;
+
+  filterBar.innerHTML = `
     <div class="league-dropdown-wrap">
       <button type="button" class="chip chip-dropdown${state.leagueFilter === "all" && !state.countryFilter ? " is-on" : ""}${allOpen ? " is-open" : ""}" data-dropdown-toggle="all">
         All Leagues <span class="chip-caret">▾</span>
@@ -1124,7 +2037,7 @@ function renderFilters() {
     </div>
     ${selectedChip}`;
 
-  $("league-dropdown-backdrop").hidden = !allOpen && !topOpen;
+  $("league-dropdown-backdrop") && ($("league-dropdown-backdrop").hidden = !allOpen && !topOpen);
 
   const tf = $("time-filters");
   if (tf) {
@@ -1134,7 +2047,8 @@ function renderFilters() {
     ).join("");
   }
 
-  $("board-title").textContent = boardTitle();
+  const boardTitleEl = $("board-title");
+  if (boardTitleEl) boardTitleEl.textContent = boardTitle();
 }
 
 function oddButton(fixture, market, selection, label) {
@@ -1160,8 +2074,10 @@ function renderOddsRow(fixture) {
 }
 
 function renderCarousel() {
-  const popular = filteredFixtures().slice(0, 8);
   const el = $("popular-carousel");
+  if (!el || !isSportsHomeSubNav()) return;
+
+  const popular = fixturesForCarousel();
 
   if (!popular.length) {
     el.innerHTML = `<div class="board-empty">No popular matches</div>`;
@@ -1193,62 +2109,34 @@ function renderCarousel() {
 }
 
 function renderBoard() {
-  const list = filteredFixtures();
   const board = $("match-board");
+  if (!board) return;
+  if (state.sportsMenuMode || !isBoardSubNav()) {
+    board.innerHTML = "";
+    return;
+  }
+  const list = filteredFixtures();
 
   if (!list.length) {
     board.innerHTML = `<div class="board-empty">No matches for this filter</div>`;
     return;
   }
 
-  const groups = new Map();
-  for (const f of list) {
-    const key = f.league.id;
-    if (!groups.has(key)) groups.set(key, { league: f.league, matches: [] });
-    groups.get(key).matches.push(f);
-  }
-
-  board.innerHTML = [...groups.values()]
-    .map(
-      (g) => `
-    <section class="league-block">
-      <div class="league-block-head">
-        <img src="${g.league.flag}" alt="" class="flag" loading="lazy" />
-        <img src="${g.league.logo}" alt="" loading="lazy" />
-        <span>${g.league.name.toUpperCase()}</span>
-      </div>
-      ${g.matches
-        .map(
-          (f) => `
-        <div class="match-row">
-          <div class="match-row-info" data-open-fixture="${f.fixtureId}" role="button" tabindex="0">
-            <div class="match-row-teams">
-              <div class="match-row-team"><img src="${f.home.logo}" alt="" loading="lazy" />${f.home.name}</div>
-              <div class="match-row-team"><img src="${f.away.logo}" alt="" loading="lazy" />${f.away.name}</div>
-            </div>
-            <div class="match-row-meta">
-              <span class="match-row-time" data-countdown="${f.date}">${formatCountdown(f.date)}</span>
-              <a class="match-row-more" href="#" data-open-fixture="${f.fixtureId}">+${f.marketCount || 83} Markets</a>
-            </div>
-          </div>
-          ${renderOddsRow(f)}
-        </div>`
-        )
-        .join("")}
-    </section>`
-    )
-    .join("");
+  renderMatchBoardInto(board, list);
 }
 
 function renderSlip() {
   const count = state.slip.length;
   const activeCount = activeSlipBets().length;
   const hasExpired = count > activeCount;
-  $("slip-tab-count").textContent = String(count);
+  const tabCount = $("slip-tab-count");
+  if (tabCount) tabCount.textContent = String(count);
+  syncMobileSlipCount();
 
   const list = $("slip-list");
   const empty = $("slip-empty");
   const foot = $("slip-foot");
+  if (!list || !empty || !foot) return;
 
   document.querySelectorAll(".betslip-mode-btn").forEach((btn) => {
     const isMultiple = btn.dataset.mode === "multiple";
@@ -1304,7 +2192,9 @@ function renderSlip() {
 }
 
 function renderQuickStakes() {
-  $("quick-stakes").innerHTML = QUICK_STAKES.map(
+  const el = $("quick-stakes");
+  if (!el) return;
+  el.innerHTML = QUICK_STAKES.map(
     (s) =>
       `<button type="button" class="${state.stake === s ? "is-on" : ""}" data-stake="${s}">${s}</button>`
   ).join("");
@@ -1343,7 +2233,7 @@ function setBetslipTab(tab) {
   });
   if ($("panel-slip")) $("panel-slip").hidden = tab !== "slip";
   if ($("panel-bets")) $("panel-bets").hidden = tab !== "bets";
-  const tools = document.querySelector(".betslip-tools");
+  const tools = $("betslip-tools");
   if (tools) tools.hidden = tab !== "slip";
   if (tab === "bets") renderHistory();
 }
@@ -1355,6 +2245,7 @@ function setView(view) {
     v.classList.toggle("is-active", on);
   });
   updateBackButton();
+  renderFootballFilters();
 }
 
 function updateBackButton() {
@@ -1380,31 +2271,47 @@ async function openMatchDetail(fixtureId) {
   setView("match");
 
   $("market-search").value = "";
+  const crumb = $("match-breadcrumb");
+  if (crumb) crumb.textContent = matchBreadcrumb(fixture);
 
   $("match-hero").innerHTML = `
     <div class="md-date">${formatMatchDate(fixture.date)}</div>
     <div class="md-teams">
-      <div class="md-team"><img src="${fixture.home.logo}" alt="" /><span>${fixture.home.name}</span></div>
+      <div class="md-team">
+        <img src="${fixture.home.logo}" alt="" loading="lazy" />
+        <span>${fixture.home.name}</span>
+      </div>
       <div class="md-vs">VS</div>
-      <div class="md-team"><img src="${fixture.away.logo}" alt="" /><span>${fixture.away.name}</span></div>
+      <div class="md-team">
+        <img src="${fixture.away.logo}" alt="" loading="lazy" />
+        <span>${fixture.away.name}</span>
+      </div>
     </div>`;
 
-  $("market-tabs").innerHTML = MARKET_TABS.map(
-    (t) => `<button type="button" class="md-tab${state.marketTab === t.id ? " is-on" : ""}" data-mtab="${t.id}">${t.label}</button>`
-  ).join("");
-
+  renderMarketTabs();
   $("match-markets").innerHTML = "";
   $("match-loading").hidden = false;
 
   const markets = await fetchFixtureMarkets(fixtureId);
   $("match-loading").hidden = true;
   state.fixtureMarkets[fixtureId] = markets;
+  state.expandedMarkets = new Set(markets.map((m) => m.id));
   renderMatchDetail();
 }
 
 function closeMatchDetail() {
   state.detailFixtureId = null;
-  setView("sports");
+  if (state.subNav === "my-bets") {
+    setView("my-bets");
+    return;
+  }
+  if (state.leaguePageIds.length) setView("leagues");
+  else setView("sports");
+}
+
+function refreshMyBetsIfVisible() {
+  if (state.subNav === "my-bets") renderMyBetsPage();
+  if (state.betslipTab === "bets") renderHistory();
 }
 
 function renderMatchDetail() {
@@ -1414,12 +2321,10 @@ function renderMatchDetail() {
   const markets = state.fixtureMarkets[state.detailFixtureId] || [];
   if (!fixture) return;
 
-  $("market-tabs").innerHTML = MARKET_TABS.map(
-    (t) => `<button type="button" class="md-tab${state.marketTab === t.id ? " is-on" : ""}" data-mtab="${t.id}">${t.label}</button>`
-  ).join("");
+  renderMarketTabs();
 
   const filtered = markets.filter((m) => {
-    if (state.marketTab !== "all" && marketCategory(m.name) !== state.marketTab) return false;
+    if (state.marketTab !== "all" && getMarketCategory(m) !== state.marketTab) return false;
     if (state.marketSearch) {
       const q = state.marketSearch.toLowerCase();
       if (!m.name.toLowerCase().includes(q)) return false;
@@ -1452,7 +2357,7 @@ function renderMatchDetail() {
 
       return `<section class="md-market${open ? " is-open" : ""}" data-market-id="${m.id}">
         <button type="button" class="md-market-head" data-toggle-market="${m.id}">
-          <span class="md-market-chevron" aria-hidden="true">▼</span>
+          <span class="md-market-chevron" aria-hidden="true">▲</span>
           <span class="md-market-star" aria-hidden="true">☆</span>
           <span class="md-market-title">${m.name}</span>
         </button>
@@ -1464,27 +2369,36 @@ function renderMatchDetail() {
     .join("");
 }
 
+function isLoggedIn() {
+  if (useApi()) return !!state.sessionUser;
+  return !!state.sessionUser;
+}
+
 function renderSession() {
+  const guest = $("utility-guest");
+  const authed = $("utility-authed");
   const joinBtn = $("btn-join");
   const userPill = $("user-pill");
   const depositBtn = $("btn-deposit");
-  if (!useApi()) {
-    joinBtn.textContent = "Demo";
-    userPill.hidden = true;
-    if (depositBtn) depositBtn.hidden = true;
-    return;
-  }
+  const loggedIn = isLoggedIn();
 
-  if (state.sessionUser) {
-    joinBtn.textContent = "Sign Out";
-    userPill.hidden = false;
-    userPill.textContent = state.sessionUser.displayName || state.sessionUser.email;
-    if (depositBtn) depositBtn.hidden = false;
-  } else {
-    joinBtn.textContent = "Sign In";
-    userPill.hidden = true;
-    if (depositBtn) depositBtn.hidden = true;
+  if (guest) guest.hidden = loggedIn;
+  if (authed) authed.hidden = !loggedIn;
+
+  if (joinBtn) {
+    joinBtn.textContent = loggedIn ? "Sign Out" : "Sign In";
+    joinBtn.hidden = !loggedIn;
   }
+  if (userPill) {
+    if (loggedIn && state.sessionUser) {
+      userPill.hidden = false;
+      userPill.textContent = state.sessionUser.displayName || state.sessionUser.email || "Account";
+    } else {
+      userPill.hidden = true;
+    }
+  }
+  if (depositBtn) depositBtn.hidden = !loggedIn || !useApi();
+  renderAccountDrawer();
 }
 
 function renderDepositMethods(methods, minDeposit) {
@@ -1543,15 +2457,46 @@ function closeDepositModal() {
   $("deposit-modal").hidden = true;
 }
 
+function phoneToAccountEmail(rawPhone) {
+  let digits = String(rawPhone || "").replace(/\D/g, "");
+  if (digits.startsWith("251")) digits = digits.slice(3);
+  if (digits.startsWith("0")) digits = digits.slice(1);
+  return `251${digits}@phone.hopebet.local`;
+}
+
+function formatAuthPhone(rawPhone) {
+  let digits = String(rawPhone || "").replace(/\D/g, "");
+  if (digits.startsWith("251")) digits = digits.slice(3);
+  if (digits.startsWith("0")) digits = digits.slice(1);
+  return `+251${digits}`;
+}
+
 function openAuthModal(tab) {
   state.authTab = tab || "login";
+  const isReg = state.authTab === "register";
   $("auth-modal").hidden = false;
-  document.querySelectorAll(".auth-tab").forEach((btn) => {
-    btn.classList.toggle("is-on", btn.dataset.authTab === state.authTab);
+  $("auth-card")?.classList.toggle("is-register", isReg);
+  if ($("auth-title")) {
+    $("auth-title").hidden = !isReg;
+    $("auth-title").textContent = "Register";
+  }
+  document.querySelectorAll(".auth-label--reg, #auth-phone-label").forEach((el) => {
+    el.hidden = !isReg;
   });
-  $("auth-phone-wrap").hidden = state.authTab !== "register";
-  $("auth-title").textContent = state.authTab === "register" ? "Create Hope Bet account" : "Sign in to Hope Bet";
-  $("auth-submit").textContent = state.authTab === "register" ? "Create Account" : "Sign In";
+  if ($("auth-confirm-wrap")) $("auth-confirm-wrap").hidden = !isReg;
+  if ($("auth-checks")) $("auth-checks").hidden = !isReg;
+  if ($("auth-footer-login")) $("auth-footer-login").hidden = isReg;
+  if ($("auth-footer-register")) $("auth-footer-register").hidden = !isReg;
+  if ($("auth-phone")) $("auth-phone").placeholder = isReg ? "" : "Number";
+  if ($("auth-password")) {
+    $("auth-password").placeholder = isReg ? "" : "Password";
+    $("auth-password").autocomplete = isReg ? "new-password" : "current-password";
+  }
+  if ($("auth-password2")) {
+    $("auth-password2").required = isReg;
+    $("auth-password2").value = isReg ? $("auth-password2").value : "";
+  }
+  if ($("auth-submit")) $("auth-submit").textContent = isReg ? "REGISTER" : "LOGIN";
 }
 
 function closeAuthModal() {
@@ -1585,7 +2530,7 @@ async function syncFromApi() {
     }));
     renderSession();
     renderBalance();
-    if (state.betslipTab === "bets") renderHistory();
+    refreshMyBetsIfVisible();
     renderLastWinnings();
   } catch (err) {
     if (err.status === 401) {
@@ -1611,6 +2556,7 @@ async function settleTicketRemote(ticket) {
     state.balance = result.balance;
     renderBalance();
     if (state.betslipTab === "bets") renderHistory();
+    refreshMyBetsIfVisible();
   } catch (err) {
     ticket.status = won ? "won" : "lost";
     if (won) ticket.payout = ticket.stake * ticket.totalOdds;
@@ -1629,6 +2575,7 @@ function settleTicketLocal(ticket) {
   save();
   renderBalance();
   if (state.betslipTab === "bets") renderHistory();
+  refreshMyBetsIfVisible();
 }
 
 async function placeBet() {
@@ -1684,10 +2631,10 @@ async function placeBet() {
       state.slip = [];
       renderBalance();
       renderSlip();
-      renderBoard();
-      renderCarousel();
+      refreshHomeAndBoard();
       if (state.detailFixtureId) renderMatchDetail();
       toast(`Bet placed — ${ticket.id}`, "ok");
+      refreshMyBetsIfVisible();
       setTimeout(() => settleTicketRemote(ticket), 3000 + Math.random() * 4000);
     } catch (err) {
       toast(err.message || "Could not place bet", "err");
@@ -1713,10 +2660,10 @@ async function placeBet() {
 
   renderBalance();
   renderSlip();
-  renderBoard();
-  renderCarousel();
+  refreshHomeAndBoard();
   if (state.detailFixtureId) renderMatchDetail();
   toast(`Bet placed — ${id}`, "ok");
+  refreshMyBetsIfVisible();
 
   setTimeout(() => settleTicketLocal(ticket), 3000 + Math.random() * 4000);
 }
@@ -1734,8 +2681,7 @@ function renderAll() {
   renderSidebar();
   renderTopLeaguesGrid();
   renderFilters();
-  renderCarousel();
-  renderBoard();
+  refreshHomeAndBoard();
   renderSlip();
   renderQuickStakes();
   renderLastWinnings();
@@ -1744,8 +2690,12 @@ function renderAll() {
 function applyBoardFilters() {
   renderSidebar();
   renderFilters();
-  renderCarousel();
-  renderBoard();
+  const leaguesView = document.querySelector('[data-view="leagues"]');
+  if (leaguesView && !leaguesView.hidden) {
+    renderLeaguePage();
+  } else {
+    refreshHomeAndBoard();
+  }
 }
 
 async function toggleSidebarCountry(countryName) {
@@ -1777,25 +2727,159 @@ function selectCountry(countryName) {
 }
 
 function bindEvents() {
-  $("sidebar-leagues").addEventListener("click", (e) => {
+  function handleOddClick(e) {
+    const btn = e.target.closest(".odd-btn");
+    if (!btn) return;
+    e.stopPropagation();
+    e.preventDefault();
+    const fixtureId = Number(btn.dataset.fixture);
+    const market = btn.dataset.market;
+    const selection = btn.dataset.selection;
+    const fixture = state.fixtures.find((f) => f.fixtureId === fixtureId);
+    if (!fixture) return;
+    toggleSelection(fixture, market, selection);
+  }
+
+  function handleOpenFixture(e) {
+    const row = e.target.closest("[data-open-fixture]");
+    if (!row || e.target.closest(".odd-btn")) return;
+    e.preventDefault();
+    openMatchDetail(Number(row.dataset.openFixture));
+  }
+
+  on($("btn-mobile-menu"), "click", () => {
+    if (document.body.classList.contains("menu-open")) closeMobileDrawers();
+    else openMobileMenu();
+  });
+
+  on($("mobile-slip-fab"), "click", () => {
+    if (document.body.classList.contains("betslip-open")) closeMobileDrawers();
+    else openMobileBetslip();
+  });
+
+  on($("btn-mobile-home"), "click", () => {
+    closeMobileDrawers();
+    applySubNav("sports");
+  });
+
+  on($("btn-mobile-account"), "click", () => {
+    if (document.body.classList.contains("account-open")) closeMobileDrawers();
+    else openAccountDrawer();
+  });
+
+  on($("btn-close-account"), "click", closeMobileDrawers);
+
+  on($("account-drawer"), "click", (e) => {
+    const authBtn = e.target.closest("[data-account-auth]");
+    if (authBtn) {
+      closeMobileDrawers();
+      openAuthModal(authBtn.dataset.accountAuth);
+      return;
+    }
+  });
+
+  on($("account-live-chat"), "click", () => {
+    closeMobileDrawers();
+    toast("Live chat coming soon", "ok");
+  });
+
+  on($("account-android"), "click", (e) => {
+    e.preventDefault();
+    toast("Android app coming soon", "ok");
+  });
+
+  on($("account-ios"), "click", (e) => {
+    e.preventDefault();
+    toast("iOS app coming soon", "ok");
+  });
+
+  on($("account-language"), "change", () => {
+    toast("English is the only language available for now", "ok");
+  });
+
+  on($("account-deposit"), "click", () => {
+    closeMobileDrawers();
+    $("btn-deposit")?.click();
+  });
+
+  on($("account-signout"), "click", () => {
+    closeMobileDrawers();
+    $("btn-join")?.click();
+  });
+
+  on($("mobile-sports-strip"), "click", (e) => {
+    const tool = e.target.closest("[data-mobile-tool]");
+    if (tool) {
+      const kind = tool.dataset.mobileTool;
+      if (kind === "inplay") applySubNav("inplay");
+      else if (kind === "search") {
+        openMobileMenu();
+        $("event-search")?.focus();
+      } else if (kind === "check") {
+        closeMobileDrawers();
+        applySubNav("check-bet");
+      }
+      return;
+    }
+    const sport = e.target.closest("[data-mobile-sport]");
+    if (!sport) return;
+    if (sport.dataset.mobileSport === "football") {
+      openSportsMenu("football");
+      return;
+    }
+    toast("Only Football is live for now — other sports coming soon", "err");
+  });
+
+  on($("mobile-time-strip"), "click", (e) => {
+    const btn = e.target.closest("[data-mobile-time]");
+    if (!btn) return;
+    state.timeFilter = btn.dataset.mobileTime;
+    renderFilters();
+    renderMobileTimeStrip();
+    refreshHomeAndBoard();
+    if (!$("view-leagues")?.hidden) renderLeaguePage();
+  });
+
+  on($("btn-close-sidebar"), "click", closeMobileDrawers);
+  on($("btn-close-betslip"), "click", closeMobileDrawers);
+  on($("mobile-drawer-backdrop"), "click", closeMobileDrawers);
+
+  on(window, "resize", () => {
+    if (!isMobileLayout()) closeMobileDrawers();
+    renderMobileTimeStrip();
+  });
+
+  on($("sidebar-leagues"), "click", (e) => {
     const btn = e.target.closest("[data-sidebar-league]");
     if (!btn) return;
     selectLeague(Number(btn.dataset.sidebarLeague));
+    closeMobileDrawers();
   });
 
-  $("sidebar-countries").addEventListener("click", async (e) => {
+  on($("sidebar-countries"), "click", async (e) => {
     const leagueBtn = e.target.closest("[data-sidebar-league]");
     if (leagueBtn) {
       selectLeague(Number(leagueBtn.dataset.sidebarLeague));
+      closeMobileDrawers();
       return;
     }
-
     const countryBtn = e.target.closest("[data-sidebar-country]");
     if (!countryBtn) return;
     await toggleSidebarCountry(countryBtn.dataset.sidebarCountry);
   });
 
-  $("league-filter-bar").addEventListener("click", (e) => {
+  on($("sidebar-sports"), "click", (e) => {
+    const btn = e.target.closest("[data-sidebar-sport]");
+    if (!btn) return;
+    if (btn.dataset.sidebarSport === "football") {
+      openSportsMenu("football");
+      closeMobileDrawers();
+      return;
+    }
+    toast("Only Football is live for now — other sports coming soon", "err");
+  });
+
+  on($("league-filter-bar"), "click", (e) => {
     const toggle = e.target.closest("[data-dropdown-toggle]");
     if (toggle) {
       const id = toggle.dataset.dropdownToggle;
@@ -1840,74 +2924,69 @@ function bindEvents() {
     }
   });
 
-  $("league-filter-bar").addEventListener("input", (e) => {
+  on($("league-filter-bar"), "input", (e) => {
     if (!e.target.matches("[data-dropdown-search]")) return;
     state.leagueDropdownSearch = e.target.value;
     renderFilters();
-    const input = $("league-filter-bar").querySelector("[data-dropdown-search]");
+    const input = $("league-filter-bar")?.querySelector("[data-dropdown-search]");
     if (input) {
       input.focus();
       input.setSelectionRange(input.value.length, input.value.length);
     }
   });
 
-  $("league-dropdown-backdrop").addEventListener("click", () => {
+  on($("league-dropdown-backdrop"), "click", () => {
     closeLeagueDropdown();
     renderFilters();
   });
 
-  $("time-filters").addEventListener("click", (e) => {
+  on($("time-filters"), "click", (e) => {
     const btn = e.target.closest("[data-time]");
     if (!btn) return;
     state.timeFilter = btn.dataset.time;
     renderFilters();
-    renderCarousel();
-    renderBoard();
+    const leaguesView = document.querySelector('[data-view="leagues"]');
+    if (leaguesView && !leaguesView.hidden) renderLeaguePage();
+    else if (!state.sportsMenuMode) refreshHomeAndBoard();
   });
 
-  function handleOddClick(e) {
-    const btn = e.target.closest(".odd-btn");
-    if (!btn) return;
-    e.stopPropagation();
-    e.preventDefault();
-    const fixtureId = Number(btn.dataset.fixture);
-    const market = btn.dataset.market;
-    const selection = btn.dataset.selection;
-    const fixture = state.fixtures.find((f) => f.fixtureId === fixtureId);
-    if (!fixture) return;
-    toggleSelection(fixture, market, selection);
-  }
-
-  function handleOpenFixture(e) {
-    const row = e.target.closest("[data-open-fixture]");
-    if (!row || e.target.closest(".odd-btn")) return;
-    e.preventDefault();
-    openMatchDetail(Number(row.dataset.openFixture));
-  }
-
-  $("popular-carousel").addEventListener("click", (e) => {
+  on($("popular-carousel"), "click", (e) => {
     handleOddClick(e);
     handleOpenFixture(e);
   });
 
-  $("match-board").addEventListener("click", (e) => {
+  on($("match-board"), "click", (e) => {
     handleOddClick(e);
     handleOpenFixture(e);
   });
 
-  $("market-tabs").addEventListener("click", (e) => {
+  on($("market-tabs"), "click", (e) => {
     const btn = e.target.closest("[data-mtab]");
     if (!btn) return;
     state.marketTab = btn.dataset.mtab;
+    if (state.marketTab === "combo" && state.detailFixtureId) {
+      const markets = state.fixtureMarkets[state.detailFixtureId] || [];
+      markets.filter((m) => getMarketCategory(m) === "combo").forEach((m) => state.expandedMarkets.add(m.id));
+    }
     renderMatchDetail();
   });
 
-  $("market-search").addEventListener("input", (e) => {
+  on($("md-collapse-all"), "click", () => {
+    if (!state.detailFixtureId) return;
+    const markets = state.fixtureMarkets[state.detailFixtureId] || [];
+    if (state.expandedMarkets.size) state.expandedMarkets.clear();
+    else state.expandedMarkets = new Set(markets.map((m) => m.id));
+    renderMatchDetail();
+  });
+
+  on($("md-fav-markets"), "click", () => toast("Favourite markets coming soon", "err"));
+
+  on($("market-search"), "input", (e) => {
     state.marketSearch = e.target.value.trim();
     renderMatchDetail();
   });
 
-  $("match-markets").addEventListener("click", (e) => {
+  on($("match-markets"), "click", (e) => {
     const toggle = e.target.closest("[data-toggle-market]");
     if (toggle) {
       const id = Number(toggle.dataset.toggleMarket);
@@ -1922,58 +3001,109 @@ function bindEvents() {
     const fixtureId = Number(btn.dataset.fixture);
     const fixture = state.fixtures.find((f) => f.fixtureId === fixtureId);
     if (!fixture) return;
-    toggleDetailSelection(fixture, { id: Number(btn.dataset.marketId), name: btn.dataset.marketName }, { value: btn.dataset.value, odd: btn.dataset.odd });
+    toggleDetailSelection(
+      fixture,
+      { id: Number(btn.dataset.marketId), name: btn.dataset.marketName },
+      { value: btn.dataset.value, odd: btn.dataset.odd }
+    );
   });
 
-  $("btn-back")?.addEventListener("click", (e) => {
+  on($("btn-back"), "click", (e) => {
     if (state.detailFixtureId) {
       e.preventDefault();
       closeMatchDetail();
     }
   });
 
-  $("match-back").addEventListener("click", closeMatchDetail);
+  on($("match-back"), "click", closeMatchDetail);
+  on($("btn-my-bets-shortcut"), "click", () => applySubNav("my-bets"));
 
-  $("btn-my-bets-shortcut")?.addEventListener("click", () => setBetslipTab("bets"));
-  $("sub-nav-my-bets")?.addEventListener("click", () => setBetslipTab("bets"));
-
-  document.querySelectorAll(".betslip-tab").forEach((btn) => {
-    btn.addEventListener("click", () => setBetslipTab(btn.dataset.btab));
+  on($("sub-nav"), "click", (e) => {
+    const btn = e.target.closest("[data-subnav]");
+    if (!btn) return;
+    applySubNav(btn.dataset.subnav);
   });
 
-  $("slip-list").addEventListener("click", (e) => {
+  document.querySelectorAll(".main-nav-tabs").forEach((nav) => {
+    on(nav, "click", (e) => {
+      const btn = e.target.closest("[data-nav]");
+      if (!btn) return;
+      const id = btn.dataset.nav;
+      if (id === "sport") {
+        applySubNav("sports");
+        return;
+      }
+      if (id === "upcoming") {
+        applySubNav("upcoming");
+        return;
+      }
+      if (id === "live") {
+        toast("Live is currently unavailable", "err");
+        return;
+      }
+      if (id === "special") {
+        window.location.href = "../index.html";
+      }
+    });
+  });
+
+  on($("my-bets-close"), "click", () => applySubNav("sports"));
+
+  on($("my-bets-status-tabs"), "click", (e) => {
+    const btn = e.target.closest("[data-mybets-status]");
+    if (!btn) return;
+    state.myBetsStatus = btn.dataset.mybetsStatus;
+    renderMyBetsPage();
+  });
+
+  on($("my-bets-time-tabs"), "click", (e) => {
+    const btn = e.target.closest("[data-mybets-time]");
+    if (!btn) return;
+    state.myBetsTime = btn.dataset.mybetsTime;
+    renderMyBetsPage();
+  });
+
+  on($("my-bets-search"), "input", (e) => {
+    state.myBetsSearch = e.target.value.trim();
+    renderMyBetsPage();
+  });
+
+  on($("my-bets-search-btn"), "click", () => renderMyBetsPage());
+
+  document.querySelectorAll(".betslip-tab").forEach((btn) => {
+    on(btn, "click", () => setBetslipTab(btn.dataset.btab));
+  });
+
+  on($("slip-list"), "click", (e) => {
     const btn = e.target.closest("[data-remove]");
     if (!btn) return;
-    const key = btn.dataset.remove;
-    state.slip = state.slip.filter((b) => b.key !== key);
+    state.slip = state.slip.filter((b) => b.key !== btn.dataset.remove);
     save();
     renderSlip();
-    renderBoard();
-    renderCarousel();
+    refreshHomeAndBoard();
     if (state.detailFixtureId) renderMatchDetail();
   });
 
   document.querySelectorAll(".betslip-mode-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
+    on(btn, "click", () => {
       state.slipMode = btn.dataset.mode;
       document.querySelectorAll(".betslip-mode-btn").forEach((b) => b.classList.toggle("is-on", b === btn));
       if (state.slipMode === "single" && state.slip.length > 1) {
         state.slip = [state.slip[state.slip.length - 1]];
         save();
         renderSlip();
-        renderBoard();
-        renderCarousel();
+        refreshHomeAndBoard();
       }
     });
   });
 
-  $("stake-input").addEventListener("input", (e) => {
+  on($("stake-input"), "input", (e) => {
     state.stake = Math.max(0, Number(e.target.value) || 0);
     save();
     renderSlip();
   });
 
-  $("quick-stakes").addEventListener("click", (e) => {
+  on($("quick-stakes"), "click", (e) => {
     const btn = e.target.closest("[data-stake]");
     if (!btn) return;
     state.stake = Number(btn.dataset.stake);
@@ -1982,67 +3112,107 @@ function bindEvents() {
     renderQuickStakes();
   });
 
-  $("stake-minus")?.addEventListener("click", () => {
+  on($("stake-minus"), "click", () => {
     state.stake = Math.max(MIN_STAKE, state.stake - 10);
     save();
     renderSlip();
     renderQuickStakes();
   });
 
-  $("stake-plus")?.addEventListener("click", () => {
+  on($("stake-plus"), "click", () => {
     state.stake += 10;
     save();
     renderSlip();
     renderQuickStakes();
   });
 
-  $("btn-balance-toggle")?.addEventListener("click", () => {
+  on($("btn-balance-toggle"), "click", () => {
     state.balanceHidden = !state.balanceHidden;
     renderBalance();
   });
 
-  $("event-search")?.addEventListener("input", (e) => {
+  on($("event-search"), "input", (e) => {
     state.eventSearch = e.target.value.trim();
-    renderCarousel();
-    renderBoard();
+    const leaguesView = document.querySelector('[data-view="leagues"]');
+    if (leaguesView && !leaguesView.hidden) renderLeaguePage();
+    else if (!state.sportsMenuMode) refreshHomeAndBoard();
   });
 
-  $("ad-prev")?.addEventListener("click", () => {
+  on($("ad-prev"), "click", () => {
     if (!state.adSlides.length) return;
     state.adIndex = (state.adIndex - 1 + state.adSlides.length) % state.adSlides.length;
     updateAdCarousel();
   });
 
-  $("ad-next")?.addEventListener("click", () => {
+  on($("ad-next"), "click", () => {
     if (!state.adSlides.length) return;
     state.adIndex = (state.adIndex + 1) % state.adSlides.length;
     updateAdCarousel();
   });
 
-  $("ad-carousel-dots")?.addEventListener("click", (e) => {
+  on($("ad-carousel-dots"), "click", (e) => {
     const dot = e.target.closest("[data-dot]");
     if (!dot) return;
     state.adIndex = Number(dot.dataset.dot);
     updateAdCarousel();
   });
 
-  $("top-leagues-grid")?.addEventListener("click", (e) => {
+  on($("top-leagues-grid"), "click", (e) => {
     const card = e.target.closest("[data-top-league]");
     if (!card) return;
     selectLeague(Number(card.dataset.topLeague));
   });
 
-  $("sidebar-sports")?.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-sidebar-sport]");
-    if (!btn) return;
-    state.sportFilter = btn.dataset.sidebarSport;
-    if (btn.dataset.sidebarSport !== "football") {
-      toast("Only Football is live for now — other sports coming soon", "err");
+  on($("sports-menu-back"), "click", closeSportsMenu);
+
+  on($("football-regions"), "click", async (e) => {
+    const openLeague = e.target.closest("[data-open-league]");
+    if (openLeague) {
+      openLeaguePage([Number(openLeague.dataset.openLeague)]);
+      return;
     }
-    renderSportsSidebar();
+    const toggle = e.target.closest("[data-toggle-football-region]");
+    if (toggle) await toggleFootballRegion(toggle.dataset.toggleFootballRegion);
   });
 
-  $("btn-share-slip")?.addEventListener("click", () => {
+  on($("football-regions"), "change", (e) => {
+    const check = e.target;
+    if (!check.matches("[data-football-league]")) return;
+    onFootballLeagueToggle(Number(check.dataset.footballLeague), check.checked);
+  });
+
+  on($("btn-open-selected-leagues"), "click", () => {
+    if (!state.checkedLeagueIds.size) {
+      toast("Mark at least one league first", "err");
+      return;
+    }
+    openLeaguePage([...state.checkedLeagueIds]);
+  });
+
+  on($("football-filters-btn"), "click", () => toggleFootballFilters());
+  on($("league-filters-btn"), "click", () => toggleFootballFilters());
+
+  document.querySelectorAll("[data-filters-collapse]").forEach((btn) => {
+    on(btn, "click", () => toggleFootballFilters(false));
+  });
+
+  on($("football-time-slider"), "input", (e) => setFootballTimeFilterByIndex(Number(e.target.value)));
+  on($("league-time-slider"), "input", (e) => setFootballTimeFilterByIndex(Number(e.target.value)));
+
+  on(document, "click", (e) => {
+    const label = e.target.closest("[data-football-time-index]");
+    if (!label) return;
+    setFootballTimeFilterByIndex(Number(label.dataset.footballTimeIndex));
+  });
+
+  on($("leagues-back"), "click", closeLeaguePage);
+
+  on($("league-page-board"), "click", (e) => {
+    handleOddClick(e);
+    handleOpenFixture(e);
+  });
+
+  on($("btn-share-slip"), "click", () => {
     if (!state.slip.length) {
       toast("Add selections to share", "err");
       return;
@@ -2053,59 +3223,138 @@ function bindEvents() {
   });
 
   document.querySelectorAll(".btn-load-tool").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      toast("Ticket tools coming soon — ask admin to enable", "err");
+    on(btn, "click", () => toast("Ticket tools coming soon — ask admin to enable", "err"));
+  });
+
+  document.querySelectorAll("[data-focus-check]").forEach((btn) => {
+    on(btn, "click", () => {
+      const el = $("page-check-bet-id") || $("check-bet-focus");
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+      $("page-check-bet-id")?.focus();
     });
   });
 
-  $("btn-place").addEventListener("click", placeBet);
+  on($("btn-place"), "click", placeBet);
 
-  $("btn-clear-slip").addEventListener("click", () => {
+  on($("btn-clear-slip"), "click", () => {
     state.slip = [];
     save();
     renderSlip();
-    renderBoard();
-    renderCarousel();
+    refreshHomeAndBoard();
   });
 
-  $("btn-join").addEventListener("click", () => {
-    if (!useApi()) {
-      state.balance += 1000;
-      save();
-      renderBalance();
-      toast(`+1,000 ${CURRENCY} demo added`, "ok");
-      return;
-    }
+  on($("btn-join"), "click", () => {
     if (state.sessionUser) {
-      api().clearSession();
+      if (useApi()) api().clearSession();
       state.sessionUser = null;
-      state.balance = 0;
-      state.history = [];
+      if (!useApi()) {
+        /* keep demo balance on sign-out of local session */
+      } else {
+        state.balance = 0;
+        state.history = [];
+      }
       renderSession();
       renderBalance();
-      if (state.betslipTab === "bets") renderHistory();
+      refreshMyBetsIfVisible();
       toast("Signed out", "ok");
       return;
     }
     openAuthModal("login");
   });
 
-  document.querySelectorAll(".auth-tab").forEach((btn) => {
-    btn.addEventListener("click", () => openAuthModal(btn.dataset.authTab));
+  on($("header-help"), "click", () => toast("Password reset coming soon", "ok"));
+  on($("header-register-btn"), "click", () => openAuthModal("register"));
+  on($("header-login-btn"), "click", async () => {
+    const phoneRaw = $("header-login-phone")?.value.trim();
+    const password = $("header-login-password")?.value;
+    if (!phoneRaw || !password) {
+      openAuthModal("login");
+      return;
+    }
+    if (!useApi()) {
+      state.sessionUser = {
+        displayName: formatAuthPhone(phoneRaw),
+        email: phoneToAccountEmail(phoneRaw),
+      };
+      renderSession();
+      renderBalance();
+      toast("Signed in (demo)", "ok");
+      return;
+    }
+    const email = phoneToAccountEmail(phoneRaw);
+    try {
+      const data = await api().login({ email, password });
+      state.sessionUser = data.user;
+      toast("Signed in", "ok");
+      await syncFromApi();
+      renderSession();
+    } catch (err) {
+      toast(err.message || "Login failed", "err");
+    }
+  });
+  on($("header-login-password"), "keydown", (e) => {
+    if (e.key === "Enter") $("header-login-btn")?.click();
   });
 
-  $("auth-close").addEventListener("click", closeAuthModal);
-  $("auth-modal").addEventListener("click", (e) => {
+  document.querySelectorAll("[data-auth-tab]").forEach((btn) => {
+    on(btn, "click", () => openAuthModal(btn.dataset.authTab));
+  });
+
+  document.querySelectorAll("[data-toggle-pass]").forEach((btn) => {
+    on(btn, "click", () => {
+      const input = $(btn.dataset.togglePass);
+      if (!input) return;
+      const show = input.type === "password";
+      input.type = show ? "text" : "password";
+      btn.textContent = show ? "🙈" : "👁";
+      btn.setAttribute("aria-label", show ? "Hide password" : "Show password");
+    });
+  });
+
+  on($("auth-forgot"), "click", () => toast("Password reset coming soon", "ok"));
+  on($("auth-support"), "click", () => toast("Support coming soon", "ok"));
+
+  on($("auth-close"), "click", closeAuthModal);
+  on($("auth-modal"), "click", (e) => {
     if (e.target === $("auth-modal")) closeAuthModal();
   });
 
-  $("auth-form").addEventListener("submit", async (e) => {
+  on($("auth-form"), "submit", async (e) => {
     e.preventDefault();
-    if (!useApi()) return;
-    const email = $("auth-email").value.trim();
-    const password = $("auth-password").value;
-    const phone = $("auth-phone").value.trim();
+    if (!useApi()) {
+      toast("Connect to the live API to sign in", "err");
+      return;
+    }
+    const phoneRaw = $("auth-phone")?.value.trim();
+    const password = $("auth-password")?.value;
+    const password2 = $("auth-password2")?.value;
+    if (!phoneRaw) {
+      toast("Enter your phone number", "err");
+      return;
+    }
+    const digits = phoneRaw.replace(/\D/g, "");
+    if (digits.replace(/^251/, "").replace(/^0/, "").length < 9) {
+      toast("Enter a valid Ethiopian phone number", "err");
+      return;
+    }
+    if (state.authTab === "register") {
+      if (password !== password2) {
+        toast("Passwords do not match", "err");
+        return;
+      }
+      if (!$("auth-age")?.checked) {
+        toast("Confirm that you are over 18", "err");
+        return;
+      }
+      if (!$("auth-terms")?.checked) {
+        toast("Agree to the terms to continue", "err");
+        return;
+      }
+    }
+    const email = phoneToAccountEmail(phoneRaw);
+    const phone = formatAuthPhone(phoneRaw);
     const submitBtn = $("auth-submit");
+    if (!submitBtn) return;
     const prevLabel = submitBtn.textContent;
     submitBtn.disabled = true;
     submitBtn.textContent = "Please wait…";
@@ -2129,13 +3378,13 @@ function bindEvents() {
     }
   });
 
-  $("btn-deposit")?.addEventListener("click", openDepositModal);
-  $("deposit-close")?.addEventListener("click", closeDepositModal);
-  $("deposit-modal")?.addEventListener("click", (e) => {
+  on($("btn-deposit"), "click", openDepositModal);
+  on($("deposit-close"), "click", closeDepositModal);
+  on($("deposit-modal"), "click", (e) => {
     if (e.target === $("deposit-modal")) closeDepositModal();
   });
-  $("deposit-method")?.addEventListener("change", () => updateDepositInstructions(state.depositMethods || []));
-  $("deposit-form")?.addEventListener("submit", async (e) => {
+  on($("deposit-method"), "change", () => updateDepositInstructions(state.depositMethods || []));
+  on($("deposit-form"), "submit", async (e) => {
     e.preventDefault();
     if (!useApi() || !api().getToken()) return;
     try {
@@ -2156,25 +3405,41 @@ function bindEvents() {
 }
 
 function init() {
-  load();
-  state.fixtures = buildMockFixtures();
-  state.sidebar = buildMockSidebar();
-  bindEvents();
-  renderSession();
-  renderAll();
-  syncFromApi();
-  fetchSidebar().then(() => {
-    renderSidebar();
-  });
-  loadFixtures();
-  initAdvertCarousel();
-  setInterval(updateCountdowns, 1000);
-  setInterval(() => {
-    if (state.adSlides.length > 1) {
-      state.adIndex = (state.adIndex + 1) % state.adSlides.length;
-      updateAdCarousel();
+  try {
+    load();
+    state.fixtures = buildMockFixtures();
+    state.sidebar = buildMockSidebar();
+    bindEvents();
+    closeLeagueDropdown();
+    updateSportsMenuUI();
+    updateSubNavHighlight();
+    renderSession();
+    renderAll();
+    renderFootballFilters();
+    initAdvertCarousel();
+    loadFixtures();
+    if (window.location.protocol !== "file:") {
+      syncFromApi();
+      fetchSidebar().then(() => {
+        renderSidebar();
+        renderTopLeaguesGrid();
+        refreshHomeAndBoard();
+      });
     }
-  }, 6000);
+    setInterval(updateCountdowns, 1000);
+    setInterval(() => {
+      if (state.adSlides.length > 1) {
+        state.adIndex = (state.adIndex + 1) % state.adSlides.length;
+        updateAdCarousel();
+      }
+    }, 6000);
+  } catch (err) {
+    showBootError(err);
+  }
 }
+
+window.addEventListener("error", (e) => {
+  if (e?.error) showBootError(e.error);
+});
 
 init();
