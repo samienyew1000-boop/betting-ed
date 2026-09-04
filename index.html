@@ -1,293 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="hope-bet-api" content="https://betting-ed.onrender.com" />
-    <title>Hope Bet — Sportsbook</title>
-    <script>
-      (function () {
-        var path = location.pathname || "";
-        if (!path.endsWith("/") && !/\.html?$/i.test(path)) {
-          location.replace(path + "/" + location.search + location.hash);
-        }
-      })();
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./style.css?v=20260903p" />
-  </head>
-  <body>
-    <div class="web-app">
-      <header class="site-header">
-        <div class="utility-bar">
-          <div class="utility-guest" id="utility-guest">
-            <div class="header-login-fields">
-              <label class="header-login-phone">
-                <span class="header-login-ico" aria-hidden="true">👤</span>
-                <span class="header-login-cc">+251 (0)</span>
-                <input type="tel" id="header-login-phone" placeholder="Number" inputmode="numeric" autocomplete="tel-national" />
-              </label>
-              <label class="header-login-pass">
-                <span class="header-login-ico" aria-hidden="true">🔑</span>
-                <input type="password" id="header-login-password" placeholder="Password" autocomplete="current-password" />
-              </label>
-            </div>
-            <button type="button" class="header-help-btn" id="header-help" title="Forgot password" aria-label="Help">?</button>
-            <button type="button" class="header-auth-btn" id="header-login-btn">LOGIN</button>
-            <button type="button" class="header-auth-btn" id="header-register-btn">REGISTER</button>
-          </div>
 
-          <div class="utility-authed" id="utility-authed" hidden>
-            <div class="utility-balances">
-              <button type="button" class="balance-toggle" id="btn-balance-toggle" aria-label="Toggle balance visibility">👁</button>
-              <div class="balance-line">
-                <span>Real Balance</span>
-                <strong id="balance">0.00</strong>
-                <em id="currency-label">ETB</em>
-              </div>
-              <div class="balance-line balance-line--bonus">
-                <span>Bonus Balance</span>
-                <strong id="bonus-balance">0.00</strong>
-                <em>ETB</em>
-              </div>
-            </div>
-            <button type="button" class="btn-deposit-header" id="btn-deposit">DEPOSIT</button>
-            <div class="utility-icons">
-              <button type="button" class="utility-icon" title="Messages">✉</button>
-              <button type="button" class="utility-icon" title="Promotions">🎁</button>
-              <button type="button" class="utility-icon" id="btn-my-bets-shortcut" title="My Bets">📋</button>
-            </div>
-            <div class="utility-right">
-              <span class="user-pill" id="user-pill" hidden></span>
-              <button type="button" class="btn-join btn-join--header" id="btn-join">Sign Out</button>
-            </div>
-          </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="hope-bet-api" content="http://127.0.0.1:8787" />
+  <title>Hope Bet — Sportsbook</title>
+  <script>
+    (function () {
+      var path = location.pathname || "";
+      if (!path.endsWith("/") && !/\.html?$/i.test(path)) {
+        location.replace(path + "/" + location.search + location.hash);
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css?v=20260904_betslip_redesign_v1" />
+</head>
+
+<body>
+  <div class="web-app">
+    <header class="site-header">
+      <!-- TOP UTILITY STRIP -->
+      <div class="top-nav-bar">
+        <div class="top-nav-links">
+          <button type="button" class="top-link is-on" data-nav="sport">Sport</button>
+          <button type="button" class="top-link" data-nav="upcoming">Upcoming</button>
+          <button type="button" class="top-link" data-nav="live">Live</button>
+          <button type="button" class="top-link" data-coming-soon>Tournament</button>
+          <button type="button" class="top-link" data-coming-soon>Fury Flight</button>
+          <button type="button" class="top-link" data-coming-soon>MH5 Family</button>
+          <button type="button" class="top-link" data-coming-soon>Sizzling Star</button>
+          <button type="button" class="top-link" data-coming-soon>Sizzling Blaze</button>
+          <button type="button" class="top-link" data-coming-soon>Virtual</button>
+          <button type="button" class="top-link" data-coming-soon>Special Games</button>
+          <button type="button" class="top-link" data-coming-soon>Promo</button>
         </div>
-
-        <nav class="main-nav">
-          <a class="main-nav-logo" href="./">
-            <img id="brand-logo" src="assets/hope-bet-logo.png" alt="Hope Bet" />
-          </a>
-          <div class="main-nav-tabs">
-            <button type="button" class="main-nav-tab is-on" data-nav="sport">SPORT</button>
-            <button type="button" class="main-nav-tab" data-nav="upcoming">UPCOMING</button>
-            <button type="button" class="main-nav-tab" data-nav="live">LIVE</button>
-            <button type="button" class="main-nav-tab" data-nav="special">SPECIAL GAME</button>
-          </div>
-        </nav>
-
-        <nav class="sub-nav" id="sub-nav">
-          <button type="button" class="sub-nav-item is-on" data-subnav="sports">Sports</button>
-          <button type="button" class="sub-nav-item" data-subnav="daily">Daily Events</button>
-          <button type="button" class="sub-nav-item" data-subnav="all-events">All Events</button>
-          <button type="button" class="sub-nav-item" data-subnav="upcoming">Upcoming</button>
-          <button type="button" class="sub-nav-item" data-subnav="inplay">Inplay Calendar</button>
-          <button type="button" class="sub-nav-item" data-subnav="my-bets" id="sub-nav-my-bets">My Bets</button>
-        </nav>
-      </header>
-
-      <div class="mobile-top" id="mobile-top">
-        <button type="button" class="mobile-top-btn" id="btn-mobile-menu" aria-label="Open menu">☰</button>
-        <button type="button" class="mobile-top-brand" id="btn-mobile-home" aria-label="Hope Bet home">
-          <img src="assets/hope-bet-logo.png" alt="Hope Bet" />
-        </button>
-        <button type="button" class="mobile-top-btn" id="btn-mobile-account" aria-label="Account">👤</button>
-      </div>
-      <div class="mobile-sports-strip" id="mobile-sports-strip" aria-label="Sports"></div>
-      <div class="mobile-time-strip" id="mobile-time-strip" hidden></div>
-      <div class="mobile-drawer-backdrop" id="mobile-drawer-backdrop" hidden></div>
-      <aside class="account-drawer" id="account-drawer" aria-label="Account">
-        <button type="button" class="drawer-close" id="btn-close-account" aria-label="Close account">×</button>
-        <div class="account-drawer-body" id="account-drawer-body">
-          <div class="account-guest" id="account-guest">
-            <p class="account-prompt">Account already existing?</p>
-            <button type="button" class="account-cta" data-account-auth="login">LOGIN</button>
-            <p class="account-prompt">New user?</p>
-            <button type="button" class="account-cta" data-account-auth="register">REGISTER</button>
-          </div>
-          <div class="account-signed" id="account-signed" hidden>
-            <p class="account-signed-name" id="account-signed-name"></p>
-            <button type="button" class="account-cta" id="account-deposit">DEPOSIT</button>
-            <button type="button" class="account-cta account-cta--dark" id="account-signout">SIGN OUT</button>
-          </div>
-          <button type="button" class="account-row" id="account-live-chat">
-            <span class="account-row-icon" aria-hidden="true">💬</span>
+        <div class="top-nav-right">
+          <label class="night-toggle" id="night-toggle" title="Toggle Night Mode">
+            <span class="night-toggle-icon">🌙</span>
+            <div class="night-toggle-track">
+              <div class="night-toggle-thumb"></div>
+            </div>
+          </label>
+          <button type="button" class="top-app-pill" data-coming-soon>App</button>
+          <button type="button" class="top-util-link" id="top-live-chat">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
             <span>LIVE CHAT</span>
           </button>
-          <div class="account-row account-row--select">
-            <span class="account-lang-flag" aria-hidden="true">🇬🇧</span>
-            <select id="account-language" aria-label="Language">
-              <option value="en" selected>English</option>
-            </select>
-          </div>
-          <div class="account-apps">
-            <a class="account-app" href="#" id="account-android">
-              <span class="account-app-logo account-app-logo--android" aria-hidden="true"></span>
-              <span>
-                <small>Application</small>
-                <strong>Android</strong>
-              </span>
-            </a>
-            <a class="account-app" href="#" id="account-ios">
-              <span class="account-app-logo account-app-logo--ios" aria-hidden="true"></span>
-              <span>
-                <small>Application</small>
-                <strong>IOS</strong>
-              </span>
-            </a>
-          </div>
-          <div class="account-social">
-            <p>Follow Our Social Media!</p>
-            <a class="account-social-btn" href="https://t.me/" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
-              <span aria-hidden="true">✈</span>
-            </a>
+          <a href="https://t.me/" target="_blank" rel="noopener noreferrer" class="top-util-icon" title="Telegram">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
+          </a>
+          <div class="top-lang-dropdown">
+            <span>🇬🇧 English ▾</span>
           </div>
         </div>
-      </aside>
-      <button type="button" class="mobile-slip-fab" id="mobile-slip-fab" hidden aria-label="Open betslip">
-        <span class="mobile-slip-fab-count" id="mobile-slip-count">0</span>
-        <span class="mobile-slip-fab-odds">
-          <span class="mobile-slip-fab-label">TOTAL ODDS</span>
-          <strong id="mobile-slip-odds">0.00</strong>
-        </span>
+      </div>
+
+      <!-- MAIN BRAND BAR -->
+      <nav class="main-nav">
+        <a class="main-nav-logo" href="./">
+          <img id="brand-logo" src="assets/hope-bet-logo.png" alt="Hope Bet" />
+        </a>
+        <div class="main-nav-tabs">
+          <button type="button" class="main-nav-tab is-on" data-nav="sport">SPORT</button>
+          <button type="button" class="main-nav-tab" data-nav="upcoming"><span class="tab-badge-new">NEW</span>UPCOMING</button>
+          <button type="button" class="main-nav-tab" data-nav="live">LIVE</button>
+          <button type="button" class="main-nav-tab" data-nav="tournament" data-coming-soon><span class="tab-badge-new">NEW</span>TOURNAMENT</button>
+          <button type="button" class="main-nav-tab" data-nav="fury-flight" data-coming-soon><span class="tab-badge-new">NEW</span>FURY FLIGHT</button>
+          <button type="button" class="main-nav-tab" data-nav="mh5" data-coming-soon><span class="tab-badge-new">NEW</span>MH5 FAMILY</button>
+          <button type="button" class="main-nav-tab" data-nav="sizzling" data-coming-soon><span class="tab-badge-new">NEW</span>SIZZLING STAR</button>
+          <span class="nav-arrow-down">▾</span>
+        </div>
+        <div class="main-nav-right">
+          <span class="nav-action-icon" title="Leaderboard" data-coming-soon>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#ffd700"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 003.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+          </span>
+          <span class="nav-action-icon" title="VIP Club" data-coming-soon>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#ffd700"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 15l-4-4 1.41-1.41L10 13.17l6.59-6.59L18 8l-8 8z"/></svg>
+          </span>
+          <button type="button" class="main-nav-promo" data-coming-soon>PROMOTIONS</button>
+          
+          <div class="nav-auth-guest" id="utility-guest">
+            <span class="nav-pipe">|</span>
+            <button type="button" class="main-nav-link" id="header-login-btn">Log In</button>
+            <button type="button" class="main-nav-create" id="header-register-btn">Create Account</button>
+          </div>
+
+          <div class="nav-auth-logged" id="utility-authed" hidden>
+            <div class="balance-line">
+              <strong id="balance">0.00</strong> <em id="currency-label">ETB</em>
+            </div>
+            <button type="button" class="btn-deposit-header" id="btn-deposit">DEPOSIT</button>
+            <span class="user-pill" id="user-pill"></span>
+            <button type="button" class="btn-join btn-join--header" id="btn-join">Sign Out</button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- SUB NAV STRIP -->
+      <nav class="sub-nav" id="sub-nav">
+        <button type="button" class="sub-nav-item is-on" data-subnav="sports">Sports</button>
+        <button type="button" class="sub-nav-item" data-subnav="daily">Daily Events</button>
+        <button type="button" class="sub-nav-item" data-subnav="all-events">All Events</button>
+        <button type="button" class="sub-nav-item" data-subnav="upcoming">Upcoming</button>
+        <button type="button" class="sub-nav-item" data-subnav="inplay">Inplay Calendar</button>
+        <button type="button" class="sub-nav-item" data-subnav="my-bets" id="sub-nav-my-bets">My Bets</button>
+      </nav>
+    </header>
+
+    <div class="mobile-top" id="mobile-top">
+      <button type="button" class="mobile-top-btn" id="btn-mobile-menu" aria-label="Open menu">☰</button>
+      <button type="button" class="mobile-top-brand" id="btn-mobile-home" aria-label="Hope Bet home">
+        <img src="assets/hope-bet-logo.png" alt="Hope Bet" />
       </button>
+      <button type="button" class="mobile-top-btn" id="btn-mobile-account" aria-label="Account">👤</button>
+    </div>
+    <div class="mobile-sports-strip" id="mobile-sports-strip" aria-label="Sports"></div>
+    <div class="mobile-time-strip" id="mobile-time-strip" hidden></div>
+    <div class="mobile-drawer-backdrop" id="mobile-drawer-backdrop" hidden></div>
+    <aside class="account-drawer" id="account-drawer" aria-label="Account">
+      <button type="button" class="drawer-close" id="btn-close-account" aria-label="Close account">×</button>
+      <div class="account-drawer-body" id="account-drawer-body">
+        <div class="account-guest" id="account-guest">
+          <p class="account-prompt">Account already existing?</p>
+          <button type="button" class="account-cta" data-account-auth="login">LOGIN</button>
+          <p class="account-prompt">New user?</p>
+          <button type="button" class="account-cta" data-account-auth="register">REGISTER</button>
+        </div>
+        <div class="account-signed" id="account-signed" hidden>
+          <p class="account-signed-name" id="account-signed-name"></p>
+          <button type="button" class="account-cta" id="account-deposit">DEPOSIT</button>
+          <button type="button" class="account-cta account-cta--dark" id="account-signout">SIGN OUT</button>
+        </div>
+        <button type="button" class="account-row" id="account-live-chat">
+          <span class="account-row-icon" aria-hidden="true">💬</span>
+          <span>LIVE CHAT</span>
+        </button>
+        <div class="account-row account-row--select">
+          <span class="account-lang-flag" aria-hidden="true">🇬🇧</span>
+          <select id="account-language" aria-label="Language">
+            <option value="en" selected>English</option>
+          </select>
+        </div>
+        <div class="account-apps">
+          <a class="account-app" href="#" id="account-android">
+            <span class="account-app-logo account-app-logo--android" aria-hidden="true"></span>
+            <span>
+              <small>Application</small>
+              <strong>Android</strong>
+            </span>
+          </a>
+          <a class="account-app" href="#" id="account-ios">
+            <span class="account-app-logo account-app-logo--ios" aria-hidden="true"></span>
+            <span>
+              <small>Application</small>
+              <strong>IOS</strong>
+            </span>
+          </a>
+        </div>
+        <div class="account-social">
+          <p>Follow Our Social Media!</p>
+          <a class="account-social-btn" href="https://t.me/" target="_blank" rel="noopener noreferrer"
+            aria-label="Telegram">
+            <span aria-hidden="true">✈</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+    <button type="button" class="mobile-slip-fab" id="mobile-slip-fab" hidden aria-label="Open betslip">
+      <span class="mobile-slip-fab-count" id="mobile-slip-count">0</span>
+      <span class="mobile-slip-fab-odds">
+        <span class="mobile-slip-fab-label">TOTAL ODDS</span>
+        <strong id="mobile-slip-odds">0.00</strong>
+      </span>
+    </button>
 
-      <div class="web-body">
-        <aside class="sidebar" id="sidebar">
-          <button type="button" class="drawer-close" id="btn-close-sidebar" aria-label="Close menu">×</button>
-          <div class="sports-menu-head" id="sports-menu-head" hidden>
-            <button type="button" class="sports-menu-back" id="sports-menu-back" aria-label="Back">↩</button>
-            <span>Sports Menu</span>
+    <div class="web-body">
+      <aside class="sidebar" id="sidebar">
+        <button type="button" class="drawer-close" id="btn-close-sidebar" aria-label="Close menu">&times;</button>
+        <div class="sidebar-menu-top">
+          <span class="sidebar-menu-title">Sports Menu</span>
+          <button type="button" class="sidebar-menu-toggle-btn" title="Filter" data-coming-soon>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+          </button>
+        </div>
+
+        <div class="sidebar-search">
+          <div class="sidebar-section-header">
+            <span>Search Event</span>
+            <span class="sidebar-arrow">▲</span>
           </div>
-
-          <div class="sidebar-search">
-            <label class="sidebar-search-label">Search Event</label>
-            <p class="sidebar-search-hint" id="sidebar-search-hint" hidden>
-              Insert the events name or at least one team in the form below.
-            </p>
-            <div class="sidebar-search-wrap">
-              <input type="search" id="event-search" placeholder="Search Event" autocomplete="off" />
-              <span aria-hidden="true">⌕</span>
-            </div>
+          <p class="sidebar-search-hint">Insert the events name or at least one team in the form below</p>
+          <div class="sidebar-search-wrap">
+            <span class="sidebar-search-ico">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            </span>
+            <input type="search" id="event-search" placeholder="Search Event" autocomplete="off" />
           </div>
+        </div>
 
-          <div class="sidebar-block" id="sidebar-menu-filters">
-            <div class="sidebar-title sidebar-title--red"><span>Quick Filter</span></div>
-            <div class="filter-chips filter-chips--time filter-chips--sidebar" id="time-filters"></div>
-            <button type="button" class="btn-inplay" id="btn-inplay">🕐 In-Play</button>
+        <div class="sidebar-block" id="sidebar-menu-filters">
+          <div class="sidebar-section-header">
+            <span>Quick Filter</span>
+            <span class="sidebar-arrow">▲</span>
           </div>
+          <div class="filter-chips filter-chips--time filter-chips--sidebar" id="time-filters"></div>
+          <button type="button" class="btn-inplay" id="btn-inplay">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.1.8-1.2-4.5-2.7V7z"/></svg>
+            <span>In-Play</span>
+          </button>
+        </div>
 
-          <div class="sidebar-block" id="sidebar-sports-block">
-            <div class="sidebar-title sidebar-block--home"><span>SPORTS</span></div>
-            <div class="sidebar-list sidebar-list--sports" id="sidebar-sports"></div>
+        <div class="sidebar-block" id="sidebar-sports-block">
+          <div class="sidebar-title sidebar-block--home"><span>Sports</span></div>
+          <div class="sidebar-list sidebar-list--sports" id="sidebar-sports"></div>
+        </div>
+
+        <div class="sidebar-block sidebar-block--compact sidebar-block--home">
+          <div class="sidebar-title">
+            <span>TOP LEAGUES</span>
+            <em id="top-league-count">0</em>
           </div>
+          <div class="sidebar-list" id="sidebar-leagues"></div>
+        </div>
 
-          <div class="sidebar-block sidebar-block--compact sidebar-block--home">
-            <div class="sidebar-title">
-              <span>TOP LEAGUES</span>
-              <em id="top-league-count">0</em>
-            </div>
-            <div class="sidebar-list" id="sidebar-leagues"></div>
+        <div class="sidebar-block sidebar-block--compact sidebar-block--home">
+          <div class="sidebar-title">
+            <span>COUNTRIES</span>
+            <em id="country-count">0</em>
           </div>
+          <div class="sidebar-list" id="sidebar-countries"></div>
+        </div>
+      </aside>
 
-          <div class="sidebar-block sidebar-block--compact sidebar-block--home">
-            <div class="sidebar-title">
-              <span>COUNTRIES</span>
-              <em id="country-count">0</em>
-            </div>
-            <div class="sidebar-list" id="sidebar-countries"></div>
-          </div>
-        </aside>
-
-        <main class="content">
-          <section class="content-view is-active" id="view-sports" data-view="sports">
-            <div id="sports-home-wrap">
+      <main class="content">
+        <section class="content-view is-active" id="view-sports" data-view="sports">
+          <div id="sports-home-wrap">
             <div class="ad-carousel" id="ad-carousel">
-              <button type="button" class="ad-carousel-btn ad-carousel-btn--prev" id="ad-prev" aria-label="Previous">‹</button>
+              <button type="button" class="ad-carousel-btn ad-carousel-btn--prev" id="ad-prev"
+                aria-label="Previous">‹</button>
               <div class="ad-carousel-track" id="ad-carousel-track"></div>
-              <button type="button" class="ad-carousel-btn ad-carousel-btn--next" id="ad-next" aria-label="Next">›</button>
+              <button type="button" class="ad-carousel-btn ad-carousel-btn--next" id="ad-next"
+                aria-label="Next">›</button>
               <div class="ad-carousel-dots" id="ad-carousel-dots"></div>
             </div>
 
             <div class="section-head section-head--row">
-              <h2>TOP MATCHES</h2>
+              <h2><span class="section-dots">&#x2022;&#x2022;&#x2022;</span> Top Matches</h2>
             </div>
             <div class="popular-row" id="popular-carousel"></div>
 
             <div class="section-head section-head--row">
-              <h2>TOP LEAGUES</h2>
+              <h2><span class="section-dots">&#x2022;&#x2022;&#x2022;</span> Top Leagues</h2>
+            </div>
+            <div class="league-sport-tabs" id="league-sport-tabs">
+              <button type="button" class="league-sport-tab is-on" data-league-sport="football">Football</button>
+              <button type="button" class="league-sport-tab" data-league-sport="basketball" data-coming-soon>Basketball</button>
+              <button type="button" class="league-sport-tab" data-league-sport="tennis" data-coming-soon>Tennis</button>
+              <button type="button" class="league-sport-tab" data-league-sport="hockey" data-coming-soon>Ice Hockey</button>
+              <button type="button" class="league-sport-tab" data-league-sport="handball" data-coming-soon>Handball</button>
+              <button type="button" class="league-sport-tab" data-league-sport="baseball" data-coming-soon>Baseball</button>
             </div>
             <div class="top-leagues-grid" id="top-leagues-grid"></div>
-            </div>
+          </div>
 
-            <div id="football-menu-wrap" hidden>
-              <div class="football-menu-toolbar">
-                <button type="button" class="football-filters-btn" id="football-filters-btn" aria-expanded="false">
-                  <span class="football-filters-btn-icon" aria-hidden="true">☷</span>
-                  Filters <span class="football-filters-btn-chev">▾</span>
-                </button>
-                <button type="button" class="btn-open-selected" id="btn-open-selected-leagues" hidden>
-                  Open selected leagues
-                </button>
-              </div>
-              <div class="football-filters-panel" id="football-filters-panel" hidden>
-                <button type="button" class="football-filters-panel-head" data-filters-collapse>
-                  <span class="football-filters-chev" aria-hidden="true">▲</span>
-                  <span class="football-filters-icon" aria-hidden="true">☷</span>
-                  <span>Filters</span>
-                </button>
-                <div class="football-filters-body">
-                  <div class="football-time-slider-wrap">
-                    <input type="range" class="football-time-slider" id="football-time-slider" min="0" max="0" value="0" step="1" aria-label="Filter matches by time" />
-                    <div class="football-time-ticks" id="football-time-ticks"></div>
-                    <div class="football-time-labels" id="football-time-labels"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="football-menu-banner">
-                <span>Football</span>
-                <div class="football-menu-banner-actions">
-                  <button type="button" title="Expand">⛶</button>
-                  <button type="button" title="Share">↗</button>
-                </div>
-              </div>
-              <div class="football-regions" id="football-regions"></div>
-            </div>
-
-            <div class="filter-bar">
-              <div class="league-filter-bar" id="league-filter-bar"></div>
-            </div>
-            <div class="league-dropdown-backdrop" id="league-dropdown-backdrop" hidden></div>
-
-            <div class="board-head">
-              <h3 id="board-title">All Leagues</h3>
-              <div class="board-markets">
-                <span>1X2</span>
-                <span>Double Chance</span>
-                <span>O/U 2.5</span>
-              </div>
-            </div>
-
-            <div class="board-wrap">
-              <div class="board-loading" id="board-loading" hidden>Loading fixtures…</div>
-              <div class="match-board" id="match-board"></div>
-            </div>
-          </section>
-
-          <section class="content-view" id="view-leagues" data-view="leagues" hidden>
-            <button type="button" class="match-back" id="leagues-back">‹ Back to Football menu</button>
-            <div class="football-menu-toolbar football-menu-toolbar--league">
-              <button type="button" class="football-filters-btn" id="league-filters-btn" aria-expanded="false">
+          <div id="football-menu-wrap" hidden>
+            <div class="football-menu-toolbar">
+              <button type="button" class="football-filters-btn" id="football-filters-btn" aria-expanded="false">
                 <span class="football-filters-btn-icon" aria-hidden="true">☷</span>
                 Filters <span class="football-filters-btn-chev">▾</span>
               </button>
+              <button type="button" class="btn-open-selected" id="btn-open-selected-leagues" hidden>
+                Open selected leagues
+              </button>
             </div>
-            <div class="football-filters-panel" id="league-filters-panel" hidden>
+            <div class="football-filters-panel" id="football-filters-panel" hidden>
               <button type="button" class="football-filters-panel-head" data-filters-collapse>
                 <span class="football-filters-chev" aria-hidden="true">▲</span>
                 <span class="football-filters-icon" aria-hidden="true">☷</span>
@@ -295,283 +286,456 @@
               </button>
               <div class="football-filters-body">
                 <div class="football-time-slider-wrap">
-                  <input type="range" class="football-time-slider" id="league-time-slider" min="0" max="0" value="0" step="1" aria-label="Filter matches by time" />
-                  <div class="football-time-ticks" id="league-time-ticks"></div>
-                  <div class="football-time-labels" id="league-time-labels"></div>
+                  <input type="range" class="football-time-slider" id="football-time-slider" min="0" max="0" value="0"
+                    step="1" aria-label="Filter matches by time" />
+                  <div class="football-time-ticks" id="football-time-ticks"></div>
+                  <div class="football-time-labels" id="football-time-labels"></div>
                 </div>
               </div>
             </div>
-            <div class="league-page-head">
-              <h2 id="league-page-title">Matches</h2>
-              <div class="board-markets">
-                <span>1X2</span>
-                <span>Double Chance</span>
-                <span>O/U 2.5</span>
+            <div class="football-menu-banner">
+              <span>Football</span>
+              <div class="football-menu-banner-actions">
+                <button type="button" title="Expand">⛶</button>
+                <button type="button" title="Share">↗</button>
               </div>
             </div>
-            <div class="board-wrap league-page-board-wrap">
-              <div class="board-loading" id="league-page-loading" hidden>Loading fixtures…</div>
-              <div class="match-board" id="league-page-board"></div>
-            </div>
-          </section>
-
-          <section class="content-view match-detail-view" id="view-match" data-view="match" hidden>
-            <div class="md-breadcrumb">
-              <button type="button" class="md-breadcrumb-back" id="match-back" aria-label="Back to matches">‹</button>
-              <span class="md-breadcrumb-dots" aria-hidden="true">⋮</span>
-              <span class="md-breadcrumb-path" id="match-breadcrumb"></span>
-            </div>
-            <div class="md-hero" id="match-hero"></div>
-            <div class="md-tabs-wrap">
-              <div class="md-tabs" id="market-tabs"></div>
-            </div>
-            <div class="md-toolbar">
-              <button type="button" class="md-toolbar-btn" id="md-collapse-all" aria-label="Collapse all markets">▾</button>
-              <button type="button" class="md-toolbar-btn" id="md-fav-markets" aria-label="Favourite markets">☆</button>
-              <div class="md-search">
-                <span class="md-search-icon" aria-hidden="true">⌕</span>
-                <input type="search" id="market-search" placeholder="Search..." autocomplete="off" />
-              </div>
-            </div>
-            <div class="md-loading" id="match-loading" hidden>Loading markets…</div>
-            <div class="md-markets" id="match-markets"></div>
-          </section>
-
-          <section class="content-view" id="view-check-bet" data-view="check-bet" hidden>
-            <div class="check-bet-page">
-              <section class="check-bet-card">
-                <div class="check-bet-card-head">Load booked bet</div>
-                <p class="check-bet-card-copy">
-                  Insert the code to load or <button type="button" class="check-bet-link" data-focus-check="check">check it</button> here.
-                </p>
-                <div class="check-bet-card-row">
-                  <input type="text" id="page-load-booked-code" placeholder="Insert the code here..." autocomplete="off" />
-                  <button type="button" class="btn-load-tool" data-load="booked">Load</button>
-                </div>
-              </section>
-
-              <section class="check-bet-card">
-                <div class="check-bet-card-head">Load Ticket</div>
-                <p class="check-bet-card-copy">Insert the id to load ticket.</p>
-                <div class="check-bet-card-row">
-                  <input type="text" id="page-load-ticket-id" placeholder="Insert the id here..." autocomplete="off" />
-                  <button type="button" class="btn-load-tool" data-load="ticket">Load</button>
-                </div>
-              </section>
-
-              <section class="check-bet-card" id="check-bet-focus">
-                <div class="check-bet-card-head">Check Your Bet</div>
-                <p class="check-bet-card-copy">Your Bet ID</p>
-                <div class="check-bet-card-row">
-                  <input type="text" id="page-check-bet-id" placeholder="Insert the code here..." autocomplete="off" />
-                  <button type="button" class="btn-load-tool" data-load="check">Load</button>
-                </div>
-              </section>
-            </div>
-          </section>
-
-          <section class="content-view" id="view-my-bets" data-view="my-bets" hidden>
-            <div class="my-bets-page">
-              <div class="my-bets-topbar">
-                <div class="my-bets-tabs" id="my-bets-status-tabs">
-                  <button type="button" class="my-bets-tab" data-mybets-status="closed">Closed</button>
-                  <button type="button" class="my-bets-tab" data-mybets-status="live">Live</button>
-                  <button type="button" class="my-bets-tab is-on" data-mybets-status="in-course">In Course</button>
-                </div>
-                <div class="my-bets-tabs my-bets-tabs--time" id="my-bets-time-tabs">
-                  <button type="button" class="my-bets-tab is-on" data-mybets-time="today">Today</button>
-                  <button type="button" class="my-bets-tab" data-mybets-time="week">1 Week</button>
-                  <button type="button" class="my-bets-tab" data-mybets-time="all">All</button>
-                </div>
-                <button type="button" class="my-bets-close" id="my-bets-close" aria-label="Close">×</button>
-              </div>
-              <div class="my-bets-search">
-                <input type="search" id="my-bets-search" placeholder="Insert ticket code here.." autocomplete="off" />
-                <button type="button" class="my-bets-search-btn" id="my-bets-search-btn" aria-label="Search ticket">⌕</button>
-              </div>
-              <div class="my-bets-body" id="my-bets-list"></div>
-            </div>
-          </section>
-        </main>
-
-        <aside class="betslip-panel" id="betslip-panel">
-          <button type="button" class="drawer-close" id="btn-close-betslip" aria-label="Close betslip">×</button>
-          <div class="betslip-header">
-            <span>Betslip</span>
-            <em id="slip-tab-count">0</em>
+            <div class="football-regions" id="football-regions"></div>
           </div>
 
-          <div class="betslip-panel-slip" id="panel-slip">
-            <div class="betslip-mode">
-              <button type="button" class="betslip-mode-btn is-on" data-mode="multiple">Multiple</button>
-              <button type="button" class="betslip-mode-btn" data-mode="single">Single</button>
-            </div>
+          <div class="filter-bar">
+            <div class="league-filter-bar" id="league-filter-bar"></div>
+          </div>
+          <div class="league-dropdown-backdrop" id="league-dropdown-backdrop" hidden></div>
 
-            <div class="betslip-empty" id="slip-empty">
-              <strong>Betslip is empty</strong>
-              <p>Add selections to start betting</p>
-            </div>
-
-            <div class="betslip-list" id="slip-list"></div>
-
-            <div class="betslip-foot" id="slip-foot" hidden>
-              <div class="stake-row">
-                <label for="stake-input">Stake</label>
-                <div class="stake-stepper">
-                  <button type="button" class="stake-step" id="stake-minus">−</button>
-                  <input type="number" id="stake-input" min="20" step="1" value="20" placeholder="Stake.." />
-                  <button type="button" class="stake-step" id="stake-plus">+</button>
-                </div>
-              </div>
-              <div class="quick-stakes" id="quick-stakes"></div>
-              <div class="slip-summary">
-                <div><span>Total odds</span><strong id="total-odds">0.00</strong></div>
-                <div><span>Potential win</span><strong id="potential-win">0.00</strong></div>
-              </div>
-              <button type="button" class="btn-share-slip" id="btn-share-slip">💾 SHARE</button>
-              <div class="betslip-actions">
-                <button type="button" class="btn-cancel-bet" id="btn-clear-slip">✕ CANCEL</button>
-                <button type="button" class="btn-place" id="btn-place">✓ PLACE BET</button>
-              </div>
+          <div class="board-head">
+            <h3 id="board-title">All Leagues</h3>
+            <div class="board-markets">
+              <span>1X2</span>
+              <span>Double Chance</span>
+              <span>O/U 2.5</span>
             </div>
           </div>
 
-          <div class="betslip-tools" id="betslip-tools">
-            <div class="betslip-tool">
-              <div class="betslip-tool-head">Load booked bet</div>
-              <p>Insert the code to load or check it here.</p>
-              <div class="betslip-tool-row">
-                <input type="text" id="load-booked-code" placeholder="Code" />
+          <div class="board-wrap">
+            <div class="board-loading" id="board-loading" hidden>Loading fixtures…</div>
+            <div class="match-board" id="match-board"></div>
+          </div>
+        </section>
+
+        <section class="content-view" id="view-leagues" data-view="leagues" hidden>
+          <button type="button" class="match-back" id="leagues-back">‹ Back to Football menu</button>
+          <div class="football-menu-toolbar football-menu-toolbar--league">
+            <button type="button" class="football-filters-btn" id="league-filters-btn" aria-expanded="false">
+              <span class="football-filters-btn-icon" aria-hidden="true">☷</span>
+              Filters <span class="football-filters-btn-chev">▾</span>
+            </button>
+          </div>
+          <div class="football-filters-panel" id="league-filters-panel" hidden>
+            <button type="button" class="football-filters-panel-head" data-filters-collapse>
+              <span class="football-filters-chev" aria-hidden="true">▲</span>
+              <span class="football-filters-icon" aria-hidden="true">☷</span>
+              <span>Filters</span>
+            </button>
+            <div class="football-filters-body">
+              <div class="football-time-slider-wrap">
+                <input type="range" class="football-time-slider" id="league-time-slider" min="0" max="0" value="0"
+                  step="1" aria-label="Filter matches by time" />
+                <div class="football-time-ticks" id="league-time-ticks"></div>
+                <div class="football-time-labels" id="league-time-labels"></div>
+              </div>
+            </div>
+          </div>
+          <div class="league-page-head">
+            <h2 id="league-page-title">Matches</h2>
+            <div class="board-markets">
+              <span>1X2</span>
+              <span>Double Chance</span>
+              <span>O/U 2.5</span>
+            </div>
+          </div>
+          <div class="board-wrap league-page-board-wrap">
+            <div class="board-loading" id="league-page-loading" hidden>Loading fixtures…</div>
+            <div class="match-board" id="league-page-board"></div>
+          </div>
+        </section>
+
+        <section class="content-view match-detail-view" id="view-match" data-view="match" hidden>
+          <div class="md-breadcrumb">
+            <button type="button" class="md-breadcrumb-back" id="match-back" aria-label="Back to matches">‹</button>
+            <span class="md-breadcrumb-dots" aria-hidden="true">⋮</span>
+            <span class="md-breadcrumb-path" id="match-breadcrumb"></span>
+          </div>
+          <div class="md-hero" id="match-hero"></div>
+          <div class="md-tabs-wrap">
+            <div class="md-tabs" id="market-tabs"></div>
+          </div>
+          <div class="md-toolbar">
+            <button type="button" class="md-toolbar-btn" id="md-collapse-all"
+              aria-label="Collapse all markets">▾</button>
+            <button type="button" class="md-toolbar-btn" id="md-fav-markets" aria-label="Favourite markets">☆</button>
+            <div class="md-search">
+              <span class="md-search-icon" aria-hidden="true">⌕</span>
+              <input type="search" id="market-search" placeholder="Search..." autocomplete="off" />
+            </div>
+          </div>
+          <div class="md-loading" id="match-loading" hidden>Loading markets…</div>
+          <div class="md-markets" id="match-markets"></div>
+        </section>
+
+        <section class="content-view" id="view-check-bet" data-view="check-bet" hidden>
+          <div class="check-bet-page">
+            <section class="check-bet-card">
+              <div class="check-bet-card-head">Load booked bet</div>
+              <p class="check-bet-card-copy">
+                Insert the code to load or <button type="button" class="check-bet-link" data-focus-check="check">check
+                  it</button> here.
+              </p>
+              <div class="check-bet-card-row">
+                <input type="text" id="page-load-booked-code" placeholder="Insert the code here..."
+                  autocomplete="off" />
                 <button type="button" class="btn-load-tool" data-load="booked">Load</button>
               </div>
-            </div>
-            <div class="betslip-tool">
-              <div class="betslip-tool-head">Load Ticket</div>
-              <p>Insert the id to load ticket.</p>
-              <div class="betslip-tool-row">
-                <input type="text" id="load-ticket-id" placeholder="Ticket ID" />
+            </section>
+
+            <section class="check-bet-card">
+              <div class="check-bet-card-head">Load Ticket</div>
+              <p class="check-bet-card-copy">Insert the id to load ticket.</p>
+              <div class="check-bet-card-row">
+                <input type="text" id="page-load-ticket-id" placeholder="Insert the id here..." autocomplete="off" />
                 <button type="button" class="btn-load-tool" data-load="ticket">Load</button>
               </div>
-            </div>
-            <div class="betslip-tool">
-              <div class="betslip-tool-head">Check Your Bet</div>
-              <p>Your Bet ID</p>
-              <div class="betslip-tool-row">
-                <input type="text" id="check-bet-id" placeholder="Bet ID" />
+            </section>
+
+            <section class="check-bet-card" id="check-bet-focus">
+              <div class="check-bet-card-head">Check Your Bet</div>
+              <p class="check-bet-card-copy">Your Bet ID</p>
+              <div class="check-bet-card-row">
+                <input type="text" id="page-check-bet-id" placeholder="Insert the code here..." autocomplete="off" />
                 <button type="button" class="btn-load-tool" data-load="check">Load</button>
               </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="content-view" id="view-super-admin" data-view="super-admin" hidden>
+          <div class="my-bets-page" style="padding: 1rem;">
+            <div class="section-head section-head--row" style="margin-bottom:1rem;">
+              <h2>Super Admin Dashboard</h2>
+              <button class="auth-btn" id="sa-refresh-btn" style="width: auto; padding: 0.5rem 1rem;">♻️
+                Refresh</button>
             </div>
-            <div class="betslip-tool">
-              <div class="betslip-tool-head">Last winnings</div>
-              <div class="last-winnings" id="last-winnings">
-                <div class="last-winnings-head">
-                  <span>Winner</span><span>Stake</span><span>Date</span>
+
+            <div style="background: var(--surface); padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+              <h3 style="margin-bottom: 1rem; color: var(--text-color);">Create User (Admin/Player)</h3>
+              <form id="sa-create-form"
+                style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 1rem; align-items: end;">
+                <div>
+                  <label class="auth-label">Username / Phone</label>
+                  <input type="text" id="sa-new-username" class="auth-field" required
+                    style="width: 100%; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); padding: 0.75rem; border-radius: 4px;" />
                 </div>
-                <div class="last-winnings-body" id="last-winnings-body">
-                  <p class="last-winnings-empty">No recent wins</p>
+                <div>
+                  <label class="auth-label">Password</label>
+                  <input type="text" id="sa-new-password" class="auth-field" required
+                    style="width: 100%; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); padding: 0.75rem; border-radius: 4px;" />
                 </div>
+                <div>
+                  <label class="auth-label">Role</label>
+                  <select id="sa-new-role"
+                    style="width: 100%; padding: 0.75rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color);">
+                    <option value="admin">Admin</option>
+                    <option value="player">Player</option>
+                  </select>
+                </div>
+                <button type="submit" class="auth-btn" style="height: 100%; padding: 0 1rem;">Create</button>
+              </form>
+            </div>
+
+            <div style="background: var(--surface); padding: 1rem; border-radius: 8px;">
+              <h3 style="margin-bottom: 1rem; color: var(--text-color);">Manage Users</h3>
+              <div style="overflow-x: auto;">
+                <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                  <thead>
+                    <tr style="border-bottom: 1px solid var(--border-color);">
+                      <th style="padding: 0.75rem; color: var(--text-muted);">ID</th>
+                      <th style="padding: 0.75rem; color: var(--text-muted);">Username</th>
+                      <th style="padding: 0.75rem; color: var(--text-muted);">Role</th>
+                      <th style="padding: 0.75rem; color: var(--text-muted);">Balance</th>
+                      <th style="padding: 0.75rem; color: var(--text-muted);">Top Up Amount</th>
+                      <th style="padding: 0.75rem; color: var(--text-muted);">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sa-users-table">
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
+        </section>
 
-          <div class="betslip-panel-bets" id="panel-bets" hidden>
-            <div class="bet-history" id="bet-history"></div>
+        <section class="content-view" id="view-my-bets" data-view="my-bets" hidden>
+          <div class="my-bets-page">
+            <div class="my-bets-topbar">
+              <div class="my-bets-tabs" id="my-bets-status-tabs">
+                <button type="button" class="my-bets-tab" data-mybets-status="closed">Closed</button>
+                <button type="button" class="my-bets-tab" data-mybets-status="live">Live</button>
+                <button type="button" class="my-bets-tab is-on" data-mybets-status="in-course">In Course</button>
+              </div>
+              <div class="my-bets-tabs my-bets-tabs--time" id="my-bets-time-tabs">
+                <button type="button" class="my-bets-tab is-on" data-mybets-time="today">Today</button>
+                <button type="button" class="my-bets-tab" data-mybets-time="week">1 Week</button>
+                <button type="button" class="my-bets-tab" data-mybets-time="all">All</button>
+              </div>
+              <button type="button" class="my-bets-close" id="my-bets-close" aria-label="Close">×</button>
+            </div>
+            <div class="my-bets-search">
+              <input type="search" id="my-bets-search" placeholder="Insert ticket code here.." autocomplete="off" />
+              <button type="button" class="my-bets-search-btn" id="my-bets-search-btn"
+                aria-label="Search ticket">⌕</button>
+            </div>
+            <div class="my-bets-body" id="my-bets-list"></div>
           </div>
-        </aside>
-      </div>
+        </section>
+      </main>
 
-      <button type="button" class="fab-chat" title="Live chat">💬</button>
-    </div>
-
-    <div class="toast" id="toast" hidden></div>
-    <div class="boot-error" id="boot-error" hidden></div>
-
-    <div class="auth-modal" id="deposit-modal" hidden>
-      <div class="auth-card">
-        <button type="button" class="auth-close" id="deposit-close" aria-label="Close">×</button>
-        <h2>Deposit ETB</h2>
-        <p class="auth-sub" id="deposit-instructions">Send payment, then submit your transaction reference.</p>
-        <form id="deposit-form" class="auth-form">
-          <label>
-            Payment method
-            <select id="deposit-method" required></select>
-          </label>
-          <label>
-            Amount (ETB)
-            <input type="number" id="deposit-amount" min="100" step="1" required />
-          </label>
-          <label>
-            Transaction reference
-            <input type="text" id="deposit-reference" required minlength="4" placeholder="Telebirr / bank reference ID" />
-          </label>
-          <button type="submit" class="auth-submit" id="deposit-submit">Submit deposit request</button>
-        </form>
-        <p class="auth-note" id="deposit-note">Deposits are reviewed manually. Balance updates after approval.</p>
-        <div class="deposit-history" id="deposit-history"></div>
-      </div>
-    </div>
-
-    <div class="auth-modal" id="auth-modal" hidden>
-      <div class="auth-card auth-card--hope" id="auth-card">
-        <button type="button" class="auth-close" id="auth-close" aria-label="Close">×</button>
-        <div class="auth-brand">
-          <img src="assets/hope-bet-logo.png" alt="Hope Bet" />
-          <strong>Hope Bet</strong>
+      <aside class="betslip-panel" id="betslip-panel">
+        <button type="button" class="drawer-close" id="btn-close-betslip" aria-label="Close betslip">&times;</button>
+        <div class="betslip-header">
+          <span class="betslip-title">Betslip</span>
+          <span class="betslip-badge" id="slip-tab-count">0</span>
         </div>
-        <h2 class="auth-heading" id="auth-title" hidden>Register</h2>
-        <form id="auth-form" class="auth-form">
-          <div class="auth-field" id="auth-phone-field">
-            <label class="auth-label" id="auth-phone-label" for="auth-phone" hidden>Phone number *</label>
-            <div class="auth-phone-row">
-              <div class="auth-cc" title="Ethiopia">ET +251</div>
-              <input type="tel" id="auth-phone" inputmode="numeric" autocomplete="tel-national" placeholder="Number" required />
+        
+        <div class="betslip-empty-notice" id="slip-empty-notice">
+          No bet has been selected. To select a bet, please click on the respective odds
+        </div>
+
+        <div class="betslip-panel-slip" id="panel-slip" hidden>
+          <div class="betslip-list" id="slip-list"></div>
+
+          <div class="betslip-mode-bar">
+            <button type="button" class="btn-betslip-mode" id="btn-betslip-mode">SINGLE</button>
+          </div>
+
+          <div class="betslip-foot" id="slip-foot">
+            <div class="stake-row">
+              <span class="stake-label">Stake</span>
+              <div class="stake-stepper-pill">
+                <button type="button" class="stake-step-circle" id="stake-minus">−</button>
+                <input type="number" id="stake-input" min="20" step="1" value="20" placeholder="20" />
+                <button type="button" class="stake-step-circle" id="stake-plus">+</button>
+              </div>
+            </div>
+
+            <div class="quick-stakes-row">
+              <div class="quick-stakes" id="quick-stakes"></div>
+              <button type="button" class="quick-stake-edit" id="btn-quick-stake-edit" title="Custom stake">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+              </button>
+            </div>
+
+            <div class="potential-winning-box">
+              <div class="pw-title">Potential Winning</div>
+              <div class="pw-amount-line">
+                <span class="pw-val" id="potential-win">0.00</span>
+                <span class="pw-cur">ETB</span>
+              </div>
+            </div>
+
+            <div class="betslip-meta-row">
+              <div class="meta-odds-type">
+                <span class="meta-check">✓</span>
+                <span>Odds Type</span>
+              </div>
+              <button type="button" class="meta-settings" data-coming-soon>
+                <span>Settings</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54A.484.484 0 0 0 14 2h-4c-.25 0-.46.18-.49.42l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.63 8.49c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.485.485 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.49.41h4c.25 0 .46-.18.49-.42l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+              </button>
+            </div>
+
+            <div class="betslip-auth-notice" id="slip-auth-notice">
+              <span class="auth-notice-ico">ⓘ</span>
+              <span>You need to login to be able to place a bet.</span>
+            </div>
+
+            <div class="betslip-actions-block">
+              <button type="button" class="btn-share-dark" id="btn-share-slip">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-7 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                <span>SHARE</span>
+              </button>
+              <div class="betslip-dual-actions">
+                <button type="button" class="btn-cancel-red" id="btn-clear-slip">
+                  <span class="btn-act-ico">✖</span>
+                  <span>CANCEL</span>
+                </button>
+                <button type="button" class="btn-place-green" id="btn-place">
+                  <span>PLACE BET</span>
+                  <span class="btn-act-ico">📋</span>
+                </button>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div class="auth-field">
-            <label class="auth-label auth-label--reg" for="auth-password" hidden data-reg-only>Password</label>
-            <div class="auth-pass-wrap">
-              <input type="password" id="auth-password" placeholder="Password" required minlength="6" autocomplete="current-password" />
-              <button type="button" class="auth-eye" data-toggle-pass="auth-password" aria-label="Show password">👁</button>
+        <div class="betslip-tools" id="betslip-tools">
+          <div class="betslip-tool">
+            <div class="betslip-tool-head">Load booked bet</div>
+            <p>Insert the code to load or <a href="#" class="check-it-link" data-coming-soon>check it</a> here</p>
+            <div class="betslip-tool-row">
+              <input type="text" id="load-booked-code" placeholder="Insert the code here..." />
+              <button type="button" class="btn-load-red" data-load="booked">Load</button>
             </div>
           </div>
-
-          <div class="auth-field" id="auth-confirm-wrap" hidden>
-            <label class="auth-label" for="auth-password2">Confirm Password</label>
-            <div class="auth-pass-wrap">
-              <input type="password" id="auth-password2" placeholder="Confirm Password" minlength="6" autocomplete="new-password" />
-              <button type="button" class="auth-eye" data-toggle-pass="auth-password2" aria-label="Show password">👁</button>
+          <div class="betslip-tool">
+            <div class="betslip-tool-head">Load Ticket</div>
+            <p>Insert the id to load ticket</p>
+            <div class="betslip-tool-row">
+              <input type="text" id="load-ticket-id" placeholder="Insert the id here" />
+              <button type="button" class="btn-load-red" data-load="ticket">Load</button>
             </div>
           </div>
-
-          <div class="auth-checks" id="auth-checks" hidden>
-            <label class="auth-check">
-              <input type="checkbox" id="auth-age" />
-              <span>I confirm that I am OVER 18 *</span>
-            </label>
-            <label class="auth-check">
-              <input type="checkbox" id="auth-terms" />
-              <span>If you continue, you'll confirm that you've read and agree with the terms of use and the privacy policy</span>
-            </label>
+          <div class="betslip-tool">
+            <div class="betslip-tool-head">Check Your Bet</div>
+            <p>Your Bet ID</p>
+            <div class="betslip-tool-row">
+              <input type="text" id="check-bet-id" placeholder="Insert the code here..." />
+              <button type="button" class="btn-load-red" data-load="check">Load</button>
+            </div>
           </div>
+          <div class="betslip-tool">
+            <div class="betslip-tool-head">Last winnings</div>
+            <div class="last-winnings" id="last-winnings">
+              <div class="last-winnings-head">
+                <span>Winner</span><span>Stake</span><span>Date</span>
+              </div>
+              <div class="last-winnings-body" id="last-winnings-body">
+                <p class="last-winnings-empty">No recent wins</p>
+              </div>
+            </div>
+          </div>
+          <!-- Red "Load booked bet" footer bar -->
+          <button type="button" class="betslip-load-booked-bar" data-load="booked">Load booked bet</button>
+        </div>
 
-          <button type="submit" class="auth-submit" id="auth-submit">LOGIN</button>
-        </form>
-        <div class="auth-footer" id="auth-footer-login">
-          <button type="button" class="auth-footer-link" id="auth-forgot">Forgot Password</button>
-          <span>|</span>
-          <button type="button" class="auth-footer-link" data-auth-tab="register">Create Account</button>
+        <div class="betslip-panel-bets" id="panel-bets" hidden>
+          <div class="bet-history" id="bet-history"></div>
         </div>
-        <div class="auth-footer" id="auth-footer-register" hidden>
-          <button type="button" class="auth-footer-link" id="auth-support">Support</button>
-          <span>|</span>
-          <button type="button" class="auth-footer-link" data-auth-tab="login">Enter</button>
-        </div>
-      </div>
+      </aside>
     </div>
 
-    <script src="./config.js?v=20260903p"></script>
-    <script src="./api-client.js?v=20260903p"></script>
-    <script src="./game.js?v=20260903p"></script>
-  </body>
+    <button type="button" class="fab-chat-floating" id="fab-chat-btn" title="Live chat" data-coming-soon>
+      <span class="fab-chat-badge">1</span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="#ffffff"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+    </button>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+  <div class="boot-error" id="boot-error" hidden></div>
+
+  <div class="auth-modal" id="deposit-modal" hidden>
+    <div class="auth-card">
+      <button type="button" class="auth-close" id="deposit-close" aria-label="Close">×</button>
+      <h2>Deposit ETB</h2>
+      <p class="auth-sub" id="deposit-instructions">Send payment, then submit your transaction reference.</p>
+      <form id="deposit-form" class="auth-form">
+        <label>
+          Payment method
+          <select id="deposit-method" required></select>
+        </label>
+        <label>
+          Amount (ETB)
+          <input type="number" id="deposit-amount" min="100" step="1" required />
+        </label>
+        <label>
+          Transaction reference
+          <input type="text" id="deposit-reference" required minlength="4" placeholder="Telebirr / bank reference ID" />
+        </label>
+        <button type="submit" class="auth-submit" id="deposit-submit">Submit deposit request</button>
+      </form>
+      <p class="auth-note" id="deposit-note">Deposits are reviewed manually. Balance updates after approval.</p>
+      <div class="deposit-history" id="deposit-history"></div>
+    </div>
+  </div>
+
+  <div class="auth-modal" id="auth-modal" hidden>
+    <div class="auth-card auth-card--hope" id="auth-card">
+      <button type="button" class="auth-close" id="auth-close" aria-label="Close">×</button>
+      <div class="auth-brand">
+        <img src="assets/hope-bet-logo.png" alt="Hope Bet" />
+        <strong>Hope Bet</strong>
+      </div>
+      <h2 class="auth-heading" id="auth-title" hidden>Register</h2>
+      <form id="auth-form" class="auth-form">
+        <div class="auth-field" id="auth-phone-field">
+          <label class="auth-label" id="auth-phone-label" for="auth-phone" hidden>Phone number *</label>
+          <div class="auth-phone-row">
+            <div class="auth-cc" title="Ethiopia">ET +251</div>
+            <input type="tel" id="auth-phone" inputmode="numeric" autocomplete="tel-national" placeholder="Number"
+              required />
+          </div>
+        </div>
+
+        <div class="auth-field">
+          <label class="auth-label auth-label--reg" for="auth-password" hidden data-reg-only>Password</label>
+          <div class="auth-pass-wrap">
+            <input type="password" id="auth-password" placeholder="Password" required minlength="6"
+              autocomplete="current-password" />
+            <button type="button" class="auth-eye" data-toggle-pass="auth-password"
+              aria-label="Show password">👁</button>
+          </div>
+        </div>
+
+        <div class="auth-field" id="auth-role-wrap" hidden>
+          <label class="auth-label" for="auth-role">Account Type</label>
+          <div class="auth-pass-wrap">
+            <select id="auth-role"
+              style="width: 100%; padding: 0.75rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color);">
+              <option value="player">Player</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="auth-confirm-wrap" id="auth-confirm-wrap" hidden>
+          <label class="auth-label" for="auth-password2">Confirm Password</label>
+          <div class="auth-pass-wrap">
+            <input type="password" id="auth-password2" placeholder="Confirm Password" minlength="6"
+              autocomplete="new-password" />
+            <button type="button" class="auth-eye" data-toggle-pass="auth-password2"
+              aria-label="Show password">👁</button>
+          </div>
+        </div>
+
+        <div class="auth-checks" id="auth-checks" hidden>
+          <label class="auth-check">
+            <input type="checkbox" id="auth-age" />
+            <span>I confirm that I am OVER 18 *</span>
+          </label>
+          <label class="auth-check">
+            <input type="checkbox" id="auth-terms" />
+            <span>If you continue, you'll confirm that you've read and agree with the terms of use and the privacy
+              policy</span>
+          </label>
+        </div>
+
+        <button type="submit" class="auth-submit" id="auth-submit">LOGIN</button>
+      </form>
+      <div class="auth-footer" id="auth-footer-login">
+        <button type="button" class="auth-footer-link" id="auth-forgot">Forgot Password</button>
+        <span>|</span>
+        <button type="button" class="auth-footer-link" data-auth-tab="register">Create Account</button>
+      </div>
+      <div class="auth-footer" id="auth-footer-register" hidden>
+        <button type="button" class="auth-footer-link" id="auth-support">Support</button>
+        <span>|</span>
+        <button type="button" class="auth-footer-link" data-auth-tab="login">Enter</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./config.js?v=20260904_bestbet_v1"></script>
+  <script src="./api-client.js?v=20260904_bestbet_v1"></script>
+  <script src="./game.js?v=20260904_bestbet_v1"></script>
+</body>
+
 </html>

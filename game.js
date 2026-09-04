@@ -11,6 +11,22 @@ const CURRENCY = "ETB";
 const api = () => window.HopeBetAPI;
 const useApi = () => api() && api().isEnabled();
 
+// --- Night mode theme logic ---
+(function initTheme() {
+  const saved = localStorage.getItem("hope-bet-theme");
+  // Default to dark (night ON) if no preference saved
+  const theme = saved || "dark";
+  document.documentElement.setAttribute("data-theme", theme);
+})();
+
+function toggleNightMode() {
+  const html = document.documentElement;
+  const current = html.getAttribute("data-theme") || "light";
+  const next = current === "dark" ? "light" : "dark";
+  html.setAttribute("data-theme", next);
+  localStorage.setItem("hope-bet-theme", next);
+}
+
 const LEAGUE_FILTERS = [
   { id: "all", label: "All Leagues" },
   { id: "top", label: "Top Leagues" },
@@ -64,12 +80,48 @@ const FOOTBALL_STATIC_LEAGUES = {
 };
 
 const SPORTS_MENU = [
-  { id: "football", name: "Football", icon: "⚽" },
-  { id: "basketball", name: "Basketball", icon: "🏀" },
-  { id: "tennis", name: "Tennis", icon: "🎾" },
-  { id: "hockey", name: "Ice Hockey", icon: "🏒" },
-  { id: "volleyball", name: "Volleyball", icon: "🏐" },
-  { id: "rugby", name: "Rugby Union", icon: "🏉" },
+  { 
+    id: "football", 
+    name: "Football", 
+    count: 1380,
+    icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a7.95 7.95 0 0 1-5.18-1.92l1.62-3.15a1 1 0 0 0-.17-1.15l-2.43-2.43 2.76-2.07a1 1 0 0 0 .37-1.11L7.85 4.79A8 8 0 0 1 12 4a7.95 7.95 0 0 1 4.15.79l-1.12 3.38a1 1 0 0 0 .37 1.11l2.76 2.07-2.43 2.43a1 1 0 0 0-.17 1.15l1.62 3.15A7.95 7.95 0 0 1 12 20z"/></svg>`
+  },
+  { 
+    id: "basketball", 
+    name: "Basketball", 
+    count: 63,
+    icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v20M2 12h20M4.93 4.93a10 10 0 0 1 14.14 0M4.93 19.07a10 10 0 0 0 14.14 0" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`
+  },
+  { 
+    id: "tennis", 
+    name: "Tennis", 
+    count: 150,
+    icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4.5 4.5c4 4 4 11 0 15M19.5 4.5c-4 4-4 11 0 15" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`
+  },
+  { 
+    id: "hockey", 
+    name: "Ice Hockey", 
+    count: 112,
+    icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M4 3h2v12.5a3.5 3.5 0 0 0 3.5 3.5H12v2H9.5A5.5 5.5 0 0 1 4 15.5V3zm16 0h-2v12.5a3.5 3.5 0 0 1-3.5 3.5H12v2h2.5A5.5 5.5 0 0 0 20 15.5V3z"/></svg>`
+  },
+  { 
+    id: "volleyball", 
+    name: "Volleyball", 
+    count: 17,
+    icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2a10 10 0 0 0 0 20M2 12a10 10 0 0 0 10 10M12 12L3.5 7M12 12l8.5-5M12 12v9.8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`
+  },
+  { 
+    id: "rugby", 
+    name: "Rugby Union", 
+    count: 42,
+    icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><ellipse cx="12" cy="12" rx="9" ry="6" transform="rotate(-45 12 12)" fill="none" stroke="currentColor" stroke-width="2"/><line x1="5.6" y1="5.6" x2="18.4" y2="18.4" stroke="currentColor" stroke-width="1.5"/></svg>`
+  },
+  { 
+    id: "table-tennis", 
+    name: "Table Tennis", 
+    count: 214,
+    icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 17v5M9 22h6" stroke="currentColor" stroke-width="2"/></svg>`
+  },
 ];
 
 const TIME_FILTERS_SIDEBAR = [
@@ -170,7 +222,7 @@ function load() {
     if (Array.isArray(raw.slip)) state.slip = raw.slip;
     if (Number.isFinite(raw.stake) && raw.stake >= MIN_STAKE) state.stake = raw.stake;
     if (raw.slipMode === "single" || raw.slipMode === "multiple") state.slipMode = raw.slipMode;
-  } catch (_) {}
+  } catch (_) { }
 }
 
 function save() {
@@ -310,13 +362,13 @@ function renderMobileSportsStrip() {
       <span>IN-PLAY</span>
     </button>
     ${SPORTS_MENU.map(
-      (s) => `
+    (s) => `
       <button type="button" class="mobile-sport-chip${state.sportFilter === s.id && state.sportsMenuMode ? " is-on" : ""}" data-mobile-sport="${s.id}">
         ${counts[s.id] ? `<em>${counts[s.id]}</em>` : ""}
         <span class="sport-icon">${s.icon}</span>
         <span>${s.name.split(" ")[0]}</span>
       </button>`
-    ).join("")}`;
+  ).join("")}`;
 }
 
 function renderMobileTimeStrip() {
@@ -409,25 +461,25 @@ function buildMockFixtures() {
       fixtureId: 1001,
       hours: 2,
       league: { id: 39, name: "Premier League", country: "England", logo: "https://media.api-sports.io/football/leagues/39.png", flag: "https://media.api-sports.io/flags/gb-eng.svg" },
-      home: { id: 33, name: "Manchester United", logo: "https://media.api-sports.io/football/teams/33.png" },
+      home: { id: 57, name: "Ipswich Town", logo: "https://media.api-sports.io/football/teams/57.png" },
       away: { id: 40, name: "Liverpool", logo: "https://media.api-sports.io/football/teams/40.png" },
-      odds: { home: "2.45", draw: "3.40", away: "2.80", doubleChance: { homeDraw: "1.42", homeAway: "1.30", drawAway: "1.55" }, totals: { over25: "1.82", under25: "1.98" } },
+      odds: { home: "5.72", draw: "4.71", away: "1.51", doubleChance: { homeDraw: "2.40", homeAway: "1.16", drawAway: "1.12" }, totals: { over25: "1.50", under25: "2.60" } },
     },
     {
       fixtureId: 1002,
-      hours: 4,
-      league: { id: 39, name: "Premier League", country: "England", logo: "https://media.api-sports.io/football/leagues/39.png", flag: "https://media.api-sports.io/flags/gb-eng.svg" },
-      home: { id: 49, name: "Chelsea", logo: "https://media.api-sports.io/football/teams/49.png" },
-      away: { id: 42, name: "Arsenal", logo: "https://media.api-sports.io/football/teams/42.png" },
-      odds: { home: "2.90", draw: "3.25", away: "2.50", doubleChance: { homeDraw: "1.52", homeAway: "1.35", drawAway: "1.42" }, totals: { over25: "1.75", under25: "2.05" } },
+      hours: 2,
+      league: { id: 140, name: "La Liga", country: "Spain", logo: "https://media.api-sports.io/football/leagues/140.png", flag: "https://media.api-sports.io/flags/es.svg" },
+      home: { id: 543, name: "Real Betis", logo: "https://media.api-sports.io/football/teams/543.png" },
+      away: { id: 541, name: "Real Madrid", logo: "https://media.api-sports.io/football/teams/541.png" },
+      odds: { home: "6.53", draw: "5.21", away: "1.46", doubleChance: { homeDraw: "2.65", homeAway: "1.15", drawAway: "1.10" }, totals: { over25: "1.55", under25: "2.45" } },
     },
     {
       fixtureId: 1003,
-      hours: 5,
-      league: { id: 140, name: "La Liga", country: "Spain", logo: "https://media.api-sports.io/football/leagues/140.png", flag: "https://media.api-sports.io/flags/es.svg" },
-      home: { id: 541, name: "Real Madrid", logo: "https://media.api-sports.io/football/teams/541.png" },
-      away: { id: 529, name: "Barcelona", logo: "https://media.api-sports.io/football/teams/529.png" },
-      odds: { home: "2.20", draw: "3.50", away: "3.10", doubleChance: { homeDraw: "1.35", homeAway: "1.28", drawAway: "1.65" }, totals: { over25: "1.65", under25: "2.20" } },
+      hours: 2.1,
+      league: { id: 61, name: "Ligue 1", country: "France", logo: "https://media.api-sports.io/football/leagues/61.png", flag: "https://media.api-sports.io/flags/fr.svg" },
+      home: { id: 85, name: "Paris Saint-Germain", logo: "https://media.api-sports.io/football/teams/85.png" },
+      away: { id: 91, name: "AS Monaco", logo: "https://media.api-sports.io/football/teams/91.png" },
+      odds: { home: "1.34", draw: "5.60", away: "7.70", doubleChance: { homeDraw: "1.08", homeAway: "1.14", drawAway: "3.10" }, totals: { over25: "1.42", under25: "2.85" } },
     },
     {
       fixtureId: 1004,
@@ -535,13 +587,19 @@ function buildMockFixtures() {
 
 function buildMockSidebar() {
   const leagues = [
+    { id: 11, name: "Copa Sudamericana", logo: "https://media.api-sports.io/football/leagues/11.png", count: 8 },
     { id: 39, name: "Premier League", logo: "https://media.api-sports.io/football/leagues/39.png", count: 20 },
-    { id: 140, name: "La Liga", logo: "https://media.api-sports.io/football/leagues/140.png", count: 15 },
-    { id: 61, name: "Ligue 1", logo: "https://media.api-sports.io/football/leagues/61.png", count: 5 },
-    { id: 88, name: "Eredivisie", logo: "https://media.api-sports.io/football/leagues/88.png", count: 11 },
-    { id: 78, name: "Bundesliga", logo: "https://media.api-sports.io/football/leagues/78.png", count: 14 },
+    { id: 78, name: "Bundesliga", logo: "https://media.api-sports.io/football/leagues/78.png", count: 18 },
     { id: 135, name: "Serie A", logo: "https://media.api-sports.io/football/leagues/135.png", count: 20 },
-    { id: 40, name: "Championship", logo: "https://media.api-sports.io/football/leagues/40.png", count: 20 },
+    { id: 140, name: "La Liga", logo: "https://media.api-sports.io/football/leagues/140.png", count: 20 },
+    { id: 2, name: "UEFA Champions League", logo: "https://media.api-sports.io/football/leagues/2.png", count: 16 },
+    { id: 61, name: "Ligue 1", logo: "https://media.api-sports.io/football/leagues/61.png", count: 18 },
+    { id: 3, name: "UEFA Europa League", logo: "https://media.api-sports.io/football/leagues/3.png", count: 16 },
+    { id: 848, name: "UEFA Europa Conference League", logo: "https://media.api-sports.io/football/leagues/848.png", count: 16 },
+    { id: 88, name: "Eredivisie", logo: "https://media.api-sports.io/football/leagues/88.png", count: 18 },
+    { id: 94, name: "Primeira Liga", logo: "https://media.api-sports.io/football/leagues/94.png", count: 18 },
+    { id: 45, name: "FA Cup", logo: "https://media.api-sports.io/football/leagues/45.png", count: 10 },
+    { id: 48, name: "EFL Cup", logo: "https://media.api-sports.io/football/leagues/48.png", count: 8 },
   ];
   const countries = [
     { name: "England", flag: "https://media.api-sports.io/flags/gb-eng.svg", count: 12 },
@@ -743,7 +801,7 @@ async function fetchSidebar() {
         state.sidebar = { topLeagues, countries };
         return;
       }
-    } catch (_) {}
+    } catch (_) { }
   }
 }
 
@@ -769,7 +827,7 @@ async function fetchCountryLeagues(countryName) {
         return leagues;
       }
     }
-  } catch (_) {}
+  } catch (_) { }
 
   const leagues = buildCountryLeaguesFromFixtures(countryName);
   state.countryLeagues[countryName] = leagues;
@@ -965,7 +1023,7 @@ async function fetchFixtureMarkets(fixtureId) {
         return merged;
       }
     }
-  } catch (_) {}
+  } catch (_) { }
 
   const markets = fixture?.markets?.length > 3 ? fixture.markets : buildMockMarkets(fixture);
   state.fixtureMarkets[fixtureId] = markets;
@@ -1433,6 +1491,9 @@ function addToSlip(fixture, marketKey, selection, odd, marketLabel, pickLabel) {
     selectionName: pickLabel,
     marketName: marketLabel,
     kickoff: fixture.date,
+    sport: "Football",
+    country: fixture.league?.country || "",
+    leagueName: fixture.league?.name || "",
   });
 }
 
@@ -1489,21 +1550,13 @@ function renderBalance() {
 function renderSportsSidebar() {
   const el = $("sidebar-sports");
   if (!el) return;
-  const footballCount = state.fixtures.length || 0;
-  const counts = {
-    football: footballCount,
-    basketball: 50,
-    tennis: 120,
-    hockey: 45,
-    volleyball: 30,
-    rugby: 18,
-  };
   el.innerHTML = SPORTS_MENU.map(
     (s) => `
-    <button type="button" class="sidebar-item sidebar-item--sport${state.sportFilter === s.id && state.sportsMenuMode ? " is-on" : ""}" data-sidebar-sport="${s.id}">
-      <span class="sport-icon">${s.icon}</span>
-      <span>${s.name}</span>
-      <em>${counts[s.id] || 0}</em>
+    <button type="button" class="sidebar-sport-row${state.sportFilter === s.id && state.sportsMenuMode ? " is-on" : ""}" data-sidebar-sport="${s.id}">
+      <span class="sidebar-sport-count">${s.count || 0}</span>
+      <span class="sidebar-sport-dot">•</span>
+      <span class="sidebar-sport-name">${s.name}</span>
+      <span class="sidebar-sport-icon">${s.icon}</span>
     </button>`
   ).join("");
   renderMobileSportsStrip();
@@ -1514,7 +1567,7 @@ function renderTopLeaguesGrid() {
   const el = $("top-leagues-grid");
   if (!el) return;
   const sidebar = getSidebarData();
-  const leagues = sidebar.topLeagues.slice(0, 12);
+  const leagues = sidebar.topLeagues || [];
   if (!leagues.length) {
     el.innerHTML = "";
     return;
@@ -1522,8 +1575,8 @@ function renderTopLeaguesGrid() {
   el.innerHTML = leagues
     .map(
       (l) => `
-    <button type="button" class="top-league-card" data-top-league="${l.id}">
-      ${l.logo ? `<img src="${l.logo}" alt="" loading="lazy" />` : ""}
+    <button type="button" class="top-league-card${state.leagueFilter === l.id ? ' is-on' : ''}" data-top-league="${l.id}">
+      ${l.logo ? `<img src="${l.logo}" alt="${l.name}" loading="lazy" onerror="this.style.display='none'" />` : ""}
       <span>${l.name}</span>
     </button>`
     )
@@ -1889,8 +1942,8 @@ function renderMatchBoardInto(board, list) {
         <span>${g.league.name.toUpperCase()}</span>
       </div>
       ${g.matches
-        .map(
-          (f) => `
+          .map(
+            (f) => `
         <div class="match-row">
           <div class="match-row-info" data-open-fixture="${f.fixtureId}" role="button" tabindex="0">
             <div class="match-row-teams">
@@ -1905,8 +1958,8 @@ function renderMatchBoardInto(board, list) {
           </div>
           ${renderOddsRow(f)}
         </div>`
-        )
-        .join("")}
+          )
+          .join("")}
     </section>`
     )
     .join("");
@@ -1940,15 +1993,15 @@ function renderSidebar() {
       const children = state.countryLeagues[c.name] || [];
       const childHtml = expanded
         ? children
-            .map(
-              (l) => `
+          .map(
+            (l) => `
           <button type="button" class="sidebar-item sidebar-item--child${state.leagueFilter === l.id ? " is-on" : ""}" data-sidebar-league="${l.id}">
             ${l.logo ? `<img src="${l.logo}" alt="" loading="lazy" />` : ""}
             <span>${l.name}</span>
             <em>${l.count}</em>
           </button>`
-            )
-            .join("")
+          )
+          .join("")
         : "";
 
       return `
@@ -1972,22 +2025,22 @@ function renderFilters() {
   const selectedChip =
     typeof state.leagueFilter === "number"
       ? (() => {
-          const fromTop = sidebar.topLeagues.find((l) => l.id === state.leagueFilter);
-          if (fromTop) {
-            return `<button type="button" class="chip is-on" data-league="${fromTop.id}">
+        const fromTop = sidebar.topLeagues.find((l) => l.id === state.leagueFilter);
+        if (fromTop) {
+          return `<button type="button" class="chip is-on" data-league="${fromTop.id}">
               ${fromTop.logo ? `<img src="${fromTop.logo}" alt="" loading="lazy" />` : ""}${fromTop.name}
             </button>`;
-          }
-          for (const leagues of Object.values(state.countryLeagues)) {
-            const hit = leagues.find((l) => l.id === state.leagueFilter);
-            if (hit) {
-              return `<button type="button" class="chip is-on" data-league="${hit.id}">
+        }
+        for (const leagues of Object.values(state.countryLeagues)) {
+          const hit = leagues.find((l) => l.id === state.leagueFilter);
+          if (hit) {
+            return `<button type="button" class="chip is-on" data-league="${hit.id}">
                 ${hit.logo ? `<img src="${hit.logo}" alt="" loading="lazy" />` : ""}${hit.name}
               </button>`;
-            }
           }
-          return "";
-        })()
+        }
+        return "";
+      })()
       : state.countryFilter
         ? `<button type="button" class="chip is-on" data-country-chip="${state.countryFilter}">${state.countryFilter}</button>`
         : "";
@@ -2004,15 +2057,15 @@ function renderFilters() {
         <input type="search" class="league-dropdown-search" placeholder="Search countries..." value="${state.leagueDropdownSearch.replace(/"/g, "&quot;")}" data-dropdown-search />
         <div class="league-dropdown-list">
           ${countries
-            .map(
-              (c) => `
+      .map(
+        (c) => `
             <button type="button" class="league-dropdown-item${state.countryFilter === c.name ? " is-on" : ""}" data-dropdown-country="${c.name}">
               ${c.flag ? `<img class="flag" src="${c.flag}" alt="" loading="lazy" />` : ""}
               <span>${c.name}</span>
               <em>${c.count}</em>
             </button>`
-            )
-            .join("")}
+      )
+      .join("")}
         </div>
       </div>
     </div>
@@ -2023,15 +2076,15 @@ function renderFilters() {
       <div class="league-dropdown${topOpen ? " is-open" : ""}" id="dropdown-top" ${topOpen ? "" : "hidden"}>
         <div class="league-dropdown-list">
           ${sidebar.topLeagues
-            .map(
-              (l) => `
+      .map(
+        (l) => `
             <button type="button" class="league-dropdown-item${state.leagueFilter === l.id ? " is-on" : ""}" data-dropdown-league="${l.id}">
               ${l.logo ? `<img src="${l.logo}" alt="" loading="lazy" />` : ""}
               <span>${l.name}</span>
               <em>${l.count}</em>
             </button>`
-            )
-            .join("")}
+      )
+      .join("")}
         </div>
       </div>
     </div>
@@ -2088,20 +2141,39 @@ function renderCarousel() {
     .map(
       (f) => `
     <article class="pop-card">
-      <div class="pop-card-league">
-        <img src="${f.league.logo}" alt="" loading="lazy" />
-        <span>${f.league.name} · ${f.league.country}</span>
+      <div class="pop-card-header">
+        <span class="pop-card-league">${f.league.country || "Football"} - ${f.league.name}</span>
+        <span class="pop-card-time">${formatKickoff(f.date)}</span>
       </div>
-      <div class="pop-card-time">${formatKickoff(f.date)}</div>
       <div class="pop-card-teams" data-open-fixture="${f.fixtureId}" role="button" tabindex="0">
-        <div class="pop-card-team"><img src="${f.home.logo}" alt="" loading="lazy" /><span>${f.home.name}</span></div>
-        <div class="pop-card-vs">VS</div>
-        <div class="pop-card-team"><img src="${f.away.logo}" alt="" loading="lazy" /><span>${f.away.name}</span></div>
+        <div class="pop-card-team">
+          <img src="${f.home.logo}" alt="${f.home.name}" loading="lazy" onerror="this.style.opacity='0'" />
+          <span class="pop-card-name">${f.home.name}</span>
+        </div>
+        <div class="pop-card-vs">vs</div>
+        <div class="pop-card-team">
+          <img src="${f.away.logo}" alt="${f.away.name}" loading="lazy" onerror="this.style.opacity='0'" />
+          <span class="pop-card-name">${f.away.name}</span>
+        </div>
+      </div>
+      <div class="pop-card-divider">
+        <span class="pop-divider-line"></span>
+        <span class="pop-divider-label">Match Result</span>
+        <span class="pop-divider-line"></span>
       </div>
       <div class="pop-odds">
-        ${oddButton(f, "1x2", "home", "W1")}
-        ${oddButton(f, "1x2", "draw", "X")}
-        ${oddButton(f, "1x2", "away", "W2")}
+        <button type="button" class="odd-btn pop-odd-btn${isSelected(f.fixtureId, '1x2', 'home') ? ' is-selected' : ''}" data-fixture="${f.fixtureId}" data-market="1x2" data-selection="home">
+          <span class="odd-btn-label">Ho...</span>
+          <span class="odd-btn-value pop-odd-val">${getMarketOdds(f, '1x2', 'home')}</span>
+        </button>
+        <button type="button" class="odd-btn pop-odd-btn${isSelected(f.fixtureId, '1x2', 'draw') ? ' is-selected' : ''}" data-fixture="${f.fixtureId}" data-market="1x2" data-selection="draw">
+          <span class="odd-btn-label">Draw</span>
+          <span class="odd-btn-value pop-odd-val">${getMarketOdds(f, '1x2', 'draw')}</span>
+        </button>
+        <button type="button" class="odd-btn pop-odd-btn${isSelected(f.fixtureId, '1x2', 'away') ? ' is-selected' : ''}" data-fixture="${f.fixtureId}" data-market="1x2" data-selection="away">
+          <span class="odd-btn-label">Away</span>
+          <span class="odd-btn-value pop-odd-val">${getMarketOdds(f, '1x2', 'away')}</span>
+        </button>
       </div>
     </article>`
     )
@@ -2133,10 +2205,14 @@ function renderSlip() {
   if (tabCount) tabCount.textContent = String(count);
   syncMobileSlipCount();
 
+  const notice = $("slip-empty-notice");
+  const panelSlip = $("panel-slip");
+  if (notice) notice.hidden = count > 0;
+  if (panelSlip) panelSlip.hidden = count === 0;
+
   const list = $("slip-list");
-  const empty = $("slip-empty");
   const foot = $("slip-foot");
-  if (!list || !empty || !foot) return;
+  if (!list || !foot) return;
 
   document.querySelectorAll(".betslip-mode-btn").forEach((btn) => {
     const isMultiple = btn.dataset.mode === "multiple";
@@ -2152,40 +2228,39 @@ function renderSlip() {
 
   if (!count) {
     list.innerHTML = "";
-    empty.hidden = false;
     foot.hidden = true;
     return;
   }
 
-  empty.hidden = true;
   foot.hidden = false;
 
   list.innerHTML = state.slip
     .map((b) => {
       const expired = isSlipBetExpired(b);
-      const homeLogo = b.homeLogo ? `<img src="${b.homeLogo}" alt="" class="slip-team-logo" loading="lazy" />` : "";
-      const awayLogo = b.awayLogo ? `<img src="${b.awayLogo}" alt="" class="slip-team-logo" loading="lazy" />` : "";
-      const matchLine = b.homeName && b.awayName ? `${b.homeName} vs ${b.awayName}` : b.fixtureName;
+      const matchLine = b.homeName && b.awayName ? `${b.homeName} - ${b.awayName}` : b.fixtureName;
+      const leagueMeta = [b.sport, b.country, b.leagueName].filter(Boolean).join(' - ');
       return `
     <div class="slip-item${expired ? " is-expired" : ""}">
-      <button type="button" class="slip-remove" data-remove="${b.key}" aria-label="Remove">🗑</button>
-      <div class="slip-item-main">
-        <div class="slip-match">
-          ${homeLogo}
-          <span class="slip-match-name">${matchLine}</span>
-          ${awayLogo}
-        </div>
-        <div class="slip-pick">${b.marketName} : ${b.selectionName}</div>
+      <div class="slip-item-header">
+        <span class="slip-match-name">${matchLine}</span>
+        <button type="button" class="slip-remove" data-remove="${b.key}" aria-label="Remove">&#x2715;</button>
       </div>
-      <div class="slip-item-side">
-        ${expired ? `<span class="slip-expired-label">Expired</span>` : ""}
-        <span class="slip-odd-badge">${b.odd.toFixed(2)}</span>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;">
+        <div class="slip-item-main">
+          ${leagueMeta ? `<div class="slip-meta">${leagueMeta}</div>` : ''}
+          <div class="slip-pick">${b.marketName} : ${b.selectionName}</div>
+        </div>
+        <div class="slip-item-side">
+          ${expired ? `<span class="slip-expired-label">Expired</span>` : ""}
+          <span class="slip-odd-badge">${b.odd.toFixed(2)}</span>
+        </div>
       </div>
     </div>`;
     })
     .join("");
 
-  $("total-odds").textContent = totalOdds().toFixed(2);
+  const totalOddsEl = $("total-odds");
+  if (totalOddsEl) totalOddsEl.textContent = totalOdds().toFixed(2);
   $("potential-win").textContent = fmt(potentialWin());
   $("stake-input").value = state.stake;
   $("btn-place").disabled = state.stake < MIN_STAKE || activeCount === 0 || hasExpired;
@@ -2399,6 +2474,13 @@ function renderSession() {
   }
   if (depositBtn) depositBtn.hidden = !loggedIn || !useApi();
   renderAccountDrawer();
+
+  if (loggedIn && state.sessionUser?.role === "super_admin") {
+    setView("super-admin");
+    if (typeof loadSuperAdminUsers === "function") loadSuperAdminUsers();
+  } else if (state.currentView === "super-admin") {
+    setView("sports");
+  }
 }
 
 function renderDepositMethods(methods, minDeposit) {
@@ -2458,6 +2540,7 @@ function closeDepositModal() {
 }
 
 function phoneToAccountEmail(rawPhone) {
+  if (/[a-zA-Z]/.test(rawPhone)) return rawPhone;
   let digits = String(rawPhone || "").replace(/\D/g, "");
   if (digits.startsWith("251")) digits = digits.slice(3);
   if (digits.startsWith("0")) digits = digits.slice(1);
@@ -2483,6 +2566,7 @@ function openAuthModal(tab) {
   document.querySelectorAll(".auth-label--reg, #auth-phone-label").forEach((el) => {
     el.hidden = !isReg;
   });
+  if ($("auth-role-wrap")) $("auth-role-wrap").hidden = !isReg;
   if ($("auth-confirm-wrap")) $("auth-confirm-wrap").hidden = !isReg;
   if ($("auth-checks")) $("auth-checks").hidden = !isReg;
   if ($("auth-footer-login")) $("auth-footer-login").hidden = isReg;
@@ -2716,6 +2800,7 @@ function selectLeague(leagueId) {
   state.countryFilter = null;
   closeLeagueDropdown();
   applyBoardFilters();
+  renderTopLeaguesGrid();
 }
 
 function selectCountry(countryName) {
@@ -2727,6 +2812,37 @@ function selectCountry(countryName) {
 }
 
 function bindEvents() {
+  if (typeof bindSuperAdminEvents === "function") bindSuperAdminEvents();
+
+  // Night mode toggle
+  const nightToggle = $("night-toggle");
+  if (nightToggle) on(nightToggle, "click", toggleNightMode);
+
+  // Universal Coming Soon handler
+  document.addEventListener("click", (e) => {
+    const target = e.target.closest("[data-coming-soon], .btn-load-red, .check-it-link");
+    if (target) {
+      e.preventDefault();
+      e.stopPropagation();
+      toast("Coming Soon", "info");
+    }
+  });
+
+  // League sport tabs (Football, Basketball, Tennis, etc.)
+  const leagueSportTabs = $("league-sport-tabs");
+  if (leagueSportTabs) {
+    on(leagueSportTabs, "click", (e) => {
+      const tab = e.target.closest(".league-sport-tab");
+      if (!tab) return;
+      if (tab.dataset.leagueSport !== "football") {
+        toast("Coming Soon", "info");
+        return;
+      }
+      document.querySelectorAll(".league-sport-tab").forEach((t) => t.classList.remove("is-on"));
+      tab.classList.add("is-on");
+    });
+  }
+
   function handleOddClick(e) {
     const btn = e.target.closest(".odd-btn");
     if (!btn) return;
@@ -3281,9 +3397,9 @@ function bindEvents() {
       toast("Signed in (demo)", "ok");
       return;
     }
-    const email = phoneToAccountEmail(phoneRaw);
+    const identifier = phoneToAccountEmail(phoneRaw);
     try {
-      const data = await api().login({ email, password });
+      const data = await api().login({ identifier, password });
       state.sessionUser = data.user;
       toast("Signed in", "ok");
       await syncFromApi();
@@ -3332,10 +3448,12 @@ function bindEvents() {
       toast("Enter your phone number", "err");
       return;
     }
-    const digits = phoneRaw.replace(/\D/g, "");
-    if (digits.replace(/^251/, "").replace(/^0/, "").length < 9) {
-      toast("Enter a valid Ethiopian phone number", "err");
-      return;
+    if (!/[a-zA-Z]/.test(phoneRaw)) {
+      const digits = phoneRaw.replace(/\D/g, "");
+      if (digits.replace(/^251/, "").replace(/^0/, "").length < 9) {
+        toast("Enter a valid Ethiopian phone number or username", "err");
+        return;
+      }
     }
     if (state.authTab === "register") {
       if (password !== password2) {
@@ -3351,8 +3469,8 @@ function bindEvents() {
         return;
       }
     }
-    const email = phoneToAccountEmail(phoneRaw);
-    const phone = formatAuthPhone(phoneRaw);
+    const identifier = phoneToAccountEmail(phoneRaw);
+    const phone = /[a-zA-Z]/.test(phoneRaw) ? null : formatAuthPhone(phoneRaw);
     const submitBtn = $("auth-submit");
     if (!submitBtn) return;
     const prevLabel = submitBtn.textContent;
@@ -3360,11 +3478,13 @@ function bindEvents() {
     submitBtn.textContent = "Please wait…";
     try {
       if (state.authTab === "register") {
-        const data = await api().register({ email, password, phone });
+        const role = $("auth-role") ? $("auth-role").value : "player";
+        const email = identifier;
+        const data = await api().register({ identifier, email, password, phone, role });
         state.sessionUser = data.user;
         toast(`Welcome! +${data.welcomeBonus || 0} ${CURRENCY} bonus`, "ok");
       } else {
-        const data = await api().login({ email, password });
+        const data = await api().login({ identifier, password });
         state.sessionUser = data.user;
         toast("Signed in", "ok");
       }
@@ -3439,7 +3559,113 @@ function init() {
 }
 
 window.addEventListener("error", (e) => {
-  if (e?.error) showBootError(e.error);
+  toast("Application error", "err");
 });
 
-init();
+// --- SUPER ADMIN LOGIC ---
+async function superAdminCall(path, options = {}) {
+  const token = (api() && typeof api().getToken === "function") 
+    ? api().getToken() 
+    : (localStorage.getItem("hope-bet-token") || "");
+  const baseUrl = (api() && typeof api().apiUrl === "function") 
+    ? api().apiUrl() 
+    : (window.HOPE_BET_CONFIG?.API_URL || "http://127.0.0.1:8787");
+
+  const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  const res = await fetch(`${baseUrl.replace(/\/$/, "")}${path}`, { ...options, headers });
+  let data = {};
+  try {
+    data = await res.json();
+  } catch {
+    data = { ok: false, error: "Invalid server response" };
+  }
+  if (!res.ok) {
+    throw new Error(data.error || `Request failed (${res.status})`);
+  }
+  return data;
+}
+
+async function loadSuperAdminUsers() {
+  try {
+    let data;
+    if (api() && typeof api().superAdminGetUsers === "function") {
+      data = await api().superAdminGetUsers();
+    } else {
+      data = await superAdminCall("/api/super/users");
+    }
+    const tbody = $("sa-users-table");
+    if (!tbody) return;
+    tbody.innerHTML = (data.users || []).map(u => `
+      <tr style="border-bottom: 1px solid var(--border-color);">
+        <td style="padding: 0.75rem;">${u.id}</td>
+        <td style="padding: 0.75rem;">${u.username || u.email}</td>
+        <td style="padding: 0.75rem;"><span style="background: ${u.role === 'super_admin' ? 'gold' : (u.role === 'admin' ? 'var(--primary)' : 'var(--surface)')}; color: #fff; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">${u.role}</span></td>
+        <td style="padding: 0.75rem; color: var(--text-color); font-weight: bold;">${u.balance} ETB</td>
+        <td style="padding: 0.75rem;">
+          <input type="number" id="topup-val-${u.id}" value="0" style="width: 90px; padding: 0.4rem; background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px;" />
+        </td>
+        <td style="padding: 0.75rem;">
+          <button type="button" class="auth-btn" style="padding: 0.4rem 0.75rem; width: auto;" onclick="superAdminTopUpAction(${u.id})">Top Up</button>
+        </td>
+      </tr>
+    `).join("");
+  } catch (err) {
+    toast(err.message || "Failed to load users", "err");
+  }
+}
+
+window.superAdminTopUpAction = async function (userId) {
+  const input = $(`topup-val-${userId}`);
+  const amount = Number(input ? input.value : 0);
+  if (!amount || amount <= 0) return toast("Enter valid topup amount", "err");
+  try {
+    let res;
+    if (api() && typeof api().superAdminTopUp === "function") {
+      res = await api().superAdminTopUp(userId, amount);
+    } else {
+      res = await superAdminCall(`/api/super/users/${encodeURIComponent(userId)}/topup`, {
+        method: "POST",
+        body: JSON.stringify({ amount }),
+      });
+    }
+    toast(`Topped up ${res.amount} ETB successfully`, "ok");
+    loadSuperAdminUsers();
+  } catch (err) {
+    toast(err.message || "Top up failed", "err");
+  }
+};
+
+function bindSuperAdminEvents() {
+  const refreshBtn = $("sa-refresh-btn");
+  if (refreshBtn) on(refreshBtn, "click", loadSuperAdminUsers);
+
+  const createForm = $("sa-create-form");
+  if (createForm) {
+    on(createForm, "submit", async (e) => {
+      e.preventDefault();
+      const username = $("sa-new-username")?.value.trim();
+      const password = $("sa-new-password")?.value;
+      const role = $("sa-new-role")?.value;
+      if (!username || !password) return toast("Username and password required", "err");
+      try {
+        if (api() && typeof api().superAdminCreateUser === "function") {
+          await api().superAdminCreateUser({ username, password, role });
+        } else {
+          await superAdminCall("/api/super/users", {
+            method: "POST",
+            body: JSON.stringify({ username, password, role }),
+          });
+        }
+        toast(`User ${username} created as ${role}`, "ok");
+        createForm.reset();
+        loadSuperAdminUsers();
+      } catch (err) {
+        toast(err.message || "Failed to create user", "err");
+      }
+    });
+  }
+}
+
+document.addEventListener("DOMContentLoaded", init);
