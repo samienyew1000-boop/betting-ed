@@ -102,6 +102,18 @@
     return request("/api/deposits/history");
   }
 
+  async function superAdminGetUsers() {
+    return request("/api/super/users");
+  }
+
+  async function superAdminCreateUser(payload) {
+    return request("/api/super/users", { method: "POST", body: JSON.stringify(payload) });
+  }
+
+  async function superAdminTopUp(userId, amount) {
+    return request(`/api/super/users/${encodeURIComponent(userId)}/topup`, { method: "POST", body: JSON.stringify({ amount }) });
+  }
+
   window.HopeBetAPI = {
     isEnabled,
     getToken,
@@ -116,6 +128,9 @@
     fetchDepositMethods,
     requestDeposit,
     fetchDepositHistory,
+    superAdminGetUsers,
+    superAdminCreateUser,
+    superAdminTopUp,
     apiUrl,
   };
 })();

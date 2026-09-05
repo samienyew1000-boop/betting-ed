@@ -12,5 +12,6 @@
     CURRENCY: "ETB",
     TOKEN_KEY: "hope-bet-token",
     USER_KEY: "hope-bet-user",
+    CASHOUT_LOCKED: true,
   };
 })();

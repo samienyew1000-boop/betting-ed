@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="./style.css?v=20260904_betslip_redesign_v1" />
+  <link rel="stylesheet" href="./style.css?v=20260905_assets_v11" />
 </head>
 
 <body>
@@ -91,12 +91,49 @@
           </div>
 
           <div class="nav-auth-logged" id="utility-authed" hidden>
-            <div class="balance-line">
-              <strong id="balance">0.00</strong> <em id="currency-label">ETB</em>
+            <button type="button" class="nav-circle-btn" id="nav-btn-history" title="Bet History" aria-label="Bet History">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+              </svg>
+            </button>
+            <button type="button" class="nav-circle-btn nav-circle-btn--badge" id="nav-btn-bonuses" title="Bonuses" aria-label="Bonuses">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35L12 4l-.5-.65C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.1 0-2 .9-2 2v2h20V8c0-1.1-.9-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM2 19c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-7H2v7z"/>
+              </svg>
+              <span class="nav-circle-badge" id="nav-bonus-badge">0</span>
+            </button>
+            <button type="button" class="nav-circle-btn" id="nav-btn-jackpots" title="My Jackpots" aria-label="My Jackpots">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="#ffb300">
+                <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 003.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
+              </svg>
+            </button>
+            <button type="button" class="nav-circle-btn" id="nav-btn-vip" title="VIP Club" aria-label="VIP Club">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#ffb300">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15.5v-7l5 3.5-5 3.5z"/>
+                <path d="M12 6c-1.5 0-2.8.6-3.8 1.6l1.4 1.4C10.3 8.4 11.1 8 12 8s1.7.4 2.4 1l1.4-1.4C14.8 6.6 13.5 6 12 6z" fill="#ffe082"/>
+              </svg>
+            </button>
+            <div class="nav-avatar-badge" id="nav-user-avatar" title="Account">9</div>
+
+            <div class="nav-balance-box" id="nav-real-balance-box" role="button" tabindex="0" title="Real Balance">
+              <span class="nav-balance-title">Real Balance</span>
+              <span class="nav-balance-amount"><strong id="balance">0</strong> <em id="currency-label">ETB</em></span>
             </div>
-            <button type="button" class="btn-deposit-header" id="btn-deposit">DEPOSIT</button>
-            <span class="user-pill" id="user-pill"></span>
-            <button type="button" class="btn-join btn-join--header" id="btn-join">Sign Out</button>
+
+            <div class="nav-balance-box" id="nav-bonus-balance-box" role="button" tabindex="0" title="Bonus Balance">
+              <span class="nav-balance-title">Bonus Balance</span>
+              <span class="nav-balance-amount"><strong id="bonus-balance">0.00</strong> <em id="bonus-currency">ETB</em> <svg class="nav-balance-chevron" width="10" height="6" viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg></span>
+            </div>
+
+            <button type="button" class="btn-deposit-header" id="btn-deposit">Deposit</button>
+
+            <button type="button" class="nav-logout-icon-btn" id="btn-join" title="Sign Out" aria-label="Sign Out">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+            </button>
           </div>
         </div>
       </nav>
@@ -249,23 +286,52 @@
               <div class="ad-carousel-dots" id="ad-carousel-dots"></div>
             </div>
 
-            <div class="section-head section-head--row">
-              <h2><span class="section-dots">&#x2022;&#x2022;&#x2022;</span> Top Matches</h2>
+            <!-- TOP MATCHES HORIZONTAL CAROUSEL (matching reference image) -->
+            <div class="top-matches-header-bar">
+              <span class="section-dots">&#x2022;&#x2022;&#x2022;</span>
+              <span class="header-bar-title">Top Matches</span>
             </div>
-            <div class="popular-row" id="popular-carousel"></div>
+            <div class="top-matches-carousel-wrap">
+              <button type="button" class="top-matches-nav-btn top-matches-nav-btn--prev" id="top-matches-prev" aria-label="Previous">‹</button>
+              <div class="top-matches-track" id="popular-carousel"></div>
+              <button type="button" class="top-matches-nav-btn top-matches-nav-btn--next" id="top-matches-next" aria-label="Next">›</button>
+            </div>
 
-            <div class="section-head section-head--row">
-              <h2><span class="section-dots">&#x2022;&#x2022;&#x2022;</span> Top Leagues</h2>
-            </div>
-            <div class="league-sport-tabs" id="league-sport-tabs">
-              <button type="button" class="league-sport-tab is-on" data-league-sport="football">Football</button>
-              <button type="button" class="league-sport-tab" data-league-sport="basketball" data-coming-soon>Basketball</button>
-              <button type="button" class="league-sport-tab" data-league-sport="tennis" data-coming-soon>Tennis</button>
-              <button type="button" class="league-sport-tab" data-league-sport="hockey" data-coming-soon>Ice Hockey</button>
-              <button type="button" class="league-sport-tab" data-league-sport="handball" data-coming-soon>Handball</button>
-              <button type="button" class="league-sport-tab" data-league-sport="baseball" data-coming-soon>Baseball</button>
+            <!-- TOP LEAGUES RED BAR WITH SPORT TABS (matching reference image) -->
+            <div class="top-leagues-bar">
+              <div class="top-leagues-bar-title">
+                <span class="section-dots">&#x2022;&#x2022;&#x2022;</span>
+                <span>Top Leagues</span>
+              </div>
+              <div class="league-sport-tabs" id="league-sport-tabs">
+                <button type="button" class="league-sport-tab is-on" data-league-sport="football">Football</button>
+                <button type="button" class="league-sport-tab" data-league-sport="basketball" data-coming-soon>Basketball</button>
+                <button type="button" class="league-sport-tab" data-league-sport="tennis" data-coming-soon>Tennis</button>
+                <button type="button" class="league-sport-tab" data-league-sport="hockey" data-coming-soon>Ice Hockey</button>
+                <button type="button" class="league-sport-tab" data-league-sport="handball" data-coming-soon>Handball</button>
+                <button type="button" class="league-sport-tab" data-league-sport="baseball" data-coming-soon>Baseball</button>
+              </div>
             </div>
             <div class="top-leagues-grid" id="top-leagues-grid"></div>
+
+            <!-- SELECTED LEAGUE MATCHES TABLE (default: Premier League) -->
+            <div class="home-matches-section" id="home-league-matches-section"></div>
+
+            <!-- UPCOMING GAMES SECTION -->
+            <div class="home-matches-section" id="home-upcoming-section">
+              <div class="home-section-head">
+                <h2><span class="section-dots">&#x2022;&#x2022;&#x2022;</span> Upcoming Games</h2>
+              </div>
+              <div id="home-upcoming-table"></div>
+            </div>
+
+            <!-- POPULAR GAMES SECTION -->
+            <div class="home-matches-section" id="home-popular-section">
+              <div class="home-section-head">
+                <h2><span class="section-dots">&#x2022;&#x2022;&#x2022;</span> Popular Games</h2>
+              </div>
+              <div id="home-popular-table"></div>
+            </div>
           </div>
 
           <div id="football-menu-wrap" hidden>
@@ -310,7 +376,14 @@
 
           <div class="board-head">
             <h3 id="board-title">All Leagues</h3>
-            <div class="board-markets">
+            <div class="board-market-tabs" id="board-market-tabs">
+              <button type="button" class="board-m-tab is-active" data-board-market="main">Main (1X2, DC, Totals)</button>
+              <button type="button" class="board-m-tab" data-board-market="btts">Both Teams Score</button>
+              <button type="button" class="board-m-tab" data-board-market="ou">Over / Under</button>
+              <button type="button" class="board-m-tab" data-board-market="dnb">Draw No Bet</button>
+              <button type="button" class="board-m-tab" data-board-market="dc">Double Chance</button>
+            </div>
+            <div class="board-markets" id="board-markets-cols">
               <span>1X2</span>
               <span>Double Chance</span>
               <span>O/U 2.5</span>
@@ -348,7 +421,7 @@
           </div>
           <div class="league-page-head">
             <h2 id="league-page-title">Matches</h2>
-            <div class="board-markets">
+            <div class="board-markets" id="league-board-markets-cols">
               <span>1X2</span>
               <span>Double Chance</span>
               <span>O/U 2.5</span>
@@ -482,17 +555,18 @@
                 <button type="button" class="my-bets-tab" data-mybets-status="live">Live</button>
                 <button type="button" class="my-bets-tab is-on" data-mybets-status="in-course">In Course</button>
               </div>
+              <div class="my-bets-search">
+                <input type="search" id="my-bets-search" placeholder="Insert ticket code here.." autocomplete="off" />
+                <button type="button" class="my-bets-search-btn" id="my-bets-search-btn" aria-label="Search ticket">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                </button>
+              </div>
               <div class="my-bets-tabs my-bets-tabs--time" id="my-bets-time-tabs">
                 <button type="button" class="my-bets-tab is-on" data-mybets-time="today">Today</button>
                 <button type="button" class="my-bets-tab" data-mybets-time="week">1 Week</button>
                 <button type="button" class="my-bets-tab" data-mybets-time="all">All</button>
               </div>
-              <button type="button" class="my-bets-close" id="my-bets-close" aria-label="Close">×</button>
-            </div>
-            <div class="my-bets-search">
-              <input type="search" id="my-bets-search" placeholder="Insert ticket code here.." autocomplete="off" />
-              <button type="button" class="my-bets-search-btn" id="my-bets-search-btn"
-                aria-label="Search ticket">⌕</button>
+              <button type="button" class="my-bets-close" id="my-bets-close" aria-label="Close">✕</button>
             </div>
             <div class="my-bets-body" id="my-bets-list"></div>
           </div>
@@ -508,6 +582,26 @@
         
         <div class="betslip-empty-notice" id="slip-empty-notice">
           No bet has been selected. To select a bet, please click on the respective odds
+        </div>
+
+        <!-- BET PLACED SUCCESS PANEL -->
+        <div class="betslip-panel-success" id="panel-bet-success" hidden>
+          <div class="betslip-success-content">
+            <div class="betslip-success-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <h3 class="betslip-success-title">Your Bet Has Been Placed</h3>
+            <p class="betslip-success-subtitle">Good Luck !</p>
+
+            <div class="betslip-success-actions">
+              <button type="button" class="btn-repeat-bet" id="btn-repeat-bet">REPEAT BET</button>
+              <button type="button" class="btn-print-ticket" id="btn-print-ticket">PRINT TICKET</button>
+            </div>
+
+            <button type="button" class="btn-continue-bet" id="btn-continue-bet">CONTINUE</button>
+          </div>
         </div>
 
         <div class="betslip-panel-slip" id="panel-slip" hidden>
@@ -632,28 +726,239 @@
   <div class="toast" id="toast" hidden></div>
   <div class="boot-error" id="boot-error" hidden></div>
 
-  <div class="auth-modal" id="deposit-modal" hidden>
-    <div class="auth-card">
-      <button type="button" class="auth-close" id="deposit-close" aria-label="Close">×</button>
-      <h2>Deposit ETB</h2>
-      <p class="auth-sub" id="deposit-instructions">Send payment, then submit your transaction reference.</p>
-      <form id="deposit-form" class="auth-form">
-        <label>
-          Payment method
-          <select id="deposit-method" required></select>
-        </label>
-        <label>
-          Amount (ETB)
-          <input type="number" id="deposit-amount" min="100" step="1" required />
-        </label>
-        <label>
-          Transaction reference
-          <input type="text" id="deposit-reference" required minlength="4" placeholder="Telebirr / bank reference ID" />
-        </label>
-        <button type="submit" class="auth-submit" id="deposit-submit">Submit deposit request</button>
-      </form>
-      <p class="auth-note" id="deposit-note">Deposits are reviewed manually. Balance updates after approval.</p>
-      <div class="deposit-history" id="deposit-history"></div>
+  <!-- ===== ACCOUNT MODAL ===== -->
+  <div class="acct-modal-backdrop" id="account-modal" hidden></div>
+  <div class="acct-modal" id="account-modal-panel" hidden>
+    <!-- LEFT SIDEBAR -->
+    <aside class="acct-sidebar">
+      <div class="acct-sidebar-logo"><img src="assets/hope-bet-logo.png" alt="Hope Bet" /></div>
+      <nav class="acct-nav">
+        <button type="button" class="acct-nav-item" data-acct-section="profile">
+          <span class="acct-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v2h20v-2c0-3.3-6.7-5-10-5z"/></svg></span>
+          <span class="acct-nav-label">My Profile</span>
+          <span class="acct-nav-arrow">&#x203A;</span>
+        </button>
+        <button type="button" class="acct-nav-item" data-acct-section="bonuses">
+          <span class="acct-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35L12 4l-.5-.65C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.1 0-2 .9-2 2v2h20V8c0-1.1-.9-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM2 19c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-7H2v7z"/></svg></span>
+          <span class="acct-nav-label">Bonuses</span>
+          <span class="acct-nav-arrow">&#x203A;</span>
+        </button>
+        <button type="button" class="acct-nav-item" data-acct-section="bet-history">
+          <span class="acct-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zm-5-7h-2v2h2v2h2v-2h2v-2h-2v-2h-2v2z"/></svg></span>
+          <span class="acct-nav-label">Bet History</span>
+          <span class="acct-nav-arrow">&#x203A;</span>
+        </button>
+        <button type="button" class="acct-nav-item" data-acct-section="jackpots">
+          <span class="acct-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 003.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></span>
+          <span class="acct-nav-label">My Jackpots</span>
+          <span class="acct-nav-arrow">&#x203A;</span>
+        </button>
+        <button type="button" class="acct-nav-item" data-acct-section="history">
+          <span class="acct-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg></span>
+          <span class="acct-nav-label">History</span>
+          <span class="acct-nav-arrow">&#x203A;</span>
+        </button>
+        <button type="button" class="acct-nav-item" data-acct-section="payments">
+          <span class="acct-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg></span>
+          <span class="acct-nav-label">Payments</span>
+          <span class="acct-nav-arrow">&#x203A;</span>
+        </button>
+        <button type="button" class="acct-nav-item" data-acct-section="messages">
+          <span class="acct-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></span>
+          <span class="acct-nav-label">Messages</span>
+          <span class="acct-nav-arrow">&#x203A;</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- RIGHT CONTENT -->
+    <div class="acct-content">
+      <div class="acct-content-header" id="acct-content-header">
+        <div class="acct-header-inner" id="acct-header-inner"></div>
+        <button type="button" class="acct-close" id="account-modal-close">&#x2715;</button>
+      </div>
+
+      <!-- MY PROFILE -->
+      <div class="acct-section" id="acct-section-profile">
+        <!-- Sub-panel 1: My Details -->
+        <div class="profile-subpanel" id="profile-subpanel-details">
+          <div class="profile-grid">
+            <!-- Left column -->
+            <div class="profile-col">
+              <div class="profile-field-group">
+                <label class="profile-field-label" for="profile-screen-name">Screen Name</label>
+                <input type="text" class="profile-field-input" id="profile-screen-name" readonly />
+              </div>
+              <div class="profile-field-group">
+                <label class="profile-field-label" for="profile-first-name">First Name</label>
+                <input type="text" class="profile-field-input" id="profile-first-name" readonly />
+              </div>
+              <div class="profile-field-group">
+                <label class="profile-field-label" for="profile-email">E-mail</label>
+                <input type="email" class="profile-field-input" id="profile-email" readonly />
+              </div>
+              <div class="profile-field-group">
+                <label class="profile-field-label" for="profile-gender">Gender</label>
+                <input type="text" class="profile-field-input" id="profile-gender" value="Gender not set" readonly />
+              </div>
+              <div class="profile-field-group">
+                <label class="profile-field-label" for="profile-city">City of Residence</label>
+                <input type="text" class="profile-field-input" id="profile-city" readonly />
+              </div>
+              <div class="profile-field-group">
+                <label class="profile-field-label" for="profile-address">Address</label>
+                <input type="text" class="profile-field-input" id="profile-address" readonly />
+              </div>
+            </div>
+
+            <!-- Right column -->
+            <div class="profile-col">
+              <div class="profile-field-group">
+                <label class="profile-field-label" for="profile-username">Username</label>
+                <input type="text" class="profile-field-input" id="profile-username" readonly />
+              </div>
+              <div class="profile-field-group">
+                <label class="profile-field-label" for="profile-last-name">Last Name</label>
+                <input type="text" class="profile-field-input" id="profile-last-name" readonly />
+              </div>
+              <div class="profile-field-group">
+                <label class="profile-field-label" for="profile-dob">Date of Birth</label>
+                <input type="text" class="profile-field-input" id="profile-dob" value="Date of Birth not set" readonly />
+              </div>
+              <div class="profile-field-group">
+                <label class="profile-field-label" for="profile-country">Country of Residence</label>
+                <div class="profile-select-wrap">
+                  <select class="profile-field-select" id="profile-country" disabled>
+                    <option selected>COUNTRY OF RESIDENCE NOT SET</option>
+                    <option>ETHIOPIA</option>
+                  </select>
+                </div>
+              </div>
+              <div class="profile-field-group">
+                <label class="profile-field-label" for="profile-zip">Zip</label>
+                <input type="text" class="profile-field-input" id="profile-zip" readonly />
+              </div>
+              <div class="profile-field-group">
+                <label class="profile-field-label" for="profile-phone">Phone number</label>
+                <input type="text" class="profile-field-input" id="profile-phone" readonly />
+              </div>
+            </div>
+          </div>
+
+          <p class="profile-security-note">For security reasons, in order to change your data please contact our support.</p>
+        </div>
+
+        <!-- Sub-panel 2: Change Password -->
+        <div class="profile-subpanel" id="profile-subpanel-password" hidden>
+          <div class="profile-password-card">
+            <h3 class="profile-password-title">Change Password</h3>
+            <form id="profile-password-form" class="profile-password-form">
+              <div class="profile-field-group">
+                <label class="profile-field-label" for="profile-current-pass">Current Password</label>
+                <input type="password" class="profile-field-input" id="profile-current-pass" required placeholder="Enter current password" />
+              </div>
+              <div class="profile-field-group">
+                <label class="profile-field-label" for="profile-new-pass">New Password</label>
+                <input type="password" class="profile-field-input" id="profile-new-pass" required minlength="6" placeholder="Enter new password" />
+              </div>
+              <div class="profile-field-group">
+                <label class="profile-field-label" for="profile-confirm-pass">Confirm New Password</label>
+                <input type="password" class="profile-field-input" id="profile-confirm-pass" required minlength="6" placeholder="Repeat new password" />
+              </div>
+              <button type="submit" class="btn-profile-submit" id="btn-change-password-submit">Update Password</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- BONUSES -->
+      <div class="acct-section" id="acct-section-bonuses">
+        <div class="acct-placeholder"><p>No active bonuses at the moment.</p><p style="font-size:11px;color:#aaa;">Check back later for promotions.</p></div>
+      </div>
+
+      <!-- BET HISTORY -->
+      <div class="acct-section" id="acct-section-bet-history">
+        <div class="acct-filters-bar">
+          <div class="acct-filter-fields">
+            <div class="acct-filter-group">
+              <label class="acct-filter-label" for="bet-history-period">Period</label>
+              <div class="acct-select-wrap">
+                <select class="acct-select" id="bet-history-period">
+                  <option value="today">Today</option>
+                  <option value="yesterday">Yesterday</option>
+                  <option value="3days">3 Days</option>
+                  <option value="1week" selected>1 Week</option>
+                  <option value="1month">1 Month</option>
+                  <option value="all">All</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="acct-filter-group">
+              <label class="acct-filter-label" for="bet-history-type">Bet Type</label>
+              <div class="acct-select-wrap">
+                <select class="acct-select" id="bet-history-type">
+                  <option value="all" selected>All</option>
+                  <option value="single">Single</option>
+                  <option value="multiple">Multiple</option>
+                  <option value="system">System</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="acct-filter-actions">
+            <button type="button" class="btn-apply-filters" id="btn-apply-bet-filters">Apply Filters</button>
+          </div>
+        </div>
+
+        <div class="acct-table-container" id="acct-bet-history-body">
+          <div class="acct-placeholder">Loading bet history…</div>
+        </div>
+      </div>
+
+      <!-- MY JACKPOTS -->
+      <div class="acct-section" id="acct-section-jackpots">
+        <div class="acct-placeholder"><p>No jackpot entries found.</p></div>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="acct-section" id="acct-section-history">
+        <div id="acct-history-body"><div class="acct-placeholder">Loading transaction history…</div></div>
+      </div>
+
+      <!-- PAYMENTS -->
+      <div class="acct-section" id="acct-section-payments">
+        <div class="payments-body" id="payments-body-deposit">
+          <div class="deposit-methods-list" id="deposit-methods-list">
+            <div class="deposit-loading">Loading payment methods…</div>
+          </div>
+          <div class="deposit-form-panel" id="deposit-form-panel" hidden>
+            <button type="button" class="deposit-form-back" id="deposit-form-back">&#x2039; Back</button>
+            <div class="deposit-form-method-name" id="deposit-form-method-name"></div>
+            <form id="deposit-form" class="deposit-form-inner">
+              <label class="deposit-form-label">Amount (ETB)<input type="number" id="deposit-amount" min="100" step="1" placeholder="Min 100 ETB" required /></label>
+              <label class="deposit-form-label">Transaction Reference<input type="text" id="deposit-reference" required minlength="4" placeholder="Telebirr / bank reference ID" /></label>
+              <p class="deposit-form-instructions" id="deposit-instructions">Send payment, then submit your transaction reference.</p>
+              <input type="hidden" id="deposit-method" />
+              <button type="submit" class="deposit-form-submit" id="deposit-submit">Submit Deposit Request</button>
+            </form>
+            <p class="deposit-form-note" id="deposit-note">Deposits are reviewed manually. Balance updates after approval.</p>
+            <div class="deposit-history" id="deposit-history"></div>
+          </div>
+        </div>
+        <div class="payments-body" id="payments-body-withdraw" hidden>
+          <div class="acct-placeholder"><p>Withdrawal functionality coming soon.</p></div>
+        </div>
+        <div class="payments-body" id="payments-body-withdrawal-request" hidden>
+          <div class="acct-placeholder"><p>Submit your withdrawal request through our support team.</p></div>
+        </div>
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="acct-section" id="acct-section-messages">
+        <div class="acct-placeholder"><p>No messages yet.</p></div>
+      </div>
     </div>
   </div>
 
@@ -733,9 +1038,108 @@
     </div>
   </div>
 
-  <script src="./config.js?v=20260904_bestbet_v1"></script>
-  <script src="./api-client.js?v=20260904_bestbet_v1"></script>
-  <script src="./game.js?v=20260904_bestbet_v1"></script>
+  <!-- ===== SHARE ON SOCIALS / BOOKED BET MODAL ===== -->
+  <div class="share-modal-backdrop" id="share-modal-backdrop" hidden></div>
+  <div class="share-modal" id="share-modal" hidden>
+    <div class="share-modal-header">
+      <span class="share-modal-title">Share on Socials</span>
+      <button type="button" class="share-modal-close" id="share-modal-close" aria-label="Close">✕</button>
+    </div>
+
+    <div class="share-modal-body">
+      <!-- Top Summary Card -->
+      <div class="share-summary-row">
+        <div class="share-code-block">
+          <div class="share-booked-subtitle">Your bet has been booked</div>
+          <div class="share-code-wrapper">
+            <span class="share-code-val" id="share-code-val">*00000*</span>
+            <button type="button" class="share-copy-btn" id="share-copy-code" title="Copy code">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="share-stats-block">
+          <div class="share-stat-col">
+            <div class="share-stat-label">BETTING DATE</div>
+            <div class="share-stat-value" id="share-date-val">05/09/2026</div>
+          </div>
+          <div class="share-stat-col">
+            <div class="share-stat-label">TOTAL STAKE</div>
+            <div class="share-stat-value" id="share-stake-val">0.00</div>
+          </div>
+          <div class="share-stat-col">
+            <div class="share-stat-label">WIN AMOUNT</div>
+            <div class="share-stat-value" id="share-win-val">0.00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table of Events -->
+      <div class="share-table-wrap">
+        <table class="share-events-table">
+          <thead>
+            <tr>
+              <th>Event Date</th>
+              <th>Tournament</th>
+              <th>Event</th>
+              <th>Market</th>
+              <th>Odd</th>
+            </tr>
+          </thead>
+          <tbody id="share-table-body">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Actions Bar -->
+      <div class="share-actions-bar">
+        <div class="share-left-btns">
+          <button type="button" class="btn-share-repeat" id="share-repeat-bet">REPEAT BET</button>
+          <button type="button" class="btn-share-print" id="share-print-ticket">
+            <span>PRINT</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+          </button>
+        </div>
+
+        <div class="share-center-socials">
+          <button type="button" class="share-social-circle is-whatsapp" id="share-social-wa" title="Share on WhatsApp">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          </button>
+          <button type="button" class="share-social-circle is-facebook" id="share-social-fb" title="Share on Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </button>
+          <button type="button" class="share-social-circle is-x" id="share-social-x" title="Share on X">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="#ffffff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </button>
+          <button type="button" class="share-social-circle is-telegram" id="share-social-tg" title="Share on Telegram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          </button>
+          <button type="button" class="share-copy-link-btn" id="share-copy-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            <span>Copy link</span>
+          </button>
+        </div>
+
+        <div class="share-right-btn">
+          <button type="button" class="btn-share-continue" id="share-continue-btn">CONTINUE ON WEBSITE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THERMAL RECEIPT PRINT CONTAINER (hidden on screen, visible in native print dialog) -->
+  <div class="print-receipt-container" id="print-receipt-container" aria-hidden="true">
+    <div class="receipt-paper" id="receipt-paper">
+      <!-- Rendered dynamically for window.print() -->
+    </div>
+  </div>
+
+  <script src="./config.js?v=20260905_assets_v11"></script>
+  <script src="./api-client.js?v=20260905_assets_v11"></script>
+  <script src="./qrcode.min.js?v=20260905_assets_v11"></script>
+  <script src="./game.js?v=20260905_assets_v11"></script>
 </body>
 
 </html>
