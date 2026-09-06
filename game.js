@@ -3654,9 +3654,6 @@ function toggleDetailSelection(fixture, market, value) {
   renderSlip();
   renderMatchDetail();
   refreshMatchViews();
-  if (isMobileLayout() && state.slip.length > 0) {
-    openMobileBetslip();
-  }
 }
 
 function totalOdds() {
@@ -6601,9 +6598,6 @@ function bindEvents() {
     const fixture = findFixture(fixtureId);
     if (!fixture) return;
     toggleSelection(fixture, market, selection);
-    if (isMobileLayout() && state.slip.length > 0) {
-      openMobileBetslip();
-    }
   }
 
   function handleOpenFixture(e) {

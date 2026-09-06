@@ -5327,18 +5327,23 @@ button {
   }
 
   .mobile-slip-fab {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
     position: fixed;
-    right: 12px;
-    bottom: 66px;
+    right: 14px;
+    bottom: 68px;
     z-index: 1005;
     border: 0;
     padding: 0;
     background: transparent;
     cursor: pointer;
-    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.28));
+    filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.22));
+    font-family: inherit;
+    transition: transform 0.15s ease;
+  }
+
+  .mobile-slip-fab:active {
+    transform: scale(0.96);
   }
 
   .mobile-slip-fab[hidden] {
@@ -5346,16 +5351,21 @@ button {
   }
 
   .mobile-slip-fab-count {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
-    background: var(--brand-red);
-    color: #fff;
-    font-size: 18px;
-    font-weight: 900;
-    display: grid;
-    place-items: center;
+    background: #c62828;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+    margin-right: -16px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.28);
   }
 
   .mobile-slip-fab-odds {
@@ -5363,28 +5373,32 @@ button {
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    gap: 1px;
-    margin: 0;
-    padding: 8px 14px;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    line-height: 1.1;
+    padding: 8px 18px 8px 26px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
   }
 
   .mobile-slip-fab-label {
-    color: #888;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
+    color: #777777;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin-bottom: 3px;
   }
 
   .mobile-slip-fab-odds strong {
     display: block;
     margin: 0;
-    color: #111;
-    font-size: 15px;
+    color: #111111;
+    font-size: 22px;
     font-weight: 900;
+    line-height: 1.1;
   }
 
   .content {
