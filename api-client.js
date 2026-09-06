@@ -114,6 +114,11 @@
     return request(`/api/super/users/${encodeURIComponent(userId)}/topup`, { method: "POST", body: JSON.stringify({ amount }) });
   }
 
+  async function fetchFixtureScores(ids) {
+    const q = Array.isArray(ids) ? ids.join("-") : ids;
+    return request(`/api/odds/fixtures/scores?ids=${encodeURIComponent(q)}`);
+  }
+
   window.HopeBetAPI = {
     isEnabled,
     getToken,
@@ -124,6 +129,7 @@
     fetchBalance,
     placeBet,
     fetchHistory,
+    fetchFixtureScores,
     devSettle,
     fetchDepositMethods,
     requestDeposit,

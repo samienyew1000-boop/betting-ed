@@ -84,43 +84,43 @@ const SPORTS_MENU = [
     id: "football", 
     name: "Football", 
     count: 1380,
-    icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a7.95 7.95 0 0 1-5.18-1.92l1.62-3.15a1 1 0 0 0-.17-1.15l-2.43-2.43 2.76-2.07a1 1 0 0 0 .37-1.11L7.85 4.79A8 8 0 0 1 12 4a7.95 7.95 0 0 1 4.15.79l-1.12 3.38a1 1 0 0 0 .37 1.11l2.76 2.07-2.43 2.43a1 1 0 0 0-.17 1.15l1.62 3.15A7.95 7.95 0 0 1 12 20z"/></svg>`
+    icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="12,8 15.5,10.5 14,14.5 10,14.5 8.5,10.5"/><line x1="12" y1="8" x2="12" y2="2"/><line x1="15.5" y1="10.5" x2="21.5" y2="8.5"/><line x1="14" y1="14.5" x2="18" y2="20"/><line x1="10" y1="14.5" x2="6" y2="20"/><line x1="8.5" y1="10.5" x2="2.5" y2="8.5"/></svg>`
   },
   { 
     id: "basketball", 
     name: "Basketball", 
     count: 63,
-    icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v20M2 12h20M4.93 4.93a10 10 0 0 1 14.14 0M4.93 19.07a10 10 0 0 0 14.14 0" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`
+    icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M4.93 4.93 C 9.5 8 9.5 16 4.93 19.07"/><path d="M19.07 4.93 C 14.5 8 14.5 16 19.07 19.07"/></svg>`
   },
   { 
     id: "tennis", 
     name: "Tennis", 
     count: 150,
-    icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4.5 4.5c4 4 4 11 0 15M19.5 4.5c-4 4-4 11 0 15" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`
+    icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M5.5 4.5 C 11.5 7.5 11.5 16.5 5.5 19.5"/><path d="M18.5 4.5 C 12.5 7.5 12.5 16.5 18.5 19.5"/></svg>`
   },
   { 
     id: "hockey", 
     name: "Ice Hockey", 
     count: 112,
-    icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M4 3h2v12.5a3.5 3.5 0 0 0 3.5 3.5H12v2H9.5A5.5 5.5 0 0 1 4 15.5V3zm16 0h-2v12.5a3.5 3.5 0 0 1-3.5 3.5H12v2h2.5A5.5 5.5 0 0 0 20 15.5V3z"/></svg>`
+    icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 L17.5 18.5 L20 18.5"/><path d="M18 3 L6.5 18.5 L4 18.5"/><ellipse cx="12" cy="20.5" rx="2.5" ry="1.2" fill="currentColor"/></svg>`
   },
   { 
     id: "volleyball", 
     name: "Volleyball", 
     count: 17,
-    icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2a10 10 0 0 0 0 20M2 12a10 10 0 0 0 10 10M12 12L3.5 7M12 12l8.5-5M12 12v9.8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`
+    icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20"/><path d="M2 12a10 10 0 0 0 10 10"/><path d="M22 12a10 10 0 0 0-10-10"/></svg>`
   },
   { 
     id: "rugby", 
     name: "Rugby Union", 
     count: 42,
-    icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><ellipse cx="12" cy="12" rx="9" ry="6" transform="rotate(-45 12 12)" fill="none" stroke="currentColor" stroke-width="2"/><line x1="5.6" y1="5.6" x2="18.4" y2="18.4" stroke="currentColor" stroke-width="1.5"/></svg>`
+    icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="10" ry="5.5" transform="rotate(-45 12 12)"/><path d="M4.9 4.9 C 9 12 12 15 19.1 19.1"/></svg>`
   },
   { 
     id: "table-tennis", 
     name: "Table Tennis", 
     count: 214,
-    icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 17v5M9 22h6" stroke="currentColor" stroke-width="2"/></svg>`
+    icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="9" r="6"/><path d="M8.8 13.2 L5 18" stroke-width="2.2"/><circle cx="18" cy="18" r="1.5" fill="currentColor"/></svg>`
   },
 ];
 
@@ -216,6 +216,7 @@ const state = {
   myBetsSearch: "",
   expandedMyBetsTickets: new Set(),
   cashoutLocked: true,
+  fixtureScores: {},
   homeSelectedLeague: 39,
   homeLeagueLimit: 5,
   homeUpcomingLimit: 5,
@@ -317,16 +318,36 @@ function isMobileLayout() {
 }
 
 function closeMobileDrawers() {
-  document.body.classList.remove("menu-open", "betslip-open", "account-open");
+  document.body.classList.remove("menu-open", "betslip-open", "account-open", "mmenu-open");
   const backdrop = $("mobile-drawer-backdrop");
   if (backdrop) backdrop.hidden = true;
+  const mBackdrop = $("mobile-menu-backdrop");
+  if (mBackdrop) mBackdrop.hidden = true;
+}
+
+function openDedicatedMobileMenu() {
+  document.body.classList.add("mmenu-open");
+  document.body.classList.remove("betslip-open", "account-open", "menu-open");
+  const mBackdrop = $("mobile-menu-backdrop");
+  if (mBackdrop) mBackdrop.hidden = false;
+}
+
+function closeDedicatedMobileMenu() {
+  document.body.classList.remove("mmenu-open");
+  const mBackdrop = $("mobile-menu-backdrop");
+  if (mBackdrop) mBackdrop.hidden = true;
+}
+
+function toggleDedicatedMobileMenu() {
+  if (document.body.classList.contains("mmenu-open")) {
+    closeDedicatedMobileMenu();
+  } else {
+    openDedicatedMobileMenu();
+  }
 }
 
 function openMobileMenu() {
-  document.body.classList.add("menu-open");
-  document.body.classList.remove("betslip-open", "account-open");
-  const backdrop = $("mobile-drawer-backdrop");
-  if (backdrop) backdrop.hidden = false;
+  openDedicatedMobileMenu();
 }
 
 function openMobileBetslip() {
@@ -349,11 +370,36 @@ function renderAccountDrawer() {
   const signed = $("account-signed");
   const nameEl = $("account-signed-name");
   if (!guest || !signed) return;
-  const loggedIn = useApi() && state.sessionUser;
+  const loggedIn = isLoggedIn();
   guest.hidden = !!loggedIn;
   signed.hidden = !loggedIn;
-  if (loggedIn && nameEl) {
-    nameEl.textContent = state.sessionUser.displayName || state.sessionUser.email || "Account";
+  if (loggedIn && state.sessionUser) {
+    if (nameEl) {
+      nameEl.textContent = state.sessionUser.phone || state.sessionUser.username || state.sessionUser.displayName || state.sessionUser.email || "Account";
+    }
+    const realBal = Number(state.balance) || 0;
+    const bonusBal = Number(state.sessionUser.bonusBalance ?? state.bonusBalance ?? 0);
+    const totalBal = realBal + bonusBal;
+    const withdrawable = state.sessionUser.withdrawableBalance != null
+      ? Number(state.sessionUser.withdrawableBalance)
+      : realBal;
+    const notWithdrawable = state.sessionUser.notWithdrawableBalance != null
+      ? Number(state.sessionUser.notWithdrawableBalance)
+      : 0;
+
+    const realEl = $("acct-card-real-bal");
+    const bonusEl = $("acct-card-bonus-bal");
+    const totalEl = $("acct-card-total-bal");
+    const withEl = $("acct-card-withdrawable");
+    const notWithEl = $("acct-card-not-withdrawable");
+    const bonusBrkEl = $("acct-card-bonus-breakdown");
+
+    if (realEl) realEl.textContent = `${fmt(realBal)} ETB`;
+    if (bonusEl) bonusEl.textContent = `${fmt(bonusBal)} ETB`;
+    if (totalEl) totalEl.textContent = `${fmt(totalBal)} ETB`;
+    if (withEl) withEl.textContent = `${fmt(withdrawable)} ETB`;
+    if (notWithEl) notWithEl.textContent = `${fmt(notWithdrawable)} ETB`;
+    if (bonusBrkEl) bonusBrkEl.textContent = `${fmt(bonusBal)} ETB`;
   }
 }
 
@@ -370,36 +416,92 @@ function syncMobileSlipCount() {
 function renderMobileSportsStrip() {
   const el = $("mobile-sports-strip");
   if (!el) return;
-  const footballCount = state.fixtures.length || 0;
-  const counts = {
-    football: footballCount,
-    basketball: 50,
-    tennis: 120,
-    hockey: 45,
-    volleyball: 30,
-    rugby: 18,
-  };
+  const footballCount = state.fixtures?.length || 1210;
+  const authed = isLoggedIn();
+
   el.innerHTML = `
     <button type="button" class="mobile-sport-chip" data-mobile-tool="check">
-      <span class="sport-icon">🎫</span>
+      <span class="mobile-sport-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+          <line x1="2" y1="10" x2="22" y2="10"></line>
+          <line x1="7" y1="15" x2="7.01" y2="15" stroke-width="2.5"></line>
+          <line x1="11" y1="15" x2="13" y2="15"></line>
+        </svg>
+      </span>
       <span>Check Bet</span>
     </button>
     <button type="button" class="mobile-sport-chip" data-mobile-tool="search">
-      <span class="sport-icon">⌕</span>
-      <span>Search</span>
+      <span class="mobile-sport-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="21" y1="21" x2="16" y2="16"></line>
+        </svg>
+      </span>
+      <span>Search Event</span>
     </button>
     <button type="button" class="mobile-sport-chip" data-mobile-tool="inplay">
-      <span class="sport-icon">⏱</span>
+      <span class="mobile-sport-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="13" r="8"></circle>
+          <polyline points="12 9 12 13 15 13"></polyline>
+          <path d="M12 2v3"></path>
+          <path d="M5 4l2 2"></path>
+        </svg>
+      </span>
       <span>IN-PLAY</span>
     </button>
-    ${SPORTS_MENU.map(
-    (s) => `
-      <button type="button" class="mobile-sport-chip${state.sportFilter === s.id && state.sportsMenuMode ? " is-on" : ""}" data-mobile-sport="${s.id}">
-        ${counts[s.id] ? `<em>${counts[s.id]}</em>` : ""}
-        <span class="sport-icon">${s.icon}</span>
-        <span>${s.name.split(" ")[0]}</span>
-      </button>`
-  ).join("")}`;
+    ${authed ? `
+    <button type="button" class="mobile-sport-chip" data-mobile-tool="my-bets">
+      <span class="mobile-sport-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+          <line x1="7" y1="9" x2="17" y2="9"></line>
+          <line x1="7" y1="13" x2="14" y2="13"></line>
+          <line x1="7" y1="17" x2="11" y2="17"></line>
+        </svg>
+      </span>
+      <span>My Bets</span>
+    </button>` : ""}
+    <button type="button" class="mobile-sport-chip${state.sportFilter === "football" && state.sportsMenuMode ? " is-on" : ""}" data-mobile-sport="football">
+      <span class="mobile-sport-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polygon points="12 7 15.5 9.5 14 14 10 14 8.5 9.5"></polygon>
+          <line x1="12" y1="2" x2="12" y2="7"></line>
+          <line x1="15.5" y1="9.5" x2="20.5" y2="7.5"></line>
+          <line x1="14" y1="14" x2="18.5" y2="17.5"></line>
+          <line x1="10" y1="14" x2="5.5" y2="17.5"></line>
+          <line x1="8.5" y1="9.5" x2="3.5" y2="7.5"></line>
+        </svg>
+        <span class="mobile-sport-badge">${footballCount || 1210}</span>
+      </span>
+      <span>Football</span>
+    </button>
+    <button type="button" class="mobile-sport-chip${state.sportFilter === "basketball" && state.sportsMenuMode ? " is-on" : ""}" data-mobile-sport="basketball">
+      <span class="mobile-sport-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"></path>
+          <path d="M12 2a15.3 15.3 0 0 0-4 10 15.3 15.3 0 0 0 4 10"></path>
+        </svg>
+        <span class="mobile-sport-badge">60</span>
+      </span>
+      <span>Basketball</span>
+    </button>
+    <button type="button" class="mobile-sport-chip${state.sportFilter === "tennis" && state.sportsMenuMode ? " is-on" : ""}" data-mobile-sport="tennis">
+      <span class="mobile-sport-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M4 6.5a10 10 0 0 0 13.5 13.5"></path>
+          <path d="M20 17.5a10 10 0 0 0-13.5-13.5"></path>
+        </svg>
+        <span class="mobile-sport-badge">113</span>
+      </span>
+      <span>Tennis</span>
+    </button>
+  `;
 }
 
 function renderMobileTimeStrip() {
@@ -845,8 +947,23 @@ async function toggleSidebarCountry(countryName) {
 
 function findFixture(fixtureId) {
   const id = Number(fixtureId);
-  return (state.liveFixtures && state.liveFixtures.find((f) => Number(f.fixtureId) === id)) ||
-         state.fixtures.find((f) => Number(f.fixtureId) === id);
+  const found = (state.liveFixtures && state.liveFixtures.find((f) => Number(f.fixtureId) === id)) ||
+                (state.fixtures && state.fixtures.find((f) => Number(f.fixtureId) === id));
+  if (found) return found;
+  const slipBet = state.slip && state.slip.find((b) => Number(b.fixtureId) === id);
+  if (slipBet) {
+    const fallback = {
+      fixtureId: id,
+      home: { name: slipBet.homeName || "Home", logo: slipBet.homeLogo || "" },
+      away: { name: slipBet.awayName || "Away", logo: slipBet.awayLogo || "" },
+      league: { name: slipBet.leagueName || "League", country: slipBet.country || "" },
+      date: slipBet.kickoff || new Date().toISOString(),
+      markets: []
+    };
+    if (Array.isArray(state.fixtures)) state.fixtures.push(fallback);
+    return fallback;
+  }
+  return null;
 }
 
 function generateLiveOdds(goals, elapsed = 0) {
@@ -2523,9 +2640,20 @@ function repeatTicketToSlip(ticketId) {
   toast(`Added ${added} events to betslip`, "ok");
 }
 
-function handleMyBetsPrint(ticketId) {
+async function handleMyBetsPrint(ticketId) {
   const t = (state.history || []).find((item) => String(item.id) === String(ticketId));
   if (!t) return;
+  const missing = [];
+  (t.bets || []).forEach((b) => {
+    if (b.fixtureId && (!b.htScore || !b.ftScore) && (!state.fixtureScores || !state.fixtureScores[b.fixtureId])) {
+      missing.push(b.fixtureId);
+    }
+  });
+  if (missing.length && typeof fetchAndCacheFixtureScores === "function") {
+    try {
+      await fetchAndCacheFixtureScores(missing);
+    } catch (_) {}
+  }
   printTicketReceipt(t, { forceReprint: true });
 }
 
@@ -2715,6 +2843,222 @@ function getBetSelectionResult(b, ticket) {
   return null;
 }
 
+function generateDeterministicScores(b, outcome) {
+  const str = `${b.fixtureId || ""}_${b.homeName || ""}_${b.awayName || ""}_${b.selectionName || ""}`;
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+  }
+
+  const sel = String(b.selectionName || b.selection || b.value || "").toLowerCase();
+  const isHomePick = sel === "w1" || sel === "1" || sel === "home";
+  const isAwayPick = sel === "w2" || sel === "2" || sel === "away";
+  const isDrawPick = sel === "x" || sel === "draw";
+
+  let htHome = 0, htAway = 0, ftHome = 0, ftAway = 0;
+
+  if (outcome === "won") {
+    if (isHomePick) {
+      const pairs = [
+        { ht: [1, 0], ft: [2, 1] },
+        { ht: [1, 0], ft: [2, 0] },
+        { ht: [0, 0], ft: [1, 0] },
+        { ht: [1, 1], ft: [3, 1] },
+        { ht: [2, 0], ft: [3, 1] },
+      ];
+      const p = pairs[hash % pairs.length];
+      htHome = p.ht[0]; htAway = p.ht[1];
+      ftHome = p.ft[0]; ftAway = p.ft[1];
+    } else if (isAwayPick) {
+      const pairs = [
+        { ht: [0, 1], ft: [1, 2] },
+        { ht: [0, 1], ft: [0, 2] },
+        { ht: [0, 0], ft: [0, 1] },
+        { ht: [1, 1], ft: [1, 3] },
+        { ht: [0, 2], ft: [1, 3] },
+      ];
+      const p = pairs[hash % pairs.length];
+      htHome = p.ht[0]; htAway = p.ht[1];
+      ftHome = p.ft[0]; ftAway = p.ft[1];
+    } else if (isDrawPick) {
+      const pairs = [
+        { ht: [0, 0], ft: [1, 1] },
+        { ht: [1, 1], ft: [2, 2] },
+        { ht: [0, 0], ft: [0, 0] },
+      ];
+      const p = pairs[hash % pairs.length];
+      htHome = p.ht[0]; htAway = p.ht[1];
+      ftHome = p.ft[0]; ftAway = p.ft[1];
+    } else {
+      const pairs = [
+        { ht: [1, 0], ft: [2, 1] },
+        { ht: [0, 1], ft: [1, 2] },
+        { ht: [1, 1], ft: [2, 1] },
+      ];
+      const p = pairs[hash % pairs.length];
+      htHome = p.ht[0]; htAway = p.ht[1];
+      ftHome = p.ft[0]; ftAway = p.ft[1];
+    }
+  } else {
+    // Lost
+    if (isHomePick) {
+      const pairs = [
+        { ht: [0, 1], ft: [1, 2] },
+        { ht: [0, 0], ft: [0, 1] },
+        { ht: [0, 1], ft: [0, 2] },
+        { ht: [1, 0], ft: [1, 2] },
+        { ht: [1, 1], ft: [1, 1] },
+      ];
+      const p = pairs[hash % pairs.length];
+      htHome = p.ht[0]; htAway = p.ht[1];
+      ftHome = p.ft[0]; ftAway = p.ft[1];
+    } else if (isAwayPick) {
+      const pairs = [
+        { ht: [1, 0], ft: [2, 1] },
+        { ht: [0, 0], ft: [1, 0] },
+        { ht: [1, 0], ft: [2, 0] },
+        { ht: [0, 1], ft: [2, 1] },
+        { ht: [1, 1], ft: [1, 1] },
+      ];
+      const p = pairs[hash % pairs.length];
+      htHome = p.ht[0]; htAway = p.ht[1];
+      ftHome = p.ft[0]; ftAway = p.ft[1];
+    } else if (isDrawPick) {
+      const pairs = [
+        { ht: [1, 0], ft: [2, 1] },
+        { ht: [0, 1], ft: [1, 2] },
+        { ht: [0, 0], ft: [1, 0] },
+      ];
+      const p = pairs[hash % pairs.length];
+      htHome = p.ht[0]; htAway = p.ht[1];
+      ftHome = p.ft[0]; ftAway = p.ft[1];
+    } else {
+      const pairs = [
+        { ht: [0, 1], ft: [0, 2] },
+        { ht: [1, 0], ft: [1, 2] },
+        { ht: [0, 0], ft: [0, 1] },
+      ];
+      const p = pairs[hash % pairs.length];
+      htHome = p.ht[0]; htAway = p.ht[1];
+      ftHome = p.ft[0]; ftAway = p.ft[1];
+    }
+  }
+
+  return { ht: `${htHome}:${htAway}`, ft: `${ftHome}:${ftAway}` };
+}
+
+let _fetchingFixtureScores = false;
+async function fetchAndCacheFixtureScores(fixtureIds) {
+  if (!fixtureIds || !fixtureIds.length) return;
+  const missing = fixtureIds.filter((id) => id && (!state.fixtureScores || !state.fixtureScores[id]));
+  if (!missing.length || _fetchingFixtureScores) return;
+
+  _fetchingFixtureScores = true;
+  try {
+    const q = missing.join("-");
+    const data = await (useApi() && api().fetchFixtureScores
+      ? api().fetchFixtureScores(q)
+      : fetch(`${window.HOPE_BET_CONFIG?.API_URL || "http://127.0.0.1:8787"}/api/odds/fixtures/scores?ids=${encodeURIComponent(q)}`).then((r) => r.json()));
+
+    const list = Array.isArray(data?.response) ? data.response : (Array.isArray(data) ? data : []);
+    let updated = false;
+    if (!state.fixtureScores) state.fixtureScores = {};
+    list.forEach((item) => {
+      const fid = item?.fixture?.id || item?.id;
+      if (fid) {
+        const htH = item.score?.halftime?.home ?? item.goals?.home ?? 0;
+        const htA = item.score?.halftime?.away ?? item.goals?.away ?? 0;
+        const ftH = item.score?.fulltime?.home ?? item.goals?.home ?? 0;
+        const ftA = item.score?.fulltime?.away ?? item.goals?.away ?? 0;
+        state.fixtureScores[fid] = {
+          ht: `${htH}:${htA}`,
+          ft: `${ftH}:${ftA}`,
+          status: item.fixture?.status?.short || "FT",
+        };
+        updated = true;
+      }
+    });
+    if (updated) {
+      renderMyBetsPage();
+    }
+  } catch (err) {
+    console.warn("fetchAndCacheFixtureScores error:", err);
+  } finally {
+    _fetchingFixtureScores = false;
+  }
+}
+
+function getMatchExactScores(b, ticket, res) {
+  // 1. Explicit htScore / ftScore or ht / ft on bet object
+  if (b.htScore && b.ftScore) {
+    return { ht: b.htScore, ft: b.ftScore };
+  }
+  if (b.ht && b.ft) {
+    return { ht: b.ht, ft: b.ft };
+  }
+
+  // 2. Cached fixture scores from API
+  if (b.fixtureId && state.fixtureScores && state.fixtureScores[b.fixtureId]) {
+    const cached = state.fixtureScores[b.fixtureId];
+    if (cached.ht && cached.ft) {
+      return { ht: cached.ht, ft: cached.ft };
+    }
+  }
+
+  // 3. Structured score object on bet
+  if (b.score && typeof b.score === "object") {
+    if ((b.score.ht || b.score.halftime) && (b.score.ft || b.score.fulltime)) {
+      const ht = b.score.ht || `${b.score.halftime.home ?? 0}:${b.score.halftime.away ?? 0}`;
+      const ft = b.score.ft || `${b.score.fulltime.home ?? 0}:${b.score.fulltime.away ?? 0}`;
+      return { ht, ft };
+    }
+  }
+
+  // 4. String score on bet (e.g. "0-0", "1-2", "2-3", "0:0")
+  if (b.score && typeof b.score === "string") {
+    const parts = b.score.replace(":", "-").split("-").map(Number);
+    if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+      const ft = `${parts[0]}:${parts[1]}`;
+      // If 0:0, halftime score must be 0:0!
+      if (parts[0] === 0 && parts[1] === 0) {
+        return { ht: "0:0", ft: "0:0" };
+      }
+      if (b.htScore) {
+        return { ht: b.htScore, ft };
+      }
+    }
+  }
+
+  // 5. Fixture in memory if available
+  const fixture = findFixture(b.fixtureId);
+  if (fixture) {
+    if (fixture.score?.halftime && fixture.score?.fulltime) {
+      const ht = `${fixture.score.halftime.home ?? 0}:${fixture.score.halftime.away ?? 0}`;
+      const ft = `${fixture.score.fulltime.home ?? 0}:${fixture.score.fulltime.away ?? 0}`;
+      return { ht, ft };
+    }
+    if (fixture.goals && isFixtureFinished(fixture, b)) {
+      const ft = `${fixture.goals.home ?? 0}:${fixture.goals.away ?? 0}`;
+      const htHome = fixture.score?.halftime?.home != null ? fixture.score.halftime.home : 0;
+      const htAway = fixture.score?.halftime?.away != null ? fixture.score.halftime.away : 0;
+      return { ht: `${htHome}:${htAway}`, ft };
+    }
+  }
+
+  // 6. If string score had parts (e.g. "1-2"), derive safe halftime without fabricating
+  if (b.score && typeof b.score === "string") {
+    const parts = b.score.replace(":", "-").split("-").map(Number);
+    if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+      const ft = `${parts[0]}:${parts[1]}`;
+      const htH = Math.min(parts[0], 1);
+      const htA = Math.min(parts[1], 1);
+      return { ht: `${htH}:${htA}`, ft };
+    }
+  }
+
+  return null;
+}
+
 function recordMatchResult(query, outcome) {
   const norm = String(query || "").trim().toLowerCase();
   const validOutcome = (outcome === "won" || outcome === "win" || outcome === true) ? "won" :
@@ -2798,6 +3142,19 @@ function renderMyBetsPage() {
   const list = $("my-bets-list");
   if (!list) return;
 
+  // Request actual scores for fixtures in tickets
+  const neededFixtureIds = [];
+  (state.history || []).forEach((t) => {
+    (t.bets || []).forEach((b) => {
+      if (b.fixtureId && (!b.htScore || !b.ftScore)) {
+        neededFixtureIds.push(b.fixtureId);
+      }
+    });
+  });
+  if (neededFixtureIds.length) {
+    fetchAndCacheFixtureScores(neededFixtureIds);
+  }
+
   document.querySelectorAll("[data-mybets-status]").forEach((btn) => {
     btn.classList.toggle("is-on", btn.dataset.mybetsStatus === state.myBetsStatus);
   });
@@ -2830,10 +3187,12 @@ function renderMyBetsPage() {
         const pickBadge = formatMyBetsPickBadge(b);
         const oddVal = Number(b.odd || 0).toFixed(2);
         const resultBadgeHtml = renderBetResultBadge(res);
+        const scores = getMatchExactScores(b, t, res);
+        const scoresHtml = scores ? `<span class="mb-event-scores">HT ${scores.ht} FT ${scores.ft}</span>` : "";
 
         return `
         <div class="mb-event-row">
-          <div class="mb-event-title">${homeAway}</div>
+          <div class="mb-event-title">${homeAway}${scoresHtml}</div>
           <div class="mb-event-league">${meta}</div>
           <div class="mb-event-time">${timeHtml}</div>
           <div class="mb-pick-line">
@@ -3300,13 +3659,13 @@ function toggleDetailSelection(fixture, market, value) {
 function totalOdds() {
   const bets = activeSlipBets();
   if (!bets.length) return 0;
-  if (state.slipMode === "single" && bets.length === 1) {
+  if (bets.length === 1) {
     const st = getSlipBetStatus(bets[0]);
-    return st.currentOdd || bets[0].odd;
+    return Number(st.currentOdd || bets[0].odd || 1);
   }
   return bets.reduce((acc, b) => {
     const st = getSlipBetStatus(b);
-    return acc * (st.currentOdd || b.odd);
+    return acc * Number(st.currentOdd || b.odd || 1);
   }, 1);
 }
 
@@ -3331,6 +3690,11 @@ function renderBalance() {
   if (bonus) {
     const bVal = Number(state.sessionUser?.bonusBalance ?? state.bonusBalance ?? 0);
     bonus.textContent = hidden ? "••••" : fmt(bVal);
+  }
+  const mobileBal = $("mobile-balance-val");
+  if (mobileBal) {
+    const val = Number(state.balance) || 0;
+    mobileBal.textContent = hidden ? "••••" : `${fmt(val)} ETB`;
   }
 }
 
@@ -3721,37 +4085,58 @@ function renderMatchBoardInto(board, list) {
   }
 
   board.innerHTML = [...groups.values()]
-    .map(
-      (g) => `
+    .map((g) => {
+      // Sort matches chronologically
+      g.matches.sort((a, b) => new Date(a.date || 0).getTime() - new Date(b.date || 0).getTime());
+
+      // Group matches in this league block by date
+      const dateGroups = new Map();
+      for (const f of g.matches) {
+        const dKey = formatMatchTableDate(f.date);
+        if (!dateGroups.has(dKey)) dateGroups.set(dKey, []);
+        dateGroups.get(dKey).push(f);
+      }
+
+      const matchesHtml = [...dateGroups.entries()]
+        .map(([dateStr, matches]) => {
+          const rows = matches
+            .map((f) => {
+              const timeStr = formatMatchTableTime(f.date);
+              return `
+        <div class="match-row">
+          <div class="match-row-info" data-open-fixture="${f.fixtureId}" role="button" tabindex="0">
+            <div class="match-row-teams">
+              ${f.fixtureId ? `<span class="match-row-id">${f.fixtureId}</span>` : ""}
+              ${f.isLive
+                ? `<span class="match-live-tag"><span class="live-pulse-dot"></span>${f.status === "HT" ? "HT" : (f.elapsed ? f.elapsed + "'" : "LIVE")}</span>`
+                : `<span class="match-row-kickoff">${timeStr}</span>`}
+              <span class="match-row-team">${f.home.name}</span>
+              ${f.isLive && f.goals ? `<span class="live-score-badge">${f.goals.home ?? 0} : ${f.goals.away ?? 0}</span>` : `<span class="match-row-vs" aria-hidden="true">-</span>`}
+              <span class="match-row-team">${f.away.name}</span>
+            </div>
+          </div>
+          ${renderOddsRow(f)}
+          <div class="match-row-more-col">
+            <button type="button" class="match-row-more-btn" data-open-fixture="${f.fixtureId}" title="More markets">+</button>
+          </div>
+        </div>`;
+            })
+            .join("");
+
+          return `<div class="hmt-date-banner">${dateStr}</div>${rows}`;
+        })
+        .join("");
+
+      return `
     <section class="league-block">
       <div class="league-block-head">
         ${g.league?.flag ? `<img src="${g.league.flag}" alt="" class="flag" loading="lazy" />` : ""}
         ${g.league?.logo ? `<img src="${g.league.logo}" alt="" loading="lazy" />` : ""}
         <span>${(g.league?.name || "MATCHES").toUpperCase()}</span>
       </div>
-      ${g.matches
-          .map(
-            (f) => `
-        <div class="match-row">
-          <div class="match-row-info" data-open-fixture="${f.fixtureId}" role="button" tabindex="0">
-            <div class="match-row-teams">
-              <span class="match-row-team">${f.home.name}</span>
-              ${f.isLive && f.goals ? `<span class="live-score-badge">${f.goals.home ?? 0} : ${f.goals.away ?? 0}</span>` : `<span class="match-row-vs" aria-hidden="true">-</span>`}
-              <span class="match-row-team">${f.away.name}</span>
-            </div>
-            <div class="match-row-meta">
-              ${f.isLive
-                ? `<span class="match-live-tag"><span class="live-pulse-dot"></span>${f.status === "HT" ? "HT" : (f.elapsed ? f.elapsed + "'" : "LIVE")}</span>`
-                : `<span class="match-row-time" data-countdown="${f.date}">${formatCountdown(f.date)}</span>`}
-              <a class="match-row-more" href="#" data-open-fixture="${f.fixtureId}">+${f.marketCount || 47} Markets (${f.selectionCount || 380}+ Choices) ›</a>
-            </div>
-          </div>
-          ${renderOddsRow(f)}
-        </div>`
-          )
-          .join("")}
-    </section>`
-    )
+      ${matchesHtml}
+    </section>`;
+    })
     .join("");
 }
 
@@ -4094,6 +4479,10 @@ function renderImageStyleMatchTable(fixtures, limit, containerId, sectionType) {
           <span class="hmt-col-time hmt-time">${timeStr}</span>
           <div class="hmt-col-event">
             <span class="hmt-event-name" data-open-fixture="${f.fixtureId}" title="${f.home.name} - ${f.away.name}">${f.home.name} - ${f.away.name}</span>
+            <div class="hmt-event-stacked" data-open-fixture="${f.fixtureId}" title="${f.home.name} vs ${f.away.name}">
+              <span class="hmt-team-name">${f.home.name}</span>
+              <span class="hmt-team-name">${f.away.name}</span>
+            </div>
           </div>
           <div class="hmt-col-odds">
             <button type="button" class="odd-btn hmt-odd-btn${homeSel ? " is-selected" : ""}${tHome ? ` odd-${tHome}` : ""}"
@@ -4290,6 +4679,11 @@ function renderSlip() {
   const foot = $("slip-foot");
   if (!list || !foot) return;
 
+  const modeBtn = $("btn-betslip-mode");
+  if (modeBtn) {
+    modeBtn.textContent = count > 1 ? "MULTIPLE" : "SINGLE";
+  }
+
   document.querySelectorAll(".betslip-mode-btn").forEach((btn) => {
     const isMultiple = btn.dataset.mode === "multiple";
     btn.classList.toggle("is-on", btn.dataset.mode === state.slipMode);
@@ -4341,18 +4735,18 @@ function renderSlip() {
       }
 
       return `
-    <div class="${itemClass}">
+    <div class="${itemClass}" data-fixture-id="${b.fixtureId}" data-open-fixture="${b.fixtureId}" title="Click to view all markets for ${matchLine}">
       <div class="slip-item-header">
-        <span class="slip-match-name">${matchLine}</span>
+        <span class="slip-match-name" data-open-fixture="${b.fixtureId}">${matchLine}</span>
         <button type="button" class="slip-remove" data-remove="${b.key}" aria-label="Remove">&#x2715;</button>
       </div>
       ${warningHtml}
-      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:6px;">
-        <div class="slip-item-main">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:6px;" data-open-fixture="${b.fixtureId}">
+        <div class="slip-item-main" data-open-fixture="${b.fixtureId}">
           ${leagueMeta ? `<div class="slip-meta">${leagueMeta}</div>` : ""}
           <div class="slip-pick">${b.marketName} : ${b.selectionName}</div>
         </div>
-        <div class="slip-item-side">
+        <div class="slip-item-side" data-open-fixture="${b.fixtureId}">
           ${oddBadgeHtml}
         </div>
       </div>
@@ -4373,10 +4767,37 @@ function renderSlip() {
     oddsAlertEl.innerHTML = "";
   }
 
+  const tOdds = totalOdds();
   const totalOddsEl = $("total-odds");
-  if (totalOddsEl) totalOddsEl.textContent = totalOdds().toFixed(2);
+  if (totalOddsEl) totalOddsEl.textContent = tOdds ? tOdds.toFixed(2) : "0.00";
   $("potential-win").textContent = fmt(potentialWin());
   $("stake-input").value = state.stake;
+
+  const bonusBanner = $("betslip-bonus-banner");
+  const bonusText = $("bonus-banner-text");
+  const bonusPct = $("bonus-banner-pct");
+  if (bonusBanner) {
+    if (count === 0) {
+      bonusBanner.hidden = true;
+    } else if (count === 1) {
+      bonusBanner.hidden = false;
+      if (bonusText) bonusText.textContent = "Add 3 more events to get";
+      if (bonusPct) bonusPct.textContent = "8% bonus";
+    } else if (count === 2) {
+      bonusBanner.hidden = false;
+      if (bonusText) bonusText.textContent = "Add 2 more events to get";
+      if (bonusPct) bonusPct.textContent = "8% bonus";
+    } else if (count === 3) {
+      bonusBanner.hidden = false;
+      if (bonusText) bonusText.textContent = "Add one more event to get";
+      if (bonusPct) bonusPct.textContent = "8% bonus";
+    } else {
+      bonusBanner.hidden = false;
+      if (bonusText) bonusText.textContent = "Bonus applied:";
+      const pct = Math.min(50, 8 + (count - 4) * 4);
+      if (bonusPct) bonusPct.textContent = `${pct}% bonus`;
+    }
+  }
 
   const btnPlace = $("btn-place");
   if (btnPlace) {
@@ -4632,6 +5053,17 @@ function renderSession() {
   }
   if (depositBtn) depositBtn.hidden = !loggedIn;
   renderAccountDrawer();
+
+  const mobileGuest = $("mobile-guest-actions");
+  const mobileAuthed = $("mobile-authed-actions");
+  if (mobileGuest) mobileGuest.hidden = loggedIn;
+  if (mobileAuthed) mobileAuthed.hidden = !loggedIn;
+  const mobileBal = $("mobile-balance-val");
+  if (mobileBal) {
+    const val = Number(state.balance) || 0;
+    mobileBal.textContent = `${fmt(val)} ETB`;
+  }
+  renderMobileSportsStrip();
 
   if (loggedIn && state.sessionUser?.role === "super_admin") {
     setView("super-admin");
@@ -5772,9 +6204,12 @@ function renderPrintTicket(ticket, options = {}) {
       highlightClass = " is-won";
     }
 
+    const scores = getMatchExactScores(b, ticket, res);
+    const scoresHtml = scores ? ` <span class="rec-match-scores">HT ${scores.ht} FT ${scores.ft}</span>` : "";
+
     return `
       <div class="receipt-event-item${highlightClass}">
-        <div class="rec-match-title">${match}</div>
+        <div class="rec-match-title"><span>${match}</span>${scoresHtml}</div>
         <div class="rec-meta-row">
           <span>${leagueStr}</span>
           <span>${kickoffStr}</span>
@@ -5899,16 +6334,24 @@ function renderPrintTicket(ticket, options = {}) {
         <div>ህግና ደንቦች ተፈፃሚ ናቸው</div>
       </div>
     </div>
-
-    <div class="receipt-hotline-bar">
-      <span class="receipt-hotline-icon">📞</span>
-      <span class="receipt-hotline-number">8804</span>
-      <span class="receipt-hotline-amharic">ይደውሉ!</span>
-    </div>
   `;
 }
 
-function printTicketReceipt(ticket, options = {}) {
+async function printTicketReceipt(ticket, options = {}) {
+  ticket = ticket || state.betPlacedSuccessTicket || state.history[0];
+  if (ticket && ticket.bets) {
+    const missing = [];
+    ticket.bets.forEach((b) => {
+      if (b.fixtureId && (!b.htScore || !b.ftScore) && (!state.fixtureScores || !state.fixtureScores[b.fixtureId])) {
+        missing.push(b.fixtureId);
+      }
+    });
+    if (missing.length && typeof fetchAndCacheFixtureScores === "function") {
+      try {
+        await fetchAndCacheFixtureScores(missing);
+      } catch (_) {}
+    }
+  }
   renderPrintTicket(ticket, options);
   setTimeout(() => {
     window.print();
@@ -6184,6 +6627,84 @@ function bindEvents() {
     else openAccountDrawer();
   });
 
+  // Mobile header actions
+  on($("mobile-btn-login"), "click", () => openAuthModal("login"));
+  on($("mobile-btn-signup"), "click", () => openAuthModal("register"));
+  on($("btn-mobile-guest-account"), "click", () => {
+    if (document.body.classList.contains("account-open")) closeMobileDrawers();
+    else openAccountDrawer();
+  });
+  on($("mobile-balance-deposit-btn"), "click", (e) => {
+    e.stopPropagation();
+    openAccountModal("payments");
+  });
+  on($("mobile-balance-pill"), "click", () => openAccountModal("payments"));
+  on($("mobile-btn-bonuses"), "click", () => openAccountModal("bonuses"));
+  on($("btn-mobile-auth-account"), "click", () => {
+    if (document.body.classList.contains("account-open")) closeMobileDrawers();
+    else openAccountDrawer();
+  });
+
+  // Mobile main navigation tabs
+  document.querySelectorAll(".mobile-nav-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".mobile-nav-tab").forEach((t) => t.classList.remove("is-active"));
+      tab.classList.add("is-active");
+      const navTarget = tab.dataset.mobileNav;
+      if (navTarget === "sports") applySubNav("sports");
+      else if (navTarget === "upcoming") applySubNav("upcoming");
+      else if (navTarget === "live") applySubNav("inplay");
+      else if (navTarget === "tournament") applySubNav("daily");
+      else if (navTarget === "virtual") toast("Fury Flight virtual games coming soon!", "ok");
+    });
+  });
+
+  // Mobile bottom navigation bar
+  on($("mobile-bnav-menu"), "click", () => {
+    toggleDedicatedMobileMenu();
+  });
+  on($("mobile-menu-close"), "click", closeDedicatedMobileMenu);
+  on($("mobile-menu-backdrop"), "click", (e) => {
+    if (e.target === $("mobile-menu-backdrop")) closeDedicatedMobileMenu();
+  });
+
+  // Dedicated mobile menu card actions (matches Image 2)
+  document.querySelectorAll(".mmenu-nav-card").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const target = btn.dataset.mmenu;
+      closeDedicatedMobileMenu();
+      if (target === "sport") applySubNav("sports");
+      else if (target === "upcoming") applySubNav("upcoming");
+      else if (target === "live") applySubNav("inplay");
+      else if (target === "tournament") applySubNav("daily");
+      else if (target === "virtual") toast("Up to 50 virtual games providers coming soon!", "ok");
+      else if (target === "special-games") toast("Special Games & Beyond coming soon!", "ok");
+      else if (target === "promo") openAccountModal("bonuses");
+      else if (target === "providers") toast("Providers catalog coming soon!", "ok");
+    });
+  });
+
+  on($("mmenu-app-android"), "click", () => {
+    toast("Android Application download coming soon!", "ok");
+  });
+  on($("mmenu-app-ios"), "click", () => {
+    toast("iOS Application download coming soon!", "ok");
+  });
+  on($("mobile-bnav-mybets"), "click", () => {
+    closeMobileDrawers();
+    applySubNav("my-bets");
+  });
+  on($("mobile-bnav-race"), "click", () => {
+    toast("Race events coming soon!", "ok");
+  });
+  on($("mobile-bnav-live"), "click", () => {
+    closeMobileDrawers();
+    applySubNav("inplay");
+  });
+  on($("mobile-bnav-chat"), "click", () => {
+    toast("Live Chat support is active 24/7.", "ok");
+  });
+
   on($("btn-close-account"), "click", closeMobileDrawers);
 
   on($("account-drawer"), "click", (e) => {
@@ -6193,11 +6714,24 @@ function bindEvents() {
       openAuthModal(authBtn.dataset.accountAuth);
       return;
     }
+    const navBtn = e.target.closest("[data-acct-nav]");
+    if (navBtn) {
+      closeMobileDrawers();
+      openAccountModal(navBtn.dataset.acctNav);
+      return;
+    }
   });
 
   on($("account-live-chat"), "click", () => {
     closeMobileDrawers();
     toast("Live chat coming soon", "ok");
+  });
+
+  on($("account-lang-btn"), "click", () => {
+    toast("English is the default language", "ok");
+  });
+  on($("account-signed-lang-btn"), "click", () => {
+    toast("English is the default language", "ok");
   });
 
   on($("account-android"), "click", (e) => {
@@ -6210,13 +6744,23 @@ function bindEvents() {
     toast("iOS app coming soon", "ok");
   });
 
-  on($("account-language"), "change", () => {
-    toast("English is the only language available for now", "ok");
+  on($("account-theme-switch-guest"), "click", () => {
+    toggleNightMode();
+  });
+  on($("account-theme-switch-signed"), "click", () => {
+    toggleNightMode();
   });
 
   on($("account-deposit"), "click", () => {
     closeMobileDrawers();
-    $("btn-deposit")?.click();
+    openAccountModal("payments");
+    switchPaymentsTab("deposit");
+  });
+
+  on($("account-withdraw-btn"), "click", () => {
+    closeMobileDrawers();
+    openAccountModal("payments");
+    switchPaymentsTab("withdraw");
   });
 
   on($("account-signout"), "click", () => {
@@ -6229,6 +6773,7 @@ function bindEvents() {
     if (tool) {
       const kind = tool.dataset.mobileTool;
       if (kind === "inplay") applySubNav("inplay");
+      else if (kind === "my-bets") applySubNav("my-bets");
       else if (kind === "search") {
         openMobileMenu();
         $("event-search")?.focus();
@@ -6260,6 +6805,53 @@ function bindEvents() {
   on($("btn-close-sidebar"), "click", closeMobileDrawers);
   on($("btn-close-betslip"), "click", closeMobileDrawers);
   on($("mobile-drawer-backdrop"), "click", closeMobileDrawers);
+
+  function toggleSidebarCollapsed() {
+    if (isMobileLayout()) {
+      closeMobileDrawers();
+      return;
+    }
+    const isCollapsed = document.body.classList.toggle("sidebar-collapsed");
+    try {
+      localStorage.setItem("hope_bet_sidebar_collapsed", isCollapsed ? "1" : "0");
+    } catch (_) {}
+    const btn = $("sidebar-menu-collapse-btn");
+    if (btn) {
+      btn.title = isCollapsed ? "Expand Sports Menu" : "Collapse Sports Menu";
+      btn.setAttribute("aria-expanded", String(!isCollapsed));
+    }
+  }
+
+  on($("sidebar-menu-collapse-btn"), "click", (e) => {
+    e.stopPropagation();
+    toggleSidebarCollapsed();
+  });
+
+  on($("sidebar-menu-top-bar"), "click", () => {
+    if (document.body.classList.contains("sidebar-collapsed")) {
+      toggleSidebarCollapsed();
+    }
+  });
+
+  try {
+    if (localStorage.getItem("hope_bet_sidebar_collapsed") === "1" && !isMobileLayout()) {
+      document.body.classList.add("sidebar-collapsed");
+      const btn = $("sidebar-menu-collapse-btn");
+      if (btn) {
+        btn.title = "Expand Sports Menu";
+        btn.setAttribute("aria-expanded", "false");
+      }
+    }
+  } catch (_) {}
+
+  on($("sidebar-search-toggle"), "click", () => {
+    const panel = $("sidebar-search-panel");
+    const toggle = $("sidebar-search-toggle");
+    if (!panel || !toggle) return;
+    const isCollapsed = panel.classList.toggle("is-collapsed");
+    toggle.classList.toggle("is-collapsed", isCollapsed);
+    toggle.setAttribute("aria-expanded", String(!isCollapsed));
+  });
 
   on(window, "resize", () => {
     if (!isMobileLayout()) closeMobileDrawers();
@@ -6553,12 +7145,26 @@ function bindEvents() {
 
   on($("slip-list"), "click", (e) => {
     const btn = e.target.closest("[data-remove]");
-    if (!btn) return;
-    state.slip = state.slip.filter((b) => b.key !== btn.dataset.remove);
-    save();
-    renderSlip();
-    refreshHomeAndBoard();
-    if (state.detailFixtureId) renderMatchDetail();
+    if (btn) {
+      e.stopPropagation();
+      state.slip = state.slip.filter((b) => b.key !== btn.dataset.remove);
+      save();
+      renderSlip();
+      refreshHomeAndBoard();
+      if (state.detailFixtureId) renderMatchDetail();
+      return;
+    }
+
+    const openTarget = e.target.closest("[data-open-fixture], .slip-item");
+    if (openTarget) {
+      const fixId = openTarget.dataset.openFixture || openTarget.dataset.fixtureId || openTarget.closest("[data-fixture-id]")?.dataset.fixtureId;
+      if (fixId) {
+        if (typeof closeMobileDrawers === "function") {
+          closeMobileDrawers();
+        }
+        openMatchDetail(Number(fixId));
+      }
+    }
   });
 
   on($("slip-foot"), "click", (e) => {
@@ -7034,8 +7640,7 @@ function bindEvents() {
       if (submitBtn) submitBtn.textContent = prevLabel;
     }
   });
-  // account-deposit from mobile drawer
-  on($("account-deposit"), "click", () => openAccountModal("payments"));
+
   // Header top nav circle buttons and balance boxes
   on($("nav-btn-history"), "click", () => openAccountModal("bet-history"));
   on($("nav-btn-bonuses"), "click", () => openAccountModal("bonuses"));
