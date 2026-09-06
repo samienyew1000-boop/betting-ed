@@ -2658,7 +2658,7 @@ button {
   width: 100%;
   padding: 11px;
   background: #ffcc00;
-  color: #b71c1c;
+  color: #111111;
   font-weight: 800;
   font-size: 13px;
   border-radius: 3px;
@@ -2817,9 +2817,9 @@ button {
 }
 
 .quick-stakes button.is-on {
-  background: #e3eafc;
-  border-color: #5c8de8;
-  color: #1a50a0;
+  background: #5a738e;
+  border-color: #48617b;
+  color: #ffffff;
 }
 
 .quick-stake-edit {
@@ -4767,18 +4767,37 @@ button {
     position: fixed;
     top: 0;
     right: 0;
-    bottom: 0;
-    width: min(340px, 92vw);
-    z-index: 80;
+    bottom: 54px;
+    width: min(340px, 88vw);
+    z-index: 1015;
     transform: translateX(105%);
-    transition: transform 0.22s ease;
-    box-shadow: -8px 0 24px rgba(0, 0, 0, 0.18);
+    transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: -8px 0 28px rgba(0, 0, 0, 0.45);
     border-left: 1px solid var(--line);
+    background: #ffffff;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
     max-height: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .betslip-panel::-webkit-scrollbar {
+    display: none;
   }
 
   body.betslip-open .betslip-panel {
     transform: translateX(0);
+  }
+
+  body.betslip-open .mobile-slip-fab {
+    display: none !important;
+  }
+
+  .betslip-panel .drawer-close,
+  .betslip-panel .betslip-header {
+    display: none !important;
   }
 
   .betslip-tools {
@@ -5314,7 +5333,7 @@ button {
     position: fixed;
     right: 12px;
     bottom: 66px;
-    z-index: 55;
+    z-index: 1005;
     border: 0;
     padding: 0;
     background: transparent;
